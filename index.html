@@ -222,7 +222,7 @@
 
     <!-- 4. REKAP FINANSIAL BULANAN (COMPACT SVG DONUT CHART SAJA - BEBAS DAFTAR PANJANG) -->
     <section class="bg-white rounded-3xl p-4 sm:p-5 shadow-card border border-[#eadfd3]/70 animate-up">
-      <!-- Header Rekap Bulanan -->
+      <!-- Header Rekap Bulanan dengan Navigasi Bulan -->
       <div class="flex items-center justify-between mb-3">
         <div class="flex items-center gap-1.5">
           <span class="text-sm">📊</span>
@@ -230,9 +230,19 @@
             Rekap Bulanan
           </h2>
         </div>
-        <span id="rm" class="text-[10px] font-bold bg-[#f6f0e9] text-[#3b2417] px-2 py-0.5 rounded-full border border-[#eadfd3]">
-          -
-        </span>
+        
+        <!-- Navigasi Bulan Rekap (< Bulan Tahun >) -->
+        <nav aria-label="Navigasi Bulan Rekap" class="flex items-center bg-[#f6f0e9] rounded-full p-0.5 border border-[#eadfd3] shadow-xs">
+          <button id="rm_prev" title="Bulan Sebelumnya" class="w-6 h-6 rounded-full flex items-center justify-center text-xs hover:bg-[#eadfd3] text-[#3b2417] font-bold transition-all cursor-pointer">
+            ‹
+          </button>
+          <span id="rm" class="text-[10.5px] font-extrabold text-[#3b2417] px-2 min-w-[84px] text-center truncate select-none">
+            -
+          </span>
+          <button id="rm_next" title="Bulan Berikutnya" class="w-6 h-6 rounded-full flex items-center justify-center text-xs hover:bg-[#eadfd3] text-[#3b2417] font-bold transition-all cursor-pointer">
+            ›
+          </button>
+        </nav>
       </div>
 
       <!-- Segmented Tab Switch: Pengeluaran vs Pemasukan -->
@@ -560,50 +570,29 @@
         { id: 3, e: '🟠', n: 'ShopeePay' },
         { id: 4, e: '🟢', n: 'GoPay' }
       ],
-      tx: [
-        { id: 1, t: 'in', c: 'Gaji/Uang Saku', w: 1, a: 1500000, d: todayS, tm: '09.00', n: 'Gaji Bulanan' },
-        { id: 2, t: 'out', c: 'Makan', w: 1, a: 35000, d: todayS, tm: '12.30', n: 'Makan siang soto' },
-        { id: 3, t: 'out', c: 'Transport', w: 4, a: 20000, d: todayS, tm: '17.45', n: 'Ongkos ojek online' }
-      ],
-      nid: 10
+      tx: [],
+      nid: 1
     };
 
-    // Load State dari LocalStorage & Jalankan Migrasi Otomatis jika Diperlukan
+    // Load State dari LocalStorage & Jalankan Pembersihan Data Dummy
     try {
       const savedV2 = localStorage.getItem(STORAGE_KEY_V2);
       if (savedV2) {
         S = JSON.parse(savedV2);
-      } else {
-        const oldTxRaw = localStorage.getItem(OLD_STORAGE_TX);
-        const oldWalletsRaw = localStorage.getItem(OLD_STORAGE_WALLETS);
-
-        if (oldTxRaw || oldWalletsRaw) {
-          const oldTx = oldTxRaw ? JSON.parse(oldTxRaw) : [];
-          const oldWallets = oldWalletsRaw ? JSON.parse(oldWalletsRaw) : [];
-
-          if (Array.isArray(oldWallets) && oldWallets.length > 0) {
-            S.wallets = oldWallets.map((w, idx) => ({
-              id: typeof w.id === 'number' ? w.id : (idx + 1),
-              e: w.icon || '💳',
-              n: w.name || 'Dompet'
-            }));
-          }
-
-          if (Array.isArray(oldTx) && oldTx.length > 0) {
-            S.tx = oldTx.map((x, idx) => ({
-              id: idx + 1,
-              t: x.type === 'income' ? 'in' : 'out',
-              c: (x.category && x.category.name) ? x.category.name : (x.t === 'income' ? 'Gaji/Uang Saku' : 'Lainnya'),
-              w: 1,
-              a: Math.abs(x.amount || 0),
-              d: x.date || todayS,
-              tm: '12.00',
-              n: x.note || ''
-            }));
-            S.nid = S.tx.length + 10;
-          }
-
-          localStorage.setItem(STORAGE_KEY_V2, JSON.stringify(S));
+        // Pastikan wallets terformat array
+        if (!Array.isArray(S.wallets) || S.wallets.length === 0) {
+          S.wallets = [
+            { id: 1, e: '💵', n: 'Cash' },
+            { id: 2, e: '🏦', n: 'Bank' },
+            { id: 3, e: '🟠', n: 'ShopeePay' },
+            { id: 4, e: '🟢', n: 'GoPay' }
+          ];
+        }
+        // Bersihkan data dummy contoh jika sebelumnya sempat tersimpan di device
+        if (Array.isArray(S.tx)) {
+          S.tx = S.tx.filter(x => !(x.n === 'Gaji Bulanan' && x.a === 1500000) && !(x.n === 'Makan siang soto' && x.a === 35000) && !(x.n === 'Ongkos ojek online' && x.a === 20000));
+        } else {
+          S.tx = [];
         }
       }
     } catch (err) {
@@ -669,7 +658,7 @@
       const monthName = MON[monthIdx] || '-';
       
       $('#ml').textContent = `${monthName} ${year}`;
-      $('#rm').textContent = `${monthName.slice(0, 3)} ${year}`;
+      $('#rm').textContent = `${monthName} ${year}`;
 
       // Hitung Saldo Keseluruhan Sepanjang Waktu
       const totalMasukAll = sum(S.tx.filter(x => x.t === 'in'));
@@ -1127,6 +1116,8 @@
 
     $('#mp').onclick = () => moveMonth(-1);
     $('#mn').onclick = () => moveMonth(1);
+    $('#rm_prev').onclick = () => moveMonth(-1);
+    $('#rm_next').onclick = () => moveMonth(1);
 
     /* ==========================================================================
        6. BOTTOM SHEET: KELOLA KANTONG DOMPET
