@@ -222,27 +222,17 @@
 
     <!-- 4. REKAP FINANSIAL BULANAN (COMPACT SVG DONUT CHART SAJA - BEBAS DAFTAR PANJANG) -->
     <section class="bg-white rounded-3xl p-4 sm:p-5 shadow-card border border-[#eadfd3]/70 animate-up">
-      <!-- Header Rekap Bulanan dengan Navigasi Bulan -->
+      <!-- Header Rekap Bulanan (Tanpa Navigasi Ganda - Mengikuti Header Global) -->
       <div class="flex items-center justify-between mb-3">
         <div class="flex items-center gap-1.5">
           <span class="text-sm">📊</span>
-          <h2 class="text-[11px] font-extrabold tracking-wider text-[#8a7566] uppercase">
+          <h2 class="text-xs font-extrabold tracking-wider text-[#8a7566] uppercase">
             Rekap Bulanan
           </h2>
         </div>
-        
-        <!-- Navigasi Bulan Rekap (< Bulan Tahun >) -->
-        <nav aria-label="Navigasi Bulan Rekap" class="flex items-center bg-[#f6f0e9] rounded-full p-0.5 border border-[#eadfd3] shadow-xs">
-          <button id="rm_prev" title="Bulan Sebelumnya" class="w-6 h-6 rounded-full flex items-center justify-center text-xs hover:bg-[#eadfd3] text-[#3b2417] font-bold transition-all cursor-pointer">
-            ‹
-          </button>
-          <span id="rm" class="text-[10.5px] font-extrabold text-[#3b2417] px-2 min-w-[84px] text-center truncate select-none">
-            -
-          </span>
-          <button id="rm_next" title="Bulan Berikutnya" class="w-6 h-6 rounded-full flex items-center justify-center text-xs hover:bg-[#eadfd3] text-[#3b2417] font-bold transition-all cursor-pointer">
-            ›
-          </button>
-        </nav>
+        <span class="text-[10px] font-bold text-[#8a7566] bg-[#f6f0e9] px-2.5 py-1 rounded-full border border-[#eadfd3]/80">
+          Grafik Proporsi
+        </span>
       </div>
 
       <!-- Segmented Tab Switch: Pengeluaran vs Pemasukan -->
@@ -658,7 +648,6 @@
       const monthName = MON[monthIdx] || '-';
       
       $('#ml').textContent = `${monthName} ${year}`;
-      $('#rm').textContent = `${monthName} ${year}`;
 
       // Hitung Saldo Keseluruhan Sepanjang Waktu
       const totalMasukAll = sum(S.tx.filter(x => x.t === 'in'));
@@ -1105,19 +1094,29 @@
       if (e.target.value) goToDay(e.target.value);
     };
 
-    // Navigasi Bulan di Header
+    // Navigasi Bulan Utama Global di Header
     const moveMonth = offset => {
       const [y, m] = V.month.split('-').map(Number);
       const d = new Date(y, m - 1 + offset, 1);
       V.month = `${d.getFullYear()}-${pad(d.getMonth() + 1)}`;
       V.sel = null;
+
+      // Sinkronisasi otomatis ke Riwayat Harian:
+      // Jika tanggal riwayat yang sedang aktif tidak berada di dalam bulan baru ini,
+      // arahkan otomatis ke hari ini (bila bulannya sama) atau tanggal 1 di bulan baru
+      if (!V.day.startsWith(V.month)) {
+        if (todayS.startsWith(V.month)) {
+          V.day = todayS;
+        } else {
+          V.day = `${V.month}-01`;
+        }
+      }
+
       renderAll();
     };
 
     $('#mp').onclick = () => moveMonth(-1);
     $('#mn').onclick = () => moveMonth(1);
-    $('#rm_prev').onclick = () => moveMonth(-1);
-    $('#rm_next').onclick = () => moveMonth(1);
 
     /* ==========================================================================
        6. BOTTOM SHEET: KELOLA KANTONG DOMPET
