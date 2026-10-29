@@ -1,39 +1,15 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>Catatan Keuangan Pribadi - DompetKu</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>DompetKu - Catatan Keuangan Pribadi</title>
   
-  <!-- ==========================================================================
-       PWA (PROGRESSIVE WEB APP) & MOBILE-WEB-APP CONFIGURATION (FULL-SCREEN STANDALONE)
-       ========================================================================== -->
-  <!-- Web App Capabilities for Android Chrome & Modern Browsers -->
-  <meta name="mobile-web-app-capable" content="yes">
-  <meta name="application-name" content="DompetKu">
-  <meta name="theme-color" content="#EDE6DE">
-
-  <!-- iOS Safari Full-Screen (Standalone) & Status Bar Appearance -->
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="default">
-  <meta name="apple-mobile-web-app-title" content="DompetKu">
-
-  <!-- Windows & Browser UI Theme Colors -->
-  <meta name="msapplication-TileColor" content="#EDE6DE">
-  <meta name="msapplication-navbutton-color" content="#EDE6DE">
-
-  <!-- Favicon & Touch Icon (Bertema Dompet & Uang - Espresso & Soft Almond) -->
-  <link rel="icon" type="image/svg+xml" id="appFavicon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='128' fill='%233D271D'/%3E%3Cpath d='M100 170c0-22 18-40 40-40h232c22 0 40 18 40 40v30H100v-30z' fill='%23C49B71'/%3E%3Crect x='80' y='180' width='352' height='220' rx='36' fill='%23FAF6F0' stroke='%23C49B71' stroke-width='8'/%3E%3Cpath d='M80 230h352v150c0 20-16 36-36 36H116c-20 0-36-16-36-36V230z' fill='%23EDE6DE'/%3E%3Cpath d='M300 240h132v80H300c-22 0-40-18-40-40s18-40 40-40z' fill='%233D271D'/%3E%3Ccircle cx='340' cy='280' r='18' fill='%23C49B71'/%3E%3Ccircle cx='340' cy='280' r='10' fill='%23FAF6F0'/%3E%3C/svg%3E">
-  <link rel="apple-touch-icon" id="appleTouchIcon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='128' fill='%233D271D'/%3E%3Cpath d='M100 170c0-22 18-40 40-40h232c22 0 40 18 40 40v30H100v-30z' fill='%23C49B71'/%3E%3Crect x='80' y='180' width='352' height='220' rx='36' fill='%23FAF6F0' stroke='%23C49B71' stroke-width='8'/%3E%3Cpath d='M80 230h352v150c0 20-16 36-36 36H116c-20 0-36-16-36-36V230z' fill='%23EDE6DE'/%3E%3Cpath d='M300 240h132v80H300c-22 0-40-18-40-40s18-40 40-40z' fill='%233D271D'/%3E%3Ccircle cx='340' cy='280' r='18' fill='%23C49B71'/%3E%3Ccircle cx='340' cy='280' r='10' fill='%23FAF6F0'/%3E%3C/svg%3E">
-
-  <!-- Inline Web App Manifest (Data URI: Standalone Full-Screen Mode) -->
-  <link rel="manifest" href="data:application/manifest+json;utf8,%7B%22name%22%3A%22DompetKu%20-%20Catatan%20Keuangan%22%2C%22short_name%22%3A%22DompetKu%22%2C%22description%22%3A%22Aplikasi%20Pencatat%20Keuangan%20Pribadi%20Instan%22%2C%22start_url%22%3A%22.%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%23EDE6DE%22%2C%22theme_color%22%3A%22%23EDE6DE%22%2C%22orientation%22%3A%22portrait%22%2C%22icons%22%3A%5B%7B%22src%22%3A%22data%3Aimage%2Fsvg%2Bxml%2C%253Csvg%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20viewBox%3D'0%200%20512%20512'%253E%253Crect%20width%3D'512'%20height%3D'512'%20rx%3D'128'%20fill%3D'%25233D271D'%2F%253E%253Cpath%20d%3D'M100%20170c0-22%2018-40%2040-40h232c22%200%2040%2018%2040%2040v30H100v-30z'%20fill%3D'%2523C49B71'%2F%253E%253Crect%20x%3D'80'%20y%3D'180'%20width%3D'352'%20height%3D'220'%20rx%3D'36'%20fill%3D'%2523FAF6F0'%20stroke%3D'%2523C49B71'%20stroke-width%3D'8'%2F%253E%253Cpath%20d%3D'M80%20230h352v150c0%2020-16%2036-36%2036H116c-20%200-36-16-36-36V230z'%20fill%3D'%2523EDE6DE'%2F%253E%253Cpath%20d%3D'M300%20240h132v80H300c-22%200-40-18-40-40s18-40%2040-40z'%20fill%3D'%25233D271D'%2F%253E%253Ccircle%20cx%3D'340'%20cy%3D'280'%20r%3D'18'%20fill%3D'%2523C49B71'%2F%253E%253Ccircle%20cx%3D'340'%20cy%3D'280'%20r%3D'10'%20fill%3D'%2523FAF6F0'%2F%253E%253C%2Fsvg%253E%22%2C%22sizes%22%3A%22512x512%22%2C%22type%22%3A%22image%2Fsvg%2Bxml%22%2C%22purpose%22%3A%22any%20maskable%22%7D%5D%7D">
-  
-  <!-- Google Fonts: Plus Jakarta Sans -->
+  <!-- Font Plus Jakarta Sans -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-
+  
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
@@ -41,7 +17,26 @@
       theme: {
         extend: {
           fontFamily: {
-            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+            sans: ['"Plus Jakarta Sans"', 'system-ui', '-apple-system', 'sans-serif'],
+          },
+          colors: {
+            earth: {
+              bg: '#efe7de',
+              card: '#ffffff',
+              soft: '#f6f0e9',
+              ink: '#2b1d14',
+              mute: '#8a7566',
+              line: '#eadfd3',
+              brand: '#3b2417',
+              brand2: '#6b4429',
+              inc: '#0f8a5f',
+              exp: '#d6455a',
+            }
+          },
+          boxShadow: {
+            fintech: '0 10px 30px -12px rgba(59, 36, 23, 0.16)',
+            hero: '0 20px 40px -18px rgba(43, 24, 14, 0.65)',
+            sheet: '0 -15px 40px rgba(43, 24, 14, 0.25)',
           }
         }
       }
@@ -49,2155 +44,1217 @@
   </script>
 
   <style>
-    /* Custom scrollbar & mobile tap highlight styling */
+    :root {
+      --bg: #efe7de;
+      --card: #ffffff;
+      --soft: #f6f0e9;
+      --ink: #2b1d14;
+      --mute: #8a7566;
+      --line: #eadfd3;
+      --brand: #3b2417;
+      --brand2: #6b4429;
+      --inc: #0f8a5f;
+      --exp: #d6455a;
+      --sh: 0 10px 30px -12px rgba(59,36,23,.18);
+      color-scheme: light;
+      padding-top: env(safe-area-inset-top, 0px);
+      padding-bottom: env(safe-area-inset-bottom, 0px);
+    }
     * {
+      box-sizing: border-box;
       -webkit-tap-highlight-color: transparent;
-      user-select: none;
+      margin: 0;
     }
-    input, textarea {
-      user-select: text;
+    body {
+      background-color: var(--bg);
+      color: var(--ink);
+      font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
     }
-    /* Hide scrollbar for clean UI */
-    .no-scrollbar::-webkit-scrollbar {
-      display: none;
-    }
-    .no-scrollbar {
-      -ms-overflow-style: none;
-      scrollbar-width: none;
-    }
-    /* Smooth transitions */
-    .transition-theme {
+    button {
+      font: inherit;
+      color: inherit;
+      border: 0;
+      background: none;
+      cursor: pointer;
       transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
     }
-    /* Pulse badge animation */
-    @keyframes subtle-pulse {
-      0%, 100% { opacity: 1; transform: scale(1); }
-      50% { opacity: 0.85; transform: scale(0.98); }
+    button:active {
+      transform: scale(0.96);
     }
-    .animate-subtle {
-      animation: subtle-pulse 3s infinite ease-in-out;
+    @keyframes up {
+      from { opacity: 0; transform: translateY(14px); }
+      to { opacity: 1; transform: translateY(0); }
     }
-
-    /* Custom elegant espresso scrollbar for history container */
-    .custom-history-scroll::-webkit-scrollbar {
+    @keyframes pop {
+      from { opacity: 0; transform: scale(0.92); }
+      to { opacity: 1; transform: scale(1); }
+    }
+    @keyframes sk {
+      20% { transform: translateX(-6px); }
+      40% { transform: translateX(6px); }
+      60% { transform: translateX(-4px); }
+      80% { transform: translateX(4px); }
+      100% { transform: translateX(0); }
+    }
+    .animate-up {
+      animation: up 0.45s cubic-bezier(0.16, 1, 0.3, 1) both;
+    }
+    .animate-pop {
+      animation: pop 0.35s cubic-bezier(0.16, 1, 0.3, 1) both;
+    }
+    .shake {
+      animation: sk 0.4s ease-in-out;
+    }
+    /* Custom thin scrollbar */
+    .custom-scroll::-webkit-scrollbar {
       width: 4px;
     }
-    .custom-history-scroll::-webkit-scrollbar-track {
-      background: #EDE6DE;
-      border-radius: 9999px;
+    .custom-scroll::-webkit-scrollbar-thumb {
+      background: #eadfd3;
+      border-radius: 99px;
     }
-    .custom-history-scroll::-webkit-scrollbar-thumb {
-      background: #8D7466;
-      border-radius: 9999px;
-    }
-    .custom-history-scroll::-webkit-scrollbar-thumb:hover {
-      background: #5C453A;
-    }
-
-    /* Full-Screen Standalone Mobile Safe-Area Support */
-    @supports (padding-top: env(safe-area-inset-top)) {
-      header {
-        padding-top: calc(1rem + env(safe-area-inset-top, 0px));
-      }
-      .safe-bottom-padding {
-        padding-bottom: calc(2.5rem + env(safe-area-inset-bottom, 0px));
-      }
+    @media (prefers-reduced-motion: reduce) {
+      * { animation: none !important; transition: none !important; }
     }
   </style>
 </head>
-<body class="bg-[#EDE6DE] text-[#2D1E18] antialiased min-h-screen py-0 sm:py-6 flex justify-center items-start selection:bg-[#3D271D] selection:text-[#FAF7F2]">
+<body class="bg-[#efe7de] text-[#2b1d14] antialiased">
 
-  <!-- Main Mobile Container (Espresso & Soft Almond Aesthetic: Clean White Card) -->
-  <main class="w-full max-w-md min-h-screen sm:min-h-[920px] bg-white sm:rounded-3xl shadow-xl shadow-[#2D1E18]/8 relative flex flex-col overflow-hidden border border-[#E2D8CD]">
-
-    <!-- Top Status Bar & App Header -->
-    <header class="bg-white/95 backdrop-blur-md border-b border-[#EAE2D8] px-5 pt-4 pb-3 sticky top-0 z-30 shadow-xs">
-      <div class="flex items-center justify-between mb-3">
-        <div class="flex items-center gap-2.5">
-          <div class="w-9 h-9 rounded-xl bg-[#3D271D] flex items-center justify-center text-[#EDE6DE] shadow-md shadow-[#3D271D]/15 font-bold">
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-[#FAF7F2]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M21 12V7H5a2 2 0 0 1 0-4h14v4"/>
-              <path d="M3 5v14a2 2 0 0 0 2 2h16v-5"/>
-              <path d="M18 12a2 2 0 0 0 0 4h4v-4Z"/>
-            </svg>
-          </div>
-          <div>
-            <h1 class="text-base font-extrabold tracking-tight text-[#2D1E18] leading-none">DompetKu</h1>
-          </div>
-        </div>
-
-        <!-- Bulan & Tahun Filter Switcher -->
-        <div class="flex items-center bg-[#F7F3EE] rounded-xl p-1 border border-[#E5DDD2]">
-          <button id="btnPrevMonth" title="Bulan Sebelumnya" class="p-1.5 rounded-lg text-[#5C453A] hover:text-[#2D1E18] hover:bg-[#EDE5DC] active:scale-95 transition-all">
-            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
-          </button>
-          
-          <div class="relative px-1">
-            <input type="month" id="filterMonth" class="opacity-0 absolute inset-0 w-full h-full cursor-pointer z-10" />
-            <span id="labelMonth" class="text-xs font-bold text-[#2D1E18] whitespace-nowrap cursor-pointer hover:text-[#3D271D] flex items-center gap-1">
-              <span>Memuat...</span>
-              <svg class="w-3 h-3 text-[#3D271D]" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
-            </span>
-          </div>
-
-          <button id="btnNextMonth" title="Bulan Berikutnya" class="p-1.5 rounded-lg text-[#5C453A] hover:text-[#2D1E18] hover:bg-[#EDE5DC] active:scale-95 transition-all">
-            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
-          </button>
-        </div>
+  <!-- Container Utama Mobile-First -->
+  <main class="w-full max-w-[440px] px-3.5 py-4 pb-16 flex flex-col gap-3.5 mx-auto">
+    
+    <!-- 1. TOP HEADER & MONTH NAVIGATOR -->
+    <header class="flex justify-between items-center py-1 px-1">
+      <div class="flex items-center gap-2.5 font-extrabold text-lg text-[#2b1d14] tracking-tight">
+        <span class="w-9 h-9 rounded-xl bg-[#3b2417] text-white flex items-center justify-center text-lg shadow-sm">
+          👛
+        </span>
+        <span>DompetKu</span>
       </div>
 
-      <!-- Quick stats button (Jump to current month if viewing past) -->
-      <div id="bannerNotCurrentMonth" class="hidden pb-1 text-center">
-        <button id="btnResetToCurrentMonth" class="text-[11px] font-semibold text-[#3D271D] bg-[#F3ECE4] hover:bg-[#EBE2D7] px-2.5 py-0.5 rounded-full inline-flex items-center gap-1 border border-[#D8CABE] transition-all cursor-pointer">
-          <span>📅 Sedang melihat arsip • Kembali ke Bulan Ini</span>
+      <!-- Month Navigator Pill -->
+      <nav aria-label="Navigasi Bulan" class="flex items-center bg-white rounded-full p-1 shadow-fintech border border-[#eadfd3]/80 font-bold text-xs">
+        <button id="mp" title="Bulan Sebelumnya" class="w-8 h-8 rounded-full flex items-center justify-center text-base hover:bg-[#f6f0e9] text-[#3b2417]">
+          ‹
         </button>
-      </div>
+        <span id="ml" class="min-w-[102px] text-center px-1 font-extrabold text-[#2b1d14]">
+          -
+        </span>
+        <button id="mn" title="Bulan Berikutnya" class="w-8 h-8 rounded-full flex items-center justify-center text-base hover:bg-[#f6f0e9] text-[#3b2417]">
+          ›
+        </button>
+      </nav>
     </header>
 
-    <!-- Scrollable Body Content -->
-    <div class="flex-1 overflow-y-auto px-4 pt-3 pb-8 space-y-4 no-scrollbar safe-bottom-padding">
+    <!-- 2. KARTU SALDO UTAMA (HERO LUXURY FINTECH CARD) -->
+    <section class="bg-gradient-to-br from-[#4a2c1b] via-[#2b180e] to-[#6b4429] text-white rounded-3xl p-5 sm:p-6 relative overflow-hidden shadow-hero animate-up select-none">
+      <!-- Glow ambient background -->
+      <div class="absolute -right-12 -top-14 w-48 h-48 rounded-full bg-white/10 blur-2xl pointer-events-none"></div>
+      
+      <div class="flex items-center justify-between relative z-10">
+        <span class="text-[11px] font-bold tracking-widest text-[#eadfd3] uppercase">
+          Total Saldo Saat Ini
+        </span>
+        <span class="text-[10px] font-bold bg-white/15 backdrop-blur-md px-2.5 py-1 rounded-full text-white/90 border border-white/10">
+          Akumulasi Real-Time
+        </span>
+      </div>
 
-      <!-- SECTION 2: RINGKASAN SALDO & KANTONG -->
-      <section class="space-y-2.5">
-        <!-- Card Utama: Total Saldo (Espresso VIP Card) -->
-        <div class="relative overflow-hidden bg-gradient-to-br from-[#2E1C14] via-[#382218] to-[#25150E] text-[#FAF6F0] rounded-2xl p-4 shadow-lg shadow-[#2E1C14]/15 border border-[#4A3023]">
-          <!-- Background decoration -->
-          <div class="absolute -right-6 -bottom-8 w-32 h-32 bg-[#CBBBA8]/10 rounded-full blur-2xl pointer-events-none"></div>
-          <div class="absolute top-2 right-4 opacity-10 text-[#E8DCCF] pointer-events-none">
-            <svg class="w-20 h-20" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm.31-8.86c-1.77-.45-2.34-.94-2.34-1.67 0-.84.79-1.43 2.1-1.43 1.38 0 1.9.66 1.94 1.64h1.71c-.05-1.34-.87-2.57-2.49-2.97V5H10.9v1.69c-1.51.32-2.72 1.3-2.72 2.81 0 1.79 1.49 2.69 3.66 3.21 1.95.46 2.34 1.15 2.34 1.87 0 .53-.39 1.39-2.1 1.39-1.6 0-2.23-.72-2.32-1.64H8.04c.1 1.7 1.36 2.66 2.86 2.97V19h2.34v-1.67c1.52-.29 2.72-1.16 2.73-2.77-.01-2.2-1.9-2.96-3.66-3.42z"/></svg>
-          </div>
+      <div class="text-3xl sm:text-4xl font-black tracking-tight text-white my-3.5 relative z-10" id="bal">
+        Rp 0
+      </div>
 
-          <div class="relative z-10">
-            <div class="flex items-center justify-between mb-1">
-              <span class="text-xs font-semibold text-[#D1C2B4] uppercase tracking-wider">Total Saldo Saat Ini</span>
-              <span class="text-[10px] bg-[#4A3023] px-2 py-0.5 rounded-full text-[#E8DCCF] border border-[#5F3E2F] font-semibold">Akumulasi Real-Time</span>
-            </div>
-            <div id="totalSaldoDisplay" class="text-2xl sm:text-3xl font-extrabold tracking-tight text-white mb-3">
-              Rp 0
-            </div>
-
-            <!-- 2 Kolom Pemasukan & Pengeluaran Bulan Ini -->
-            <div class="grid grid-cols-2 gap-2 pt-2.5 border-t border-[#4A3023]">
-              <div class="bg-[#24150E]/80 rounded-xl p-2.5 backdrop-blur-xs border border-[#166534]/40">
-                <div class="flex items-center gap-1.5 text-[11px] font-semibold text-emerald-300 mb-0.5">
-                  <div class="w-4 h-4 rounded-full bg-emerald-500/20 flex items-center justify-center text-emerald-300">
-                    <svg class="w-2.5 h-2.5" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 14l-7-7-7 7"/></svg>
-                  </div>
-                  <span>Pemasukan</span>
-                </div>
-                <div id="monthlyIncomeDisplay" class="text-sm font-bold text-emerald-300 truncate">
-                  +Rp 0
-                </div>
-                <div class="text-[9px] text-[#A8988C] font-medium mt-0.5">Bulan terpilih</div>
-              </div>
-
-              <div class="bg-[#24150E]/80 rounded-xl p-2.5 backdrop-blur-xs border border-[#991b1b]/40">
-                <div class="flex items-center gap-1.5 text-[11px] font-semibold text-rose-300 mb-0.5">
-                  <div class="w-4 h-4 rounded-full bg-rose-500/20 flex items-center justify-center text-rose-300">
-                    <svg class="w-2.5 h-2.5" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 10l-7 7-7-7"/></svg>
-                  </div>
-                  <span>Pengeluaran</span>
-                </div>
-                <div id="monthlyExpenseDisplay" class="text-sm font-bold text-rose-300 truncate">
-                  -Rp 0
-                </div>
-                <div class="text-[9px] text-[#A8988C] font-medium mt-0.5">Bulan terpilih</div>
-              </div>
-            </div>
-          </div>
+      <!-- Grid Pemasukan & Pengeluaran Bulan Berjalan -->
+      <div class="grid grid-cols-2 gap-2.5 relative z-10 pt-1">
+        <!-- Mini Pemasukan -->
+        <div class="bg-white/10 backdrop-blur-md border border-white/15 rounded-2xl p-3 flex flex-col">
+          <span class="text-[10px] font-extrabold text-[#6df0b4] flex items-center gap-1">
+            ↗ Pemasukan
+          </span>
+          <b class="text-sm sm:text-base font-extrabold text-[#6df0b4] truncate mt-1" id="hin">
+            +Rp 0
+          </b>
+          <span class="text-[9px] text-white/60 font-medium mt-0.5">Bulan terpilih</span>
         </div>
 
-        <!-- KARTU REKAP KEUANGAN BULANAN (INTERACTIVE SVG DONUT & ANALYTICS) -->
-        <div id="monthlyAnalyticsCard" class="bg-[#FAF7F2] rounded-2xl p-3.5 border border-[#EAE2D8] shadow-xs space-y-3">
-          <!-- Header Card Rekap -->
-          <div class="flex items-center justify-between">
-            <div class="flex items-center gap-1.5 min-w-0">
-              <span class="text-sm">🍩</span>
-              <span class="text-[11px] font-bold text-[#3D271D] uppercase tracking-wider truncate">Rekap Finansial Bulanan</span>
-              <span id="analyticsMonthBadge" class="text-[9px] font-bold px-1.5 py-0.5 rounded-md bg-[#EFE8DF] text-[#6F4E37] border border-[#D8CABE] shrink-0">
-                -
-              </span>
-            </div>
-            <!-- Tombol Toggle Collapse/Expand -->
-            <button 
-              type="button" 
-              onclick="toggleAnalyticsCollapse()" 
-              id="btnToggleAnalyticsCollapse"
-              title="Ciutkan / Buka Rekap"
-              class="text-[10px] font-bold text-[#6F4E37] hover:text-[#3D271D] bg-[#EFE8DF] hover:bg-[#E5DCD0] px-2 py-0.5 rounded-lg border border-[#D8CABE] transition cursor-pointer flex items-center gap-1 shrink-0">
-              <span id="labelAnalyticsCollapse">Ciutkan</span>
-              <svg id="iconAnalyticsCollapse" class="w-3 h-3 transform transition-transform" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
-            </button>
-          </div>
-
-          <!-- Content Wrapper (Collapsible) -->
-          <div id="analyticsContentWrapper" class="space-y-3 transition-all duration-300">
-            <!-- 1. PEMISAHAN TAB REKAP (PENGELUARAN VS PEMASUKAN) -->
-            <div class="grid grid-cols-2 p-1 bg-[#EFE8DF] rounded-xl border border-[#D8CABE] gap-1 select-none">
-              <button 
-                type="button" 
-                id="btnAnalyticsTabExpense"
-                onclick="setAnalyticsTab('expense')"
-                class="py-1.5 px-3 text-xs font-bold rounded-lg transition-all duration-200 text-center flex items-center justify-center gap-1.5 bg-[#3D271D] text-[#FAF7F2] shadow-xs cursor-pointer">
-                <span>💸</span>
-                <span>Pengeluaran</span>
-              </button>
-              <button 
-                type="button" 
-                id="btnAnalyticsTabIncome"
-                onclick="setAnalyticsTab('income')"
-                class="py-1.5 px-3 text-xs font-semibold rounded-lg transition-all duration-200 text-center flex items-center justify-center gap-1.5 text-[#7A6458] hover:text-[#2D1E18] cursor-pointer">
-                <span>💰</span>
-                <span>Pemasukan</span>
-              </button>
-            </div>
-
-            <!-- 2. GRAFIK DONAT SVG MULTI-SEGMENT INTERAKTIF -->
-            <div class="bg-white rounded-2xl p-4 border border-[#EAE2D8] shadow-2xs flex flex-col items-center justify-center">
-              
-              <!-- Container Donut SVG & Center Hole Overlay -->
-              <div class="relative w-36 h-36 sm:w-40 sm:h-40 flex items-center justify-center my-1 select-none">
-                <!-- SVG Donut Chart -->
-                <svg id="analyticsDonutSvg" class="w-full h-full -rotate-90 transform" viewBox="0 0 120 120">
-                  <!-- Background Track Circle -->
-                  <circle cx="60" cy="60" r="45" fill="none" stroke="#EAE2D8" stroke-width="12" />
-                  <!-- Dynamic Category Segments -->
-                  <g id="donutSlicesGroup"></g>
-                </svg>
-
-                <!-- Lubang Tengah Lingkaran Donat (Center Hole Interaktif) -->
-                <div class="w-[84px] h-[84px] sm:w-[94px] sm:h-[94px] absolute bg-white rounded-full flex flex-col items-center justify-center shadow-inner text-center px-1.5 pointer-events-none transition-all duration-200">
-                  <span id="donutCenterLabel" class="text-[9px] font-bold text-[#8C7668] uppercase tracking-wider leading-tight truncate max-w-[76px] sm:max-w-[86px]">
-                    Total Keluar
-                  </span>
-                  <span id="donutCenterAmount" class="text-sm sm:text-base font-black text-[#2D1E18] tracking-tight leading-tight my-0.5 truncate max-w-[78px] sm:max-w-[88px]">
-                    Rp 0
-                  </span>
-                  <span id="donutCenterBadge" class="text-[8.5px] sm:text-[9px] font-extrabold text-[#6F4E37] bg-[#EFE8DF] px-1.5 sm:px-2 py-0.5 rounded-full truncate max-w-[78px] sm:max-w-[88px] leading-tight">
-                    Bulan ini
-                  </span>
-                </div>
-              </div>
-
-              <!-- Petunjuk Interaktif Halus -->
-              <p class="text-[9px] text-[#A8988C] font-semibold mt-1 text-center flex items-center gap-1">
-                <span>👆</span> <span>Sentuh kategori atau segmen donat untuk detail</span>
-              </p>
-            </div>
-
-            <!-- 3. Rincian Per Kategori Bergaya Modern Card -->
-            <div class="bg-white rounded-2xl p-3.5 border border-[#EAE2D8] shadow-2xs space-y-2.5">
-              <div class="flex items-center justify-between pb-1 border-b border-[#F0EAE1]">
-                <span class="text-[10px] font-bold text-[#7A6458] uppercase tracking-wider">Rincian per Kategori</span>
-                <span id="analyticsCategoryCountBadge" class="text-[9px] font-bold text-[#8C7668] bg-[#FAF7F2] px-1.5 py-0.5 rounded border border-[#EAE2D8]">
-                  0 Kategori
-                </span>
-              </div>
-
-              <!-- List Kategori Minimalis Modern (Clean Card Rows) -->
-              <div id="analyticsCategoryList" class="space-y-1.5 max-h-[230px] overflow-y-auto pr-0.5 custom-history-scroll">
-                <!-- Diisi secara dinamis oleh JavaScript -->
-              </div>
-            </div>
-          </div>
+        <!-- Mini Pengeluaran -->
+        <div class="bg-white/10 backdrop-blur-md border border-white/15 rounded-2xl p-3 flex flex-col">
+          <span class="text-[10px] font-extrabold text-[#ff9aa8] flex items-center gap-1">
+            ↘ Pengeluaran
+          </span>
+          <b class="text-sm sm:text-base font-extrabold text-[#ff9aa8] truncate mt-1" id="hout">
+            -Rp 0
+          </b>
+          <span class="text-[9px] text-white/60 font-medium mt-0.5">Bulan terpilih</span>
         </div>
+      </div>
+    </section>
 
-        <!-- Rincian Saldo per Kantong / Dompet Dinamis -->
-        <div class="bg-[#FAF7F2] rounded-2xl p-3.5 border border-[#EAE2D8] shadow-xs">
-          <div class="flex items-center justify-between mb-2.5 px-0.5">
-            <span class="text-[11px] font-bold text-[#3D271D] uppercase tracking-wider flex items-center gap-1.5">
-              <span>👛 Sisa Saldo Kantong</span>
-            </span>
-            <!-- Tombol Kelola / Tambah Dompet Dinamis -->
-            <button 
-              type="button" 
-              onclick="openWalletModal()" 
-              class="text-[10px] font-bold text-[#3D271D] hover:text-[#20120B] bg-[#EFE8DF] hover:bg-[#E5DCD0] active:scale-95 px-2.5 py-1 rounded-lg border border-[#D8CABE] transition-all flex items-center gap-1 cursor-pointer">
-              <svg class="w-3 h-3 text-[#3D271D]" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
-              <span>Tambah / Kelola Dompet</span>
-            </button>
-          </div>
-          
-          <!-- Dynamic Grid Cards Dompet -->
-          <div id="walletCardsContainer" class="grid grid-cols-2 gap-2">
-            <!-- Diisi secara dinamis oleh JavaScript -->
-          </div>
+    <!-- 3. REKAP FINANSIAL BULANAN DENGAN SVG DONUT CHART INTERAKTIF -->
+    <section class="bg-white rounded-3xl p-4 sm:p-5 shadow-fintech border border-[#eadfd3]/60 animate-up">
+      <!-- Header Rekap Bulanan -->
+      <div class="flex items-center justify-between mb-3.5">
+        <div class="flex items-center gap-1.5">
+          <span class="text-base">📊</span>
+          <h2 class="text-xs font-extrabold tracking-wider text-[#8a7566] uppercase">
+            Rekap Bulanan
+          </h2>
         </div>
-      </section>
+        <span id="rm" class="text-xs font-bold bg-[#f6f0e9] text-[#3b2417] px-2.5 py-1 rounded-full border border-[#eadfd3]">
+          -
+        </span>
+      </div>
 
-      <!-- SECTION 3: FORM QUICK INPUT -->
-      <section class="bg-[#FAF7F2] rounded-2xl p-4 border border-[#EAE2D8] shadow-xs relative">
-        <div class="flex items-center justify-between mb-3">
-          <div class="flex items-center gap-1.5">
-            <span class="w-2 h-2 rounded-full bg-[#3D271D]"></span>
-            <h2 class="text-xs font-extrabold uppercase tracking-wider text-[#2D1E18]">Catat Transaksi</h2>
-          </div>
-          <span class="text-[10px] font-bold text-[#3D271D] bg-[#EFE8DF] px-2 py-0.5 rounded-full border border-[#D8CABE]">⚡ Instan</span>
+      <!-- Segmented Tab Switch: Pengeluaran vs Pemasukan -->
+      <div id="rtab" class="grid grid-cols-2 bg-[#f6f0e9] p-1 rounded-2xl gap-1 mb-3.5 select-none border border-[#eadfd3]/60">
+        <button data-t="out" class="py-2.5 px-3 rounded-xl font-bold text-xs transition-all flex items-center justify-center gap-1.5 bg-[#3b2417] text-white shadow-sm">
+          <span>💸</span> <span>Pengeluaran</span>
+        </button>
+        <button data-t="in" class="py-2.5 px-3 rounded-xl font-bold text-xs transition-all flex items-center justify-center gap-1.5 text-[#8a7566] hover:text-[#2b1d14]">
+          <span>💰</span> <span>Pemasukan</span>
+        </button>
+      </div>
+
+      <!-- Grafik Donut SVG & Center Hole Interaktif -->
+      <div class="relative w-52 h-52 sm:w-56 sm:h-56 mx-auto my-1 flex items-center justify-center select-none">
+        <svg viewBox="0 0 200 200" id="svg" class="w-full h-full -rotate-90 transform">
+          <!-- Diisi secara dinamis oleh JavaScript -->
+        </svg>
+        
+        <!-- Lubang Tengah Donat Interaktif -->
+        <div id="ctr" class="absolute inset-0 flex flex-col items-center justify-center text-center pointer-events-none px-8">
+          <!-- Diisi secara dinamis oleh JavaScript -->
         </div>
+      </div>
 
-        <form id="expenseForm" class="space-y-3.5" onsubmit="event.preventDefault(); handleAddTransaction();">
-          
-          <!-- (a) TOGGLE SWITCH BESAR: Pengeluaran vs Pemasukan -->
-          <div class="grid grid-cols-2 p-1 bg-[#EFE8DF] rounded-xl border border-[#D8CABE]">
-            <button type="button" id="btnTypeExpense" 
-              class="type-toggle-btn py-2 text-xs font-bold rounded-lg transition-all flex items-center justify-center gap-1.5 bg-[#3D271D] text-[#FAF7F2] shadow-xs border border-[#2D1E18] cursor-pointer">
-              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 14l-7-7-7 7"/></svg>
-              <span>Pengeluaran</span>
-            </button>
-            <button type="button" id="btnTypeIncome" 
-              class="type-toggle-btn py-2 text-xs font-bold rounded-lg transition-all flex items-center justify-center gap-1.5 text-[#7A6458] hover:text-[#2D1E18] cursor-pointer">
-              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 10l7-7 7 7"/></svg>
-              <span>Pemasukan</span>
-            </button>
-          </div>
+      <!-- Petunjuk Interaktif -->
+      <p class="text-[10px] text-[#8a7566] font-semibold text-center mt-1 mb-3 flex items-center justify-center gap-1">
+        <span>👆</span> <span>Sentuh segmen donat atau kategori untuk detail</span>
+      </p>
 
-          <!-- (b) INPUT NOMINAL BESAR & QUICK CHIPS -->
-          <div>
-            <label for="inputNominal" class="block text-[11px] font-bold text-[#7A6458] uppercase tracking-wider mb-1">
-              Nominal (Rp)
-            </label>
-            <div class="relative flex items-center">
-              <span id="nominalPrefix" class="absolute left-3.5 font-extrabold text-lg text-[#3D271D] transition-colors">Rp</span>
-              <input 
-                type="text" 
-                id="inputNominal" 
-                inputmode="numeric" 
-                placeholder="0" 
-                autocomplete="off"
-                required
-                class="w-full pl-12 pr-4 py-2.5 text-2xl font-extrabold tracking-tight text-[#2D1E18] bg-white rounded-xl border-2 border-[#D8CABE] focus:border-[#3D271D] focus:bg-white focus:outline-none transition-all placeholder:text-[#B5A599]"
-              />
-            </div>
+      <!-- Rincian Per Kategori Bergaya Modern Card -->
+      <div id="list" class="space-y-2 max-h-64 overflow-y-auto pr-0.5 custom-scroll">
+        <!-- Diisi secara dinamis oleh JavaScript -->
+      </div>
+    </section>
 
-            <!-- Quick Add Chips -->
-            <div class="flex items-center gap-1.5 mt-2 overflow-x-auto no-scrollbar py-0.5">
-              <span class="text-[10px] text-[#8A766B] font-bold uppercase shrink-0">Cepat:</span>
-              <button type="button" onclick="quickAddAmount(10000)" class="px-2 py-1 bg-white hover:bg-[#EFE8DF] hover:text-[#2D1E18] hover:border-[#3D271D]/40 active:scale-95 text-[#5C453A] text-[11px] font-bold rounded-lg border border-[#D8CABE] transition cursor-pointer">+10rb</button>
-              <button type="button" onclick="quickAddAmount(20000)" class="px-2 py-1 bg-white hover:bg-[#EFE8DF] hover:text-[#2D1E18] hover:border-[#3D271D]/40 active:scale-95 text-[#5C453A] text-[11px] font-bold rounded-lg border border-[#D8CABE] transition cursor-pointer">+20rb</button>
-              <button type="button" onclick="quickAddAmount(50000)" class="px-2 py-1 bg-white hover:bg-[#EFE8DF] hover:text-[#2D1E18] hover:border-[#3D271D]/40 active:scale-95 text-[#5C453A] text-[11px] font-bold rounded-lg border border-[#D8CABE] transition cursor-pointer">+50rb</button>
-              <button type="button" onclick="quickAddAmount(100000)" class="px-2 py-1 bg-white hover:bg-[#EFE8DF] hover:text-[#2D1E18] hover:border-[#3D271D]/40 active:scale-95 text-[#5C453A] text-[11px] font-bold rounded-lg border border-[#D8CABE] transition cursor-pointer">+100rb</button>
-              <button type="button" onclick="clearAmount()" class="px-2 py-1 bg-white hover:bg-rose-50 hover:text-rose-600 hover:border-rose-200 active:scale-95 text-[#8A766B] text-[11px] font-bold rounded-lg border border-[#D8CABE] transition cursor-pointer">Reset</button>
-            </div>
-          </div>
-
-          <!-- (c) PILIHAN KANTONG / DOMPET DINAMIS (TOMBOL PILL) -->
-          <div>
-            <div class="flex items-center justify-between mb-1.5">
-              <label class="block text-[11px] font-bold text-[#7A6458] uppercase tracking-wider">
-                Simpan / Ambil Dari Dompet:
-              </label>
-              <span id="activeWalletLabel" class="text-[10px] font-bold text-[#3D271D] truncate max-w-[140px]">
-                <!-- Terpilih -->
-              </span>
-            </div>
-            <!-- Dinamis Rendered Wallet Buttons -->
-            <div class="flex flex-wrap gap-2" id="walletPillGroup">
-              <!-- Rendered via JS -->
-            </div>
-          </div>
-
-          <!-- (d) PILIHAN KATEGORI (GRID EMOJI + TEKS DINAMIS) -->
-          <div>
-            <div class="flex items-center justify-between mb-1.5">
-              <label class="block text-[11px] font-bold text-[#7A6458] uppercase tracking-wider">
-                Pilih Kategori:
-              </label>
-              <span id="selectedCategoryLabel" class="text-[11px] font-bold text-[#3D271D] truncate max-w-[150px]">
-                🍔 Makan
-              </span>
-            </div>
-            
-            <!-- Category Grid Container (Populated via JS) -->
-            <div id="categoryGrid" class="grid grid-cols-3 gap-2">
-              <!-- Dynamically rendered -->
-            </div>
-          </div>
-
-          <!-- (e) TANGGAL & CATATAN SINGKAT (SEJAJAR 1 BARIS) -->
-          <div class="grid grid-cols-2 gap-2">
-            <div>
-              <label for="inputDate" class="block text-[10px] font-bold text-[#7A6458] uppercase tracking-wider mb-1">
-                Tanggal
-              </label>
-              <input 
-                type="date" 
-                id="inputDate" 
-                required
-                class="w-full px-2.5 py-2 text-xs font-semibold text-[#2D1E18] bg-white rounded-xl border border-[#D8CABE] focus:border-[#3D271D] focus:outline-none transition cursor-pointer"
-              />
-            </div>
-            <div>
-              <label for="inputNote" class="block text-[10px] font-bold text-[#7A6458] uppercase tracking-wider mb-1">
-                Catatan (Opsional)
-              </label>
-              <input 
-                type="text" 
-                id="inputNote" 
-                placeholder="cth: Sarapan soto" 
-                maxlength="50"
-                class="w-full px-2.5 py-2 text-xs font-medium text-[#2D1E18] bg-white rounded-xl border border-[#D8CABE] focus:border-[#3D271D] focus:outline-none transition placeholder:text-[#B5A599]"
-              />
-            </div>
-          </div>
-
-          <!-- (f) TOMBOL SIMPAN TRANSAKSI LEBAR & JELAS -->
-          <button 
-            type="submit" 
-            id="btnSubmitTransaction" 
-            class="w-full py-3.5 px-4 rounded-xl font-extrabold text-sm text-[#FAF7F2] bg-[#3D271D] hover:bg-[#2A1A13] active:scale-[0.98] shadow-lg shadow-[#3D271D]/20 border border-[#2D1E18] transition-all flex items-center justify-center gap-2 cursor-pointer tracking-wide">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
-            <span>Simpan Pengeluaran</span>
-          </button>
-        </form>
-      </section>
-
-      <!-- SECTION 4: RIWAYAT TRANSAKSI (HARIAN) -->
-      <section class="bg-[#FAF7F2] rounded-2xl p-4 border border-[#EAE2D8] shadow-xs space-y-2.5">
-        <!-- Header & Navigasi Tanggal Harian -->
-        <div class="space-y-2 pb-2 border-b border-[#EAE2D8]">
-          <div class="flex items-center justify-between">
-            <div class="flex items-center gap-1.5">
-              <span class="text-sm">📅</span>
-              <h2 class="text-xs font-extrabold uppercase tracking-wider text-[#2D1E18]">Riwayat Harian</h2>
-            </div>
-            
-            <div class="flex items-center gap-1.5">
-              <!-- Tombol Cepat 'Hari Ini' jika sedang melihat tanggal selain hari ini -->
-              <button 
-                type="button" 
-                id="btnResetHistoryToday" 
-                onclick="resetHistoryToToday()" 
-                class="hidden text-[10px] font-bold text-[#3D271D] bg-[#EFE8DF] hover:bg-[#E5DCD0] active:scale-95 px-2 py-0.5 rounded-lg border border-[#D8CABE] transition cursor-pointer">
-                Hari Ini
-              </button>
-              
-              <span id="transactionCountBadge" class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-white text-[#5C453A] border border-[#D8CABE]">
-                0 Transaksi
-              </span>
-            </div>
-          </div>
-
-          <!-- Bar Navigasi Tanggal Harian (Ramah Jempol) -->
-          <div class="flex items-center justify-between bg-[#EFE8DF] rounded-xl p-1 border border-[#D8CABE]">
-            <button 
-              type="button" 
-              onclick="changeHistoryDay(-1)" 
-              title="Hari Sebelumnya" 
-              class="w-8 h-8 rounded-lg text-[#5C453A] hover:text-[#2D1E18] hover:bg-white active:scale-90 flex items-center justify-center transition cursor-pointer shadow-2xs">
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
-            </button>
-            
-            <div class="relative flex-1 text-center px-1">
-              <input type="date" id="inputHistoryDatePicker" class="opacity-0 absolute inset-0 w-full h-full cursor-pointer z-10" onchange="handleHistoryDatePicked(this.value)" />
-              <button type="button" class="inline-flex items-center justify-center gap-1.5 py-1 px-2 rounded-lg hover:bg-white text-[#2D1E18] font-extrabold text-xs transition">
-                <span id="labelHistoryDate">Memuat tanggal...</span>
-                <svg class="w-3 h-3 text-[#3D271D]" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
-              </button>
-            </div>
-
-            <button 
-              type="button" 
-              onclick="changeHistoryDay(1)" 
-              title="Hari Berikutnya" 
-              class="w-8 h-8 rounded-lg text-[#5C453A] hover:text-[#2D1E18] hover:bg-white active:scale-90 flex items-center justify-center transition cursor-pointer shadow-2xs">
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
-            </button>
-          </div>
-
-          <!-- Ringkasan Kecil Harian (Daily Summary) -->
-          <div class="flex items-center justify-between px-2.5 text-[11px] font-semibold bg-white rounded-lg py-1.5 border border-[#E5DDD2] text-[#5C453A]">
-            <span class="flex items-center gap-1 text-[#2D1E18]">
-              <span class="w-1.5 h-1.5 rounded-full bg-[#2D1E18]"></span>
-              <span>Keluar:</span>
-              <strong id="dailyExpenseSummary" class="font-bold text-[#2D1E18]">-Rp 0</strong>
-            </span>
-            <span class="text-[#D8CABE]">•</span>
-            <span class="flex items-center gap-1 text-[#2D1E18]">
-              <span class="w-1.5 h-1.5 rounded-full bg-emerald-600"></span>
-              <span>Masuk:</span>
-              <strong id="dailyIncomeSummary" class="font-bold text-emerald-700">+Rp 0</strong>
-            </span>
-          </div>
+    <!-- 4. SISA SALDO KANTONG / DOMPET DINAMIS -->
+    <section class="bg-white rounded-3xl p-4 sm:p-5 shadow-fintech border border-[#eadfd3]/60 animate-up">
+      <div class="flex items-center justify-between mb-3.5">
+        <div class="flex items-center gap-1.5">
+          <span class="text-base">👝</span>
+          <h2 class="text-xs font-extrabold tracking-wider text-[#8a7566] uppercase">
+            Sisa Saldo Kantong
+          </h2>
         </div>
+        <button id="wm" class="text-xs font-bold bg-[#f6f0e9] hover:bg-[#eadfd3] text-[#3b2417] px-3 py-1.5 rounded-full border border-[#eadfd3] transition-all flex items-center gap-1">
+          <span>＋</span> <span>Kelola</span>
+        </button>
+      </div>
 
-        <!-- Tab Filter Mini: Semua, Pengeluaran, Pemasukan -->
-        <div class="grid grid-cols-3 gap-1.5 p-1 bg-[#EFE8DF] rounded-xl border border-[#D8CABE]" id="historyFilterTabs">
-          <button type="button" onclick="setHistoryFilter('all')" id="tabFilterAll" class="history-tab active py-1.5 px-2 text-[11px] font-bold rounded-lg transition-all text-center bg-[#3D271D] text-[#FAF7F2] shadow-xs border border-[#2D1E18] cursor-pointer">
-            Semua
-          </button>
-          <button type="button" onclick="setHistoryFilter('expense')" id="tabFilterExpense" class="history-tab py-1.5 px-2 text-[11px] font-semibold rounded-lg transition-all text-center text-[#7A6458] hover:text-[#2D1E18] cursor-pointer">
-            Pengeluaran
-          </button>
-          <button type="button" onclick="setHistoryFilter('income')" id="tabFilterIncome" class="history-tab py-1.5 px-2 text-[11px] font-semibold rounded-lg transition-all text-center text-[#7A6458] hover:text-[#2D1E18] cursor-pointer">
-            Pemasukan
-          </button>
+      <!-- Grid Kantong Dompet -->
+      <div id="wal" class="grid grid-cols-2 gap-2.5">
+        <!-- Diisi secara dinamis oleh JavaScript -->
+      </div>
+    </section>
+
+    <!-- 5. FORM CATAT CEPAT (5 DETIK) -->
+    <section class="bg-white rounded-3xl p-4 sm:p-5 shadow-fintech border border-[#eadfd3]/60 animate-up space-y-3.5">
+      <div class="flex items-center gap-1.5">
+        <span class="text-base">⚡</span>
+        <h2 class="text-xs font-extrabold tracking-wider text-[#8a7566] uppercase">
+          Catat Cepat
+        </h2>
+      </div>
+
+      <!-- Tab Tipe: Pengeluaran vs Pemasukan -->
+      <div id="ftab" class="grid grid-cols-2 bg-[#f6f0e9] p-1 rounded-2xl gap-1 select-none border border-[#eadfd3]/60">
+        <button data-t="out" class="py-2.5 px-3 rounded-xl font-bold text-xs transition-all flex items-center justify-center gap-1.5 bg-[#3b2417] text-white shadow-sm">
+          <span>↑</span> <span>Pengeluaran</span>
+        </button>
+        <button data-t="in" class="py-2.5 px-3 rounded-xl font-bold text-xs transition-all flex items-center justify-center gap-1.5 text-[#8a7566] hover:text-[#2b1d14]">
+          <span>↓</span> <span>Pemasukan</span>
+        </button>
+      </div>
+
+      <!-- Input Nominal Besar -->
+      <div>
+        <label class="block text-[11px] font-extrabold text-[#8a7566] tracking-wider uppercase mb-1.5">
+          Nominal Transaksi
+        </label>
+        <div id="amtbox" class="flex items-center gap-2 bg-[#f6f0e9] border-2 border-transparent focus-within:border-[#6b4429] focus-within:bg-white rounded-2xl px-4 py-2 transition-all">
+          <span class="font-extrabold text-xl text-[#8a7566]">Rp</span>
+          <input 
+            id="amt" 
+            type="text" 
+            inputmode="numeric" 
+            placeholder="0" 
+            autocomplete="off"
+            class="flex-1 min-w-0 bg-transparent border-0 outline-none font-black text-2xl sm:text-3xl text-[#2b1d14] py-1 placeholder-[#8a7566]/40"
+          >
         </div>
+      </div>
 
-        <!-- Scrollable Container Transaksi (Maksimal ~4-5 transaksi terlihat, scrollable) -->
-        <div class="max-h-[380px] overflow-y-auto pr-1 space-y-1.5 custom-history-scroll" id="transactionScrollContainer">
-          <!-- List Kontainer Transaksi -->
-          <div id="transactionList" class="space-y-1.5">
-            <!-- Transaksi item diinjeksi via JavaScript -->
-          </div>
+      <!-- Tombol Cepat Tambah Nominal -->
+      <div id="qk" class="flex gap-1.5 flex-wrap">
+        <button data-v="10000" class="py-2 px-3 rounded-full bg-[#f6f0e9] hover:bg-[#eadfd3] font-bold text-xs text-[#2b1d14] border border-[#eadfd3]/60">
+          +10rb
+        </button>
+        <button data-v="20000" class="py-2 px-3 rounded-full bg-[#f6f0e9] hover:bg-[#eadfd3] font-bold text-xs text-[#2b1d14] border border-[#eadfd3]/60">
+          +20rb
+        </button>
+        <button data-v="50000" class="py-2 px-3 rounded-full bg-[#f6f0e9] hover:bg-[#eadfd3] font-bold text-xs text-[#2b1d14] border border-[#eadfd3]/60">
+          +50rb
+        </button>
+        <button data-v="100000" class="py-2 px-3 rounded-full bg-[#f6f0e9] hover:bg-[#eadfd3] font-bold text-xs text-[#2b1d14] border border-[#eadfd3]/60">
+          +100rb
+        </button>
+        <button data-v="0" class="py-2 px-3 rounded-full bg-[#f6f0e9] hover:bg-rose-100 font-bold text-xs text-rose-700 border border-[#eadfd3]/60">
+          Reset
+        </button>
+      </div>
 
-          <!-- Empty State jika tidak ada transaksi di tanggal ini -->
-          <div id="emptyState" class="hidden py-8 px-4 text-center">
-            <div class="w-12 h-12 mx-auto mb-2 rounded-full bg-[#EFE8DF] border border-[#D8CABE] flex items-center justify-center text-2xl shadow-inner text-[#3D271D]">
-              ✨
-            </div>
-            <p class="text-xs font-bold text-[#2D1E18]" id="emptyStateTitle">Belum ada catatan di tanggal ini ✨</p>
-            <p class="text-[11px] text-[#7A6458] mt-0.5" id="emptyStateDesc">Gunakan form di atas untuk mencatat transaksi hari ini.</p>
-          </div>
+      <!-- Pilihan Dompet (Pills) -->
+      <div>
+        <label class="block text-[11px] font-extrabold text-[#8a7566] tracking-wider uppercase mb-1.5">
+          Pilih Dompet / Kantong
+        </label>
+        <div id="fw" class="flex gap-2 flex-wrap">
+          <!-- Diisi secara dinamis oleh JavaScript -->
         </div>
-      </section>
+      </div>
 
-    </div>
+      <!-- Pilihan Kategori (Grid 3 Kolom) -->
+      <div>
+        <label class="block text-[11px] font-extrabold text-[#8a7566] tracking-wider uppercase mb-1.5">
+          Pilih Kategori
+        </label>
+        <div id="fc" class="grid grid-cols-3 gap-2">
+          <!-- Diisi secara dinamis oleh JavaScript -->
+        </div>
+      </div>
+
+      <!-- Tanggal & Catatan Opsional -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+        <div>
+          <label class="block text-[11px] font-extrabold text-[#8a7566] tracking-wider uppercase mb-1.5">
+            Tanggal
+          </label>
+          <input 
+            type="date" 
+            id="fd" 
+            class="w-full bg-[#f6f0e9] border-2 border-transparent focus:border-[#6b4429] focus:bg-white rounded-2xl p-3 font-semibold text-xs text-[#2b1d14] outline-none min-h-[46px] transition-all"
+          >
+        </div>
+        <div>
+          <label class="block text-[11px] font-extrabold text-[#8a7566] tracking-wider uppercase mb-1.5">
+            Catatan (Opsional)
+          </label>
+          <input 
+            type="text" 
+            id="fn" 
+            placeholder="cth: Sarapan soto ayam" 
+            class="w-full bg-[#f6f0e9] border-2 border-transparent focus:border-[#6b4429] focus:bg-white rounded-2xl p-3 font-semibold text-xs text-[#2b1d14] outline-none min-h-[46px] transition-all placeholder-[#8a7566]/60"
+          >
+        </div>
+      </div>
+
+      <!-- CTA Tombol Simpan -->
+      <button 
+        id="save" 
+        class="w-full py-3.5 px-4 rounded-2xl bg-[#3b2417] hover:bg-[#2b180e] active:scale-[0.98] text-white font-extrabold text-sm shadow-md transition-all flex items-center justify-center gap-1.5 cursor-pointer mt-2"
+      >
+        ＋ Simpan Pengeluaran
+      </button>
+    </section>
+
+    <!-- 6. RIWAYAT TRANSAKSI HARIAN -->
+    <section class="bg-white rounded-3xl p-4 sm:p-5 shadow-fintech border border-[#eadfd3]/60 animate-up space-y-3">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center gap-1.5">
+          <span class="text-base">🗓️</span>
+          <h2 class="text-xs font-extrabold tracking-wider text-[#8a7566] uppercase">
+            Riwayat Harian
+          </h2>
+        </div>
+        <span id="cnt" class="text-xs font-bold bg-[#f6f0e9] text-[#3b2417] px-2.5 py-1 rounded-full border border-[#eadfd3]">
+          0 Transaksi
+        </span>
+      </div>
+
+      <!-- Bar Navigasi Tanggal Harian + Date Picker Tersembunyi -->
+      <div class="flex items-center bg-[#f6f0e9] rounded-2xl p-1 border border-[#eadfd3]/60">
+        <button id="dp" title="Hari Sebelumnya" class="w-10 h-10 rounded-xl flex items-center justify-center text-lg hover:bg-[#eadfd3] text-[#3b2417]">
+          ‹
+        </button>
+        <label id="dl" class="flex-1 text-center font-bold text-xs relative cursor-pointer py-2 px-1">
+          <span id="dt" class="text-[#2b1d14] font-extrabold block truncate">-</span>
+          <input type="date" id="dpick" class="absolute inset-0 opacity-0 w-full h-full cursor-pointer">
+        </label>
+        <button id="dn" title="Hari Berikutnya" class="w-10 h-10 rounded-xl flex items-center justify-center text-lg hover:bg-[#eadfd3] text-[#3b2417]">
+          ›
+        </button>
+      </div>
+
+      <!-- Total Transaksi Harian (Keluar & Masuk) -->
+      <div class="flex justify-between items-center text-xs font-bold px-1.5 py-1 border-b border-[#f6f0e9]">
+        <span id="so" class="text-[#ff9aa8] font-extrabold truncate pr-1">● Keluar: -Rp 0</span>
+        <span id="si" class="text-[#0f8a5f] font-extrabold truncate pl-1">● Masuk: +Rp 0</span>
+      </div>
+
+      <!-- Filter Tabs: Semua | Keluar | Masuk -->
+      <div id="hf" class="grid grid-cols-3 bg-[#f6f0e9] p-1 rounded-2xl gap-1 select-none border border-[#eadfd3]/60 text-xs">
+        <button data-f="all" class="py-2 px-2 rounded-xl font-bold transition-all text-center bg-[#3b2417] text-white shadow-sm">
+          Semua
+        </button>
+        <button data-f="out" class="py-2 px-2 rounded-xl font-bold transition-all text-center text-[#8a7566] hover:text-[#2b1d14]">
+          Keluar
+        </button>
+        <button data-f="in" class="py-2 px-2 rounded-xl font-bold transition-all text-center text-[#8a7566] hover:text-[#2b1d14]">
+          Masuk
+        </button>
+      </div>
+
+      <!-- List Transaksi Harian -->
+      <div id="hist" class="space-y-2 max-h-80 overflow-y-auto pr-0.5 custom-scroll">
+        <!-- Diisi secara dinamis oleh JavaScript -->
+      </div>
+    </section>
+
   </main>
 
-  <!-- MODAL KELOLA & TAMBAH DOMPET (Espresso & Soft Almond) -->
-  <div id="walletModal" class="fixed inset-0 z-50 bg-[#2D1E18]/60 backdrop-blur-xs flex items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity duration-200">
-    <div class="bg-white rounded-3xl max-w-sm w-full p-4 sm:p-5 shadow-2xl transform scale-95 transition-transform duration-200 border border-[#D8CABE] max-h-[90vh] flex flex-col" id="walletModalCard">
+  <!-- 7. MODAL BOTTOM SHEET: KELOLA DOMPET DINAMIS -->
+  <div id="ov" class="fixed inset-0 bg-[#140a05]/50 backdrop-blur-sm opacity-0 pointer-events-none transition-opacity duration-300 z-50 flex items-end justify-center">
+    <div class="bg-white w-full max-w-[440px] rounded-t-[32px] p-5 pb-8 shadow-sheet transform translate-y-full transition-transform duration-400 ease-out max-h-[85vh] overflow-y-auto custom-scroll">
+      <div class="w-10 h-1.5 rounded-full bg-[#eadfd3] mx-auto mb-4"></div>
       
-      <!-- Modal Header -->
-      <div class="flex items-center justify-between pb-3 border-b border-[#EAE2D8]">
-        <div class="flex items-center gap-2">
-          <span class="text-xl">👛</span>
-          <h3 class="text-sm font-extrabold text-[#2D1E18]">Kelola Kantong / Dompet</h3>
-        </div>
-        <button type="button" onclick="closeWalletModal()" class="w-7 h-7 rounded-full bg-[#EFE8DF] hover:bg-[#E5DCD0] text-[#5C453A] hover:text-[#2D1E18] flex items-center justify-center transition cursor-pointer">
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+      <div class="flex items-center justify-between mb-3.5">
+        <h3 class="text-sm font-extrabold text-[#2b1d14] uppercase tracking-wider">
+          Kelola Kantong Dompet
+        </h3>
+        <button onclick="closeWalletSheet()" class="w-7 h-7 rounded-full bg-[#f6f0e9] text-[#8a7566] hover:text-[#2b1d14] flex items-center justify-center font-bold text-sm cursor-pointer">
+          ✕
         </button>
       </div>
 
-      <!-- Modal Body (Scrollable) -->
-      <div class="overflow-y-auto py-3 space-y-4 no-scrollbar flex-1">
-        
-        <!-- Form Tambah Dompet Baru -->
-        <div class="bg-[#FAF7F2] rounded-2xl p-3 border border-[#EAE2D8] space-y-2.5">
-          <span class="text-[11px] font-bold text-[#3D271D] uppercase tracking-wider block">
-            + Tambah Dompet Baru
-          </span>
+      <!-- Daftar Dompet yang Ada -->
+      <div id="wl" class="space-y-2 mb-4">
+        <!-- Diisi secara dinamis oleh JavaScript -->
+      </div>
 
-          <!-- Nama Dompet -->
-          <div>
-            <label for="newWalletName" class="block text-[10px] font-bold text-[#7A6458] uppercase mb-1">Nama Dompet</label>
-            <input 
-              type="text" 
-              id="newWalletName" 
-              placeholder="cth: DANA, BCA, Tabungan" 
-              maxlength="20"
-              class="w-full px-3 py-2 text-xs font-bold text-[#2D1E18] bg-white rounded-xl border border-[#D8CABE] focus:border-[#3D271D] focus:outline-none transition placeholder:text-[#B5A599]"
-            />
-          </div>
-
-          <!-- Pilihan Icon / Emoji -->
-          <div>
-            <label class="block text-[10px] font-bold text-[#7A6458] uppercase mb-1">Pilih Ikon Emoji</label>
-            <div id="emojiPickerGrid" class="flex flex-wrap gap-1.5">
-              <!-- Rendered via JS -->
-            </div>
-          </div>
-
-          <!-- Pilihan Warna Aksen -->
-          <div>
-            <label class="block text-[10px] font-bold text-[#7A6458] uppercase mb-1">Pilih Warna Aksen</label>
-            <div id="colorPickerGrid" class="flex flex-wrap gap-2 pt-0.5">
-              <!-- Rendered via JS -->
-            </div>
-          </div>
-
-          <button 
-            type="button" 
-            onclick="handleAddNewWallet()" 
-            class="w-full py-2.5 px-3 bg-[#3D271D] hover:bg-[#2A1A13] active:scale-98 text-[#FAF7F2] rounded-xl text-xs font-extrabold shadow-sm border border-[#2D1E18] transition flex items-center justify-center gap-1.5 cursor-pointer">
-            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
-            <span>Simpan Dompet Baru</span>
-          </button>
+      <!-- Form Tambah Dompet Baru -->
+      <div class="p-3.5 bg-[#f6f0e9] rounded-2xl border border-[#eadfd3]/80 space-y-2.5">
+        <span class="block text-[11px] font-extrabold text-[#8a7566] uppercase tracking-wider">
+          Tambah Dompet Baru
+        </span>
+        <div class="grid grid-cols-[64px_1fr] gap-2">
+          <input 
+            type="text" 
+            id="we" 
+            value="💳" 
+            maxlength="2"
+            title="Emoji Dompet"
+            class="w-full bg-white border border-[#eadfd3] rounded-xl p-2.5 text-center text-lg outline-none"
+          >
+          <input 
+            type="text" 
+            id="wn" 
+            placeholder="Nama dompet baru (cth: Dana)" 
+            class="w-full bg-white border border-[#eadfd3] rounded-xl p-2.5 text-xs font-semibold text-[#2b1d14] outline-none placeholder-[#8a7566]/60"
+          >
         </div>
-
-        <!-- Daftar Dompet yang Ada -->
-        <div class="space-y-1.5">
-          <span class="text-[11px] font-bold text-[#3D271D] uppercase tracking-wider block px-1">
-            Daftar Dompet Aktif (<span id="walletCountHeader" class="text-[#3D271D]">0</span>)
-          </span>
-
-          <div id="walletModalList" class="space-y-2">
-            <!-- Rendered via JS -->
-          </div>
-        </div>
-
-      </div>
-
-      <!-- Modal Footer -->
-      <div class="pt-3 border-t border-[#EAE2D8] text-right">
-        <button type="button" onclick="closeWalletModal()" class="w-full py-2 bg-[#EFE8DF] hover:bg-[#E5DCD0] text-[#3D271D] text-xs font-bold rounded-xl transition cursor-pointer">
-          Selesai
-        </button>
-      </div>
-
-    </div>
-  </div>
-
-  <!-- CONFIRMATION MODAL FOR DELETE TRANSACTION -->
-  <div id="deleteModal" class="fixed inset-0 z-50 bg-[#2D1E18]/60 backdrop-blur-xs flex items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity duration-200">
-    <div class="bg-white rounded-2xl max-w-xs w-full p-4 shadow-2xl transform scale-95 transition-transform duration-200 border border-[#D8CABE]" id="deleteModalCard">
-      <div class="w-10 h-10 rounded-full bg-rose-50 text-rose-600 border border-rose-200 flex items-center justify-center mx-auto mb-3">
-        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
-      </div>
-      <h3 class="text-sm font-bold text-center text-[#2D1E18]">Hapus Transaksi?</h3>
-      <p id="deleteModalDesc" class="text-xs text-[#7A6458] text-center mt-1">Transaksi yang dihapus tidak dapat dikembalikan lagi.</p>
-      
-      <div class="grid grid-cols-2 gap-2 mt-4">
-        <button type="button" onclick="closeDeleteModal()" class="py-2 text-xs font-bold text-[#5C453A] bg-[#EFE8DF] hover:bg-[#E5DCD0] rounded-xl transition cursor-pointer">
-          Batal
-        </button>
-        <button type="button" id="btnConfirmDelete" class="py-2 text-xs font-bold text-white bg-[#991b1b] hover:bg-[#7f1d1d] rounded-xl transition shadow-sm cursor-pointer">
-          Ya, Hapus
+        <button 
+          id="wadd" 
+          class="w-full py-2.5 rounded-xl bg-[#3b2417] hover:bg-[#2b180e] text-white font-extrabold text-xs shadow-sm transition-all"
+        >
+          ＋ Tambah Dompet
         </button>
       </div>
     </div>
   </div>
 
-  <!-- TOAST NOTIFICATION CONTAINER -->
-  <div id="toastContainer" class="fixed bottom-5 left-1/2 -translate-x-1/2 z-50 flex flex-col gap-2 items-center pointer-events-none max-w-sm w-full px-4"></div>
+  <!-- 8. TOAST NOTIFICATION -->
+  <div id="toast" class="fixed left-1/2 bottom-8 -translate-x-1/2 translate-y-20 bg-[#3b2417] text-white px-5 py-2.5 rounded-full font-bold text-xs shadow-lg transition-all duration-300 z-50 opacity-0 pointer-events-none">
+    Pesan
+  </div>
 
-  <!-- JAVASCRIPT APPLICATION LOGIC -->
+  <!-- JAVASCRIPT LOGIC ENGINE -->
   <script>
     /* ==========================================================================
-       1. DATA STRUCTURE & STATE MANAGEMENT
+       UTILITY & HELPER FUNCTIONS
        ========================================================================== */
-    const STORAGE_KEY_TX = 'catatan_keuangan_transaksi_v1';
-    const STORAGE_KEY_WALLETS = 'custom_wallets';
-
-    // Theme Color Presets for Wallets (Espresso & Soft Almond Aesthetic)
-    const WALLET_THEMES = {
-      espresso: {
-        id: 'espresso',
-        name: 'Dark Espresso',
-        colorDot: 'bg-[#3D271D]',
-        bgLight: 'bg-[#FAF7F2]',
-        border: 'border-[#D8CABE]',
-        borderHover: 'hover:border-[#3D271D]',
-        text: 'text-[#3D271D]',
-        pillActive: 'border-[#3D271D] bg-[#3D271D] text-[#FAF7F2] ring-1 ring-[#3D271D] shadow-xs'
-      },
-      almond: {
-        id: 'almond',
-        name: 'Warm Almond',
-        colorDot: 'bg-[#C49B71]',
-        bgLight: 'bg-[#FAF6F0]',
-        border: 'border-[#E2D4C3]',
-        borderHover: 'hover:border-[#C49B71]',
-        text: 'text-[#8A5B2F]',
-        pillActive: 'border-[#8A5B2F] bg-[#FAF6F0] text-[#8A5B2F] ring-1 ring-[#8A5B2F] shadow-xs'
-      },
-      mocha: {
-        id: 'mocha',
-        name: 'Rich Mocha',
-        colorDot: 'bg-[#6F4E37]',
-        bgLight: 'bg-[#F7F2EE]',
-        border: 'border-[#E0D3C7]',
-        borderHover: 'hover:border-[#6F4E37]',
-        text: 'text-[#6F4E37]',
-        pillActive: 'border-[#6F4E37] bg-[#F7F2EE] text-[#6F4E37] ring-1 ring-[#6F4E37] shadow-xs'
-      },
-      sage: {
-        id: 'sage',
-        name: 'Olive / Sage',
-        colorDot: 'bg-[#556B2F]',
-        bgLight: 'bg-[#F2F5EC]',
-        border: 'border-[#D5DEC4]',
-        borderHover: 'hover:border-[#556B2F]',
-        text: 'text-[#3B4D1E]',
-        pillActive: 'border-[#3B4D1E] bg-[#F2F5EC] text-[#3B4D1E] ring-1 ring-[#3B4D1E] shadow-xs'
-      },
-      terracotta: {
-        id: 'terracotta',
-        name: 'Terracotta',
-        colorDot: 'bg-[#C85A32]',
-        bgLight: 'bg-[#FAF0EC]',
-        border: 'border-[#ECCBC0]',
-        borderHover: 'hover:border-[#C85A32]',
-        text: 'text-[#9A3815]',
-        pillActive: 'border-[#9A3815] bg-[#FAF0EC] text-[#9A3815] ring-1 ring-[#9A3815] shadow-xs'
-      },
-      slate: {
-        id: 'slate',
-        name: 'Roasted Slate',
-        colorDot: 'bg-[#4A5568]',
-        bgLight: 'bg-[#F0F2F5]',
-        border: 'border-[#CBD2DC]',
-        borderHover: 'hover:border-[#4A5568]',
-        text: 'text-[#2D3748]',
-        pillActive: 'border-[#2D3748] bg-[#F0F2F5] text-[#2D3748] ring-1 ring-[#2D3748] shadow-xs'
-      },
-      amber: {
-        id: 'amber',
-        name: 'Honey Amber',
-        colorDot: 'bg-[#D97706]',
-        bgLight: 'bg-[#FEF9EE]',
-        border: 'border-[#FDE68A]',
-        borderHover: 'hover:border-[#D97706]',
-        text: 'text-[#92400E]',
-        pillActive: 'border-[#92400E] bg-[#FEF9EE] text-[#92400E] ring-1 ring-[#92400E] shadow-xs'
-      },
-      rose: {
-        id: 'rose',
-        name: 'Dusty Rose',
-        colorDot: 'bg-[#B85D6B]',
-        bgLight: 'bg-[#FBF1F2]',
-        border: 'border-[#EFC9CF]',
-        borderHover: 'hover:border-[#B85D6B]',
-        text: 'text-[#853241]',
-        pillActive: 'border-[#853241] bg-[#FBF1F2] text-[#853241] ring-1 ring-[#853241] shadow-xs'
-      }
+    const $ = selector => document.querySelector(selector);
+    const $$ = selector => document.querySelectorAll(selector);
+    
+    // Format Rupiah Indonesia
+    const rp = num => 'Rp ' + Math.abs(Math.round(num || 0)).toLocaleString('id-ID');
+    const pad = num => String(num).padStart(2, '0');
+    const iso = date => date.getFullYear() + '-' + pad(date.getMonth() + 1) + '-' + pad(date.getDate());
+    
+    // Escape HTML untuk proteksi XSS
+    const escapeHtml = str => {
+      if (!str) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
     };
 
-    // Pilihan Ikon Emoji & Warna untuk Modal
-    const AVAILABLE_WALLET_ICONS = ['💵', '🏦', '📱', '🟠', '🟢', '🔵', '🟣', '💳', '🪙', '💼'];
-    const AVAILABLE_WALLET_COLORS = ['espresso', 'almond', 'mocha', 'sage', 'terracotta', 'slate', 'amber', 'rose'];
-
-    // Default Wallets Sesuai Spesifikasi: 💵 Cash, 🏦 Bank, 🟠 ShopeePay, dan 🟢 GoPay
-    const DEFAULT_WALLETS = [
-      { id: 'wallet_cash', name: 'Cash', icon: '💵', color: 'espresso' },
-      { id: 'wallet_bank', name: 'Bank', icon: '🏦', color: 'mocha' },
-      { id: 'wallet_shopeepay', name: 'ShopeePay', icon: '🟠', color: 'terracotta' },
-      { id: 'wallet_gopay', name: 'GoPay', icon: '🟢', color: 'sage' }
-    ];
-
-    // Daftar Kategori Sesuai Spesifikasi
-    const CATEGORIES = {
-      expense: [
-        { id: 'makan', name: 'Makan', emoji: '🍔' },
-        { id: 'transport', name: 'Transport', emoji: '🛵' },
-        { id: 'belanja', name: 'Belanja', emoji: '🛒' },
-        { id: 'tagihan', name: 'Tagihan', emoji: '💡' },
-        { id: 'nongkrong', name: 'Nongkrong', emoji: '☕' },
-        { id: 'lainnya', name: 'Lainnya', emoji: '📦' }
+    // Master Kategori Finansial
+    const CATS = {
+      out: [
+        ['🍔', 'Makan'],
+        ['🛵', 'Transport'],
+        ['🛒', 'Belanja'],
+        ['💡', 'Tagihan'],
+        ['☕', 'Nongkrong'],
+        ['📦', 'Lainnya']
       ],
-      income: [
-        { id: 'gaji', name: 'Gaji/Uang Saku', emoji: '💰' },
-        { id: 'proyek', name: 'Proyek/Freelance', emoji: '⚡' },
-        { id: 'bonus', name: 'Bonus', emoji: '🎁' },
-        { id: 'lainnya', name: 'Lainnya', emoji: '📦' }
+      in: [
+        ['💰', 'Gaji/Uang Saku'],
+        ['🎁', 'Bonus'],
+        ['💻', 'Freelance'],
+        ['📥', 'Lainnya']
       ]
     };
 
-    // State Aplikasi
-    let wallets = [];
-    let transactions = [];
-    let currentType = 'expense'; // 'expense' | 'income'
-    let currentWallet = 'Cash';  // Nama dompet terpilih
-    let currentCategory = CATEGORIES.expense[0];
-    let selectedMonthYear = ''; // 'YYYY-MM' (Filter bulanan di header atas)
-    let selectedHistoryDate = ''; // 'YYYY-MM-DD' (Filter harian riwayat di bawah)
-    let pendingDeleteId = null;
-    let historyFilter = 'all';  // 'all' | 'expense' | 'income'
-
-    // State Rekap Bulanan (Monthly Analytics)
-    let currentAnalyticsTab = 'expense'; // 'expense' | 'income'
-    let isAnalyticsCollapsed = false;
-    let currentMonthlyAnalyticsData = {
-      monthlyIncome: 0,
-      monthlyExpense: 0,
-      expenseCategories: {},
-      incomeCategories: {}
-    };
-
-    // State Input Modal Tambah Dompet
-    let selectedNewIcon = '💵';
-    let selectedNewColor = 'espresso';
-
-    /* ==========================================================================
-       2. LOCALSTORAGE LOAD & SAVE
-       ========================================================================== */
-    function loadWallets() {
-      try {
-        const raw = localStorage.getItem(STORAGE_KEY_WALLETS);
-        if (raw) {
-          const parsed = JSON.parse(raw);
-          if (Array.isArray(parsed) && parsed.length > 0) {
-            wallets = parsed;
-          } else {
-            wallets = [...DEFAULT_WALLETS];
-            saveWallets();
-          }
-        } else {
-          wallets = [...DEFAULT_WALLETS];
-          saveWallets();
-        }
-      } catch (e) {
-        console.error('Gagal membaca storage wallets', e);
-        wallets = [...DEFAULT_WALLETS];
-      }
-
-      // Pastikan currentWallet valid
-      if (!wallets.some(w => w.name === currentWallet)) {
-        currentWallet = wallets[0] ? wallets[0].name : 'Cash';
-      }
-    }
-
-    function saveWallets() {
-      try {
-        localStorage.setItem(STORAGE_KEY_WALLETS, JSON.stringify(wallets));
-      } catch (e) {
-        console.error('Gagal menyimpan dompet', e);
-        showToast('Gagal menyimpan daftar dompet!', 'error');
-      }
-    }
-
-    function loadTransactions() {
-      try {
-        const raw = localStorage.getItem(STORAGE_KEY_TX);
-        if (raw) {
-          const parsed = JSON.parse(raw);
-          transactions = Array.isArray(parsed) ? parsed : [];
-        } else {
-          // Inisialisasi awal bersih (kosong / Rp 0) untuk pengguna atau perangkat baru
-          transactions = [];
-          saveTransactions();
-        }
-      } catch (e) {
-        console.error('Gagal membaca storage transaksi', e);
-        transactions = [];
-      }
-    }
-
-    function saveTransactions() {
-      try {
-        localStorage.setItem(STORAGE_KEY_TX, JSON.stringify(transactions));
-      } catch (e) {
-        console.error('Gagal menyimpan transaksi', e);
-        showToast('Gagal menyimpan data transaksi!', 'error');
-      }
-    }
-
-    /* ==========================================================================
-       3. FORMATTING HELPERS
-       ========================================================================== */
-    function formatRupiah(number, withPrefix = true) {
-      const isNegative = number < 0;
-      const absValue = Math.abs(number);
-      const formatted = new Intl.NumberFormat('id-ID').format(absValue);
-      if (!withPrefix) return formatted;
-      return (isNegative ? '-Rp ' : 'Rp ') + formatted;
-    }
-
-    function parseRupiahInput(valStr) {
-      if (!valStr) return 0;
-      const cleanDigits = valStr.toString().replace(/\D/g, '');
-      return parseInt(cleanDigits, 10) || 0;
-    }
-
-    function formatReadableDate(dateStr) {
-      if (!dateStr) return '';
-      const [y, m, d] = dateStr.split('-');
-      const dateObj = new Date(parseInt(y), parseInt(m) - 1, parseInt(d));
-      return dateObj.toLocaleDateString('id-ID', {
-        day: 'numeric',
-        month: 'short',
-        year: 'numeric'
-      });
-    }
-
-    function getMonthYearLabel(monthYearStr) {
-      const [year, month] = monthYearStr.split('-');
-      const dateObj = new Date(parseInt(year), parseInt(month) - 1, 1);
-      return dateObj.toLocaleDateString('id-ID', { month: 'long', year: 'numeric' });
-    }
-
-    function getCurrentMonthYearStr() {
-      const now = new Date();
-      const yyyy = now.getFullYear();
-      const mm = String(now.getMonth() + 1).padStart(2, '0');
-      return `${yyyy}-${mm}`;
-    }
-
-    function getTodayDateStr() {
-      const now = new Date();
-      const yyyy = now.getFullYear();
-      const mm = String(now.getMonth() + 1).padStart(2, '0');
-      const dd = String(now.getDate()).padStart(2, '0');
-      return `${yyyy}-${mm}-${dd}`;
-    }
-
-    function getWalletTheme(colorName) {
-      return WALLET_THEMES[colorName] || WALLET_THEMES.espresso || WALLET_THEMES.amber;
-    }
-
-    function getWalletByName(name) {
-      return wallets.find(w => w.name.toLowerCase() === (name || '').toLowerCase());
-    }
-
-    /* Helper Tanggal & Navigasi Riwayat Harian */
-    function getHistoryDateLabel(dateStr) {
-      if (!dateStr) return '';
-      const [y, m, d] = dateStr.split('-');
-      const dateObj = new Date(parseInt(y), parseInt(m) - 1, parseInt(d));
-      const todayStr = getTodayDateStr();
-      
-      const formattedDate = dateObj.toLocaleDateString('id-ID', {
-        day: 'numeric',
-        month: 'short',
-        year: 'numeric'
-      });
-
-      if (dateStr === todayStr) {
-        return `Hari Ini, ${formattedDate}`;
-      } else {
-        const dayName = dateObj.toLocaleDateString('id-ID', { weekday: 'long' });
-        return `${dayName}, ${formattedDate}`;
-      }
-    }
-
-    function changeHistoryDay(delta) {
-      if (!selectedHistoryDate) selectedHistoryDate = getTodayDateStr();
-      const [y, m, d] = selectedHistoryDate.split('-').map(Number);
-      const target = new Date(y, m - 1, d + delta);
-      const yy = target.getFullYear();
-      const mm = String(target.getMonth() + 1).padStart(2, '0');
-      const dd = String(target.getDate()).padStart(2, '0');
-      selectedHistoryDate = `${yy}-${mm}-${dd}`;
-      updateDashboard();
-    }
-
-    function resetHistoryToToday() {
-      selectedHistoryDate = getTodayDateStr();
-      updateDashboard();
-    }
-
-    function handleHistoryDatePicked(val) {
-      if (val) {
-        selectedHistoryDate = val;
-        updateDashboard();
-      }
-    }
-
-    /* ==========================================================================
-       4. DASHBOARD & RENDERING REAL-TIME
-       ========================================================================== */
-    function updateDashboard() {
-      if (!selectedHistoryDate) {
-        selectedHistoryDate = getTodayDateStr();
-      }
-
-      // 1. Update Bulan / Tahun Label & Input (Header Atas)
-      const labelMonthEl = document.getElementById('labelMonth');
-      labelMonthEl.querySelector('span').textContent = getMonthYearLabel(selectedMonthYear);
-      document.getElementById('filterMonth').value = selectedMonthYear;
-
-      const currentRealMonth = getCurrentMonthYearStr();
-      const bannerNotCurrent = document.getElementById('bannerNotCurrentMonth');
-      if (selectedMonthYear !== currentRealMonth) {
-        bannerNotCurrent.classList.remove('hidden');
-      } else {
-        bannerNotCurrent.classList.add('hidden');
-      }
-
-      // 2. Inisialisasi Saldo Total & Saldo Tiap Dompet Dinamis (Akumulatif Keseluruhan)
-      let totalSaldo = 0;
-      const walletBalances = {};
-
-      wallets.forEach(w => {
-        walletBalances[w.name] = 0;
-      });
-
-      // 3. Hitung Pemasukan & Pengeluaran Bulan Terpilih (Atas & Rekap Bulanan) & Harian (Bawah)
-      let monthlyIncome = 0;
-      let monthlyExpense = 0;
-      const monthlyExpenseByCategory = {};
-      const monthlyIncomeByCategory = {};
-
-      let dailyIncome = 0;
-      let dailyExpense = 0;
-      const dailyTransactions = [];
-
-      transactions.forEach(t => {
-        const amt = Number(t.amount) || 0;
-        
-        // Akumulasi Dompet & Total Saldo (Semua Waktu)
-        if (t.type === 'income') {
-          totalSaldo += amt;
-          if (walletBalances.hasOwnProperty(t.wallet)) {
-            walletBalances[t.wallet] += amt;
-          } else {
-            // Transaksi dengan nama dompet kustom lain
-            walletBalances[t.wallet] = (walletBalances[t.wallet] || 0) + amt;
-          }
-        } else {
-          totalSaldo -= amt;
-          if (walletBalances.hasOwnProperty(t.wallet)) {
-            walletBalances[t.wallet] -= amt;
-          } else {
-            walletBalances[t.wallet] = (walletBalances[t.wallet] || 0) - amt;
-          }
-        }
-
-        // Cek apakah masuk bulan terpilih (Untuk Card Ringkasan Bulanan Atas & Rekap Bulanan)
-        if (t.date && t.date.startsWith(selectedMonthYear)) {
-          if (t.type === 'income') {
-            monthlyIncome += amt;
-            const catName = (t.category && t.category.name) ? t.category.name : 'Lainnya';
-            const catEmoji = (t.category && t.category.emoji) ? t.category.emoji : '💰';
-            if (!monthlyIncomeByCategory[catName]) {
-              monthlyIncomeByCategory[catName] = { name: catName, emoji: catEmoji, total: 0 };
-            }
-            monthlyIncomeByCategory[catName].total += amt;
-          } else {
-            monthlyExpense += amt;
-            const catName = (t.category && t.category.name) ? t.category.name : 'Lainnya';
-            const catEmoji = (t.category && t.category.emoji) ? t.category.emoji : '🍔';
-            if (!monthlyExpenseByCategory[catName]) {
-              monthlyExpenseByCategory[catName] = { name: catName, emoji: catEmoji, total: 0 };
-            }
-            monthlyExpenseByCategory[catName].total += amt;
-          }
-        }
-
-        // Cek apakah masuk tanggal harian terpilih (Untuk Riwayat Harian Bawah)
-        if (t.date === selectedHistoryDate) {
-          dailyTransactions.push(t);
-          if (t.type === 'income') {
-            dailyIncome += amt;
-          } else {
-            dailyExpense += amt;
-          }
-        }
-      });
-
-      // 4. Render Card Total Saldo
-      const totalSaldoEl = document.getElementById('totalSaldoDisplay');
-      totalSaldoEl.textContent = formatRupiah(totalSaldo);
-      if (totalSaldo < 0) {
-        totalSaldoEl.classList.remove('text-white');
-        totalSaldoEl.classList.add('text-rose-400');
-      } else {
-        totalSaldoEl.classList.remove('text-rose-400');
-        totalSaldoEl.classList.add('text-white');
-      }
-
-      // Render Monthly Income & Expense (Atas)
-      document.getElementById('monthlyIncomeDisplay').textContent = '+' + formatRupiah(monthlyIncome);
-      document.getElementById('monthlyExpenseDisplay').textContent = '-' + formatRupiah(monthlyExpense);
-
-      // 4b. Render Rekap Keuangan Bulanan (Monthly Analytics Summary)
-      renderMonthlyAnalytics(monthlyIncome, monthlyExpense, monthlyExpenseByCategory, monthlyIncomeByCategory);
-
-      // 5. Render Sisa Saldo Tiap Kantong Dinamis (Cards Grid)
-      renderWalletCards(walletBalances);
-
-      // 6. Render Tombol Pilihan Dompet di Form
-      renderWalletPills();
-
-      // 7. Render Navigasi & Ringkasan Harian (Riwayat Bawah)
-      const labelHistoryDateEl = document.getElementById('labelHistoryDate');
-      if (labelHistoryDateEl) {
-        labelHistoryDateEl.textContent = getHistoryDateLabel(selectedHistoryDate);
-      }
-      const inputHistoryDatePicker = document.getElementById('inputHistoryDatePicker');
-      if (inputHistoryDatePicker) {
-        inputHistoryDatePicker.value = selectedHistoryDate;
-      }
-
-      // Tombol Reset 'Hari Ini' (muncul jika sedang melihat tanggal selain hari ini)
-      const btnResetHistoryToday = document.getElementById('btnResetHistoryToday');
-      if (btnResetHistoryToday) {
-        if (selectedHistoryDate === getTodayDateStr()) {
-          btnResetHistoryToday.classList.add('hidden');
-        } else {
-          btnResetHistoryToday.classList.remove('hidden');
-        }
-      }
-
-      // Ringkasan Harian (Daily Summary)
-      const dailyExpenseSummary = document.getElementById('dailyExpenseSummary');
-      const dailyIncomeSummary = document.getElementById('dailyIncomeSummary');
-      if (dailyExpenseSummary) dailyExpenseSummary.textContent = '- ' + formatRupiah(dailyExpense);
-      if (dailyIncomeSummary) dailyIncomeSummary.textContent = '+ ' + formatRupiah(dailyIncome);
-
-      // Urutkan transaksi harian berdasarkan waktu terbaru
-      dailyTransactions.sort((a, b) => {
-        return (b.createdAt || 0) - (a.createdAt || 0);
-      });
-
-      // Filter Tab: Semua / Pengeluaran / Pemasukan
-      let filteredTransactions = dailyTransactions;
-      if (historyFilter !== 'all') {
-        filteredTransactions = dailyTransactions.filter(t => t.type === historyFilter);
-      }
-
-      renderTransactionList(filteredTransactions, dailyTransactions.length);
-    }
-
-    // Filter Tab Mini: Semua, Pengeluaran, Pemasukan
-    function setHistoryFilter(filterType) {
-      historyFilter = filterType;
-      const tabAll = document.getElementById('tabFilterAll');
-      const tabExpense = document.getElementById('tabFilterExpense');
-      const tabIncome = document.getElementById('tabFilterIncome');
-
-      const activeClass = 'history-tab active py-1.5 px-2 text-[11px] font-bold rounded-lg transition-all text-center bg-[#3D271D] text-[#FAF7F2] shadow-xs border border-[#2D1E18] cursor-pointer';
-      const inactiveClass = 'history-tab py-1.5 px-2 text-[11px] font-semibold rounded-lg transition-all text-center text-[#7A6458] hover:text-[#2D1E18] cursor-pointer';
-
-      if (tabAll) tabAll.className = filterType === 'all' ? activeClass : inactiveClass;
-      if (tabExpense) tabExpense.className = filterType === 'expense' ? activeClass : inactiveClass;
-      if (tabIncome) tabIncome.className = filterType === 'income' ? activeClass : inactiveClass;
-
-      updateDashboard();
-    }
-
-    /* ==========================================================================
-       4b. REKAP KEUANGAN BULANAN (INTEGRATED INTERACTIVE DONUT & MULTI-SEGMENT)
-       ========================================================================== */
-    const CATEGORY_COLORS = {
-      // Pengeluaran
-      makan: '#3D271D',       // Cokelat Tua / Deep Espresso
-      transport: '#8C5331',   // Cokelat Karamel / Caramel
-      belanja: '#556B2F',     // Hijau Lumut / Olive Sage
-      tagihan: '#C85A32',     // Terracotta Warm
-      nongkrong: '#D97706',   // Honey Amber
-      lainnya: '#5C6470',     // Roasted Slate
-      // Pemasukan
-      gaji: '#3D271D',        // Deep Espresso
-      proyek: '#556B2F',      // Forest / Olive
-      bonus: '#D97706'        // Golden Amber
-    };
-
-    const FALLBACK_EARTH_PALETTE = [
-      '#3D271D', '#8C5331', '#556B2F', '#C85A32', '#D97706', '#5C6470', '#9E6B55', '#B85D6B'
+    // Palet Warna Earth-Tone Harmonik untuk Donut Chart
+    const COL = [
+      '#3b2417', // Espresso Tua
+      '#a0653a', // Caramel Cokelat
+      '#d9a066', // Golden Almond
+      '#7a8f5c', // Olive Sage
+      '#c2575f', // Terracotta Warm
+      '#8c7b9b', // Slate Lavender
+      '#5c6470', // Roasted Slate
+      '#b85d6b'  // Dusty Rose
     ];
 
-    function getCategoryColor(name, index) {
-      if (!name) return FALLBACK_EARTH_PALETTE[index % FALLBACK_EARTH_PALETTE.length];
-      const lower = name.toLowerCase();
-      for (const key in CATEGORY_COLORS) {
-        if (lower.includes(key)) {
-          return CATEGORY_COLORS[key];
-        }
-      }
-      return FALLBACK_EARTH_PALETTE[index % FALLBACK_EARTH_PALETTE.length];
-    }
+    const MON = [
+      'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
+      'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'
+    ];
 
-    let activeHoveredCategory = null;
-    let activeSelectedCategory = null;
+    const todayS = iso(new Date());
 
-    function renderMonthlyAnalytics(monthlyIncome, monthlyExpense, monthlyExpenseByCategory, monthlyIncomeByCategory) {
-      currentMonthlyAnalyticsData = {
-        monthlyIncome,
-        monthlyExpense,
-        expenseCategories: monthlyExpenseByCategory,
-        incomeCategories: monthlyIncomeByCategory
-      };
+    const icoOf = (type, catName) => {
+      const found = (CATS[type] || []).find(item => item[1] === catName);
+      return found ? found[0] : (type === 'in' ? '💰' : '📦');
+    };
 
-      // 1. Update Badge Bulan pada Card Rekap
-      const monthBadge = document.getElementById('analyticsMonthBadge');
-      if (monthBadge) {
-        monthBadge.textContent = getMonthYearLabel(selectedMonthYear);
-      }
+    /* ==========================================================================
+       STATE & LOCALSTORAGE MANAGEMENT (WITH AUTO-MIGRATION)
+       ========================================================================== */
+    const STORAGE_KEY_V2 = 'dompetku2';
+    const OLD_STORAGE_TX = 'catatan_keuangan_transaksi_v1';
+    const OLD_STORAGE_WALLETS = 'custom_wallets';
 
-      // 2. Render Donut Chart & List Kategori
-      activeHoveredCategory = null;
-      activeSelectedCategory = null;
-      updateAnalyticsDisplay();
-    }
+    let S = {
+      wallets: [
+        { id: 1, e: '💵', n: 'Cash' },
+        { id: 2, e: '🏦', n: 'Bank' },
+        { id: 3, e: '🟠', n: 'ShopeePay' },
+        { id: 4, e: '🟢', n: 'GoPay' }
+      ],
+      tx: [
+        { id: 1, t: 'in', c: 'Gaji/Uang Saku', w: 1, a: 1500000, d: todayS, tm: '09.00', n: 'Gaji Bulanan' },
+        { id: 2, t: 'out', c: 'Makan', w: 1, a: 35000, d: todayS, tm: '12.30', n: 'Makan siang soto' },
+        { id: 3, t: 'out', c: 'Transport', w: 4, a: 20000, d: todayS, tm: '17.45', n: 'Ongkos ojek online' }
+      ],
+      nid: 10
+    };
 
-    function setAnalyticsTab(tab) {
-      currentAnalyticsTab = tab;
-      activeHoveredCategory = null;
-      activeSelectedCategory = null;
-
-      const btnExpense = document.getElementById('btnAnalyticsTabExpense');
-      const btnIncome = document.getElementById('btnAnalyticsTabIncome');
-
-      const activeClass = 'py-1.5 px-3 text-xs font-bold rounded-lg transition-all duration-200 text-center flex items-center justify-center gap-1.5 bg-[#3D271D] text-[#FAF7F2] shadow-xs cursor-pointer';
-      const inactiveClass = 'py-1.5 px-3 text-xs font-semibold rounded-lg transition-all duration-200 text-center flex items-center justify-center gap-1.5 text-[#7A6458] hover:text-[#2D1E18] cursor-pointer';
-
-      if (btnExpense) btnExpense.className = tab === 'expense' ? activeClass : inactiveClass;
-      if (btnIncome) btnIncome.className = tab === 'income' ? activeClass : inactiveClass;
-
-      updateAnalyticsDisplay();
-    }
-
-    function updateAnalyticsDisplay() {
-      const isExpense = currentAnalyticsTab === 'expense';
-      const monthlyIncome = currentMonthlyAnalyticsData.monthlyIncome || 0;
-      const monthlyExpense = currentMonthlyAnalyticsData.monthlyExpense || 0;
-
-      const categoriesObj = isExpense 
-        ? currentMonthlyAnalyticsData.expenseCategories 
-        : currentMonthlyAnalyticsData.incomeCategories;
-      const totalAmount = isExpense ? monthlyExpense : monthlyIncome;
-
-      const items = Object.values(categoriesObj || {}).sort((a, b) => b.total - a.total);
-
-      // Elemen DOM
-      const slicesGroup = document.getElementById('donutSlicesGroup');
-      const categoryListEl = document.getElementById('analyticsCategoryList');
-      const countBadge = document.getElementById('analyticsCategoryCountBadge');
-
-      if (countBadge) {
-        countBadge.textContent = `${items.length} Kategori`;
-      }
-
-      // State Kosong (Belum ada data transaksi di bulan terpilih)
-      if (items.length === 0 || totalAmount <= 0) {
-        if (slicesGroup) {
-          slicesGroup.innerHTML = '';
-        }
-        clearCategoryHighlight();
-        if (categoryListEl) {
-          categoryListEl.innerHTML = `
-            <div class="py-5 text-center">
-              <span class="text-2xl block mb-1">${isExpense ? '🍃' : '🌱'}</span>
-              <p class="text-xs font-bold text-[#3D271D]">Belum ada data ${isExpense ? 'pengeluaran' : 'pemasukan'}</p>
-              <p class="text-[10px] text-[#A8988C] mt-0.5">di bulan ${escapeHtml(getMonthYearLabel(selectedMonthYear))}</p>
-            </div>
-          `;
-        }
-        return;
-      }
-
-      // Render Grafik Donat SVG Multi-Segment (stroke-dasharray & stroke-dashoffset)
-      const C = 2 * Math.PI * 45; // ~282.7433
-      let accumulated = 0;
-      let slicesHtml = '';
-
-      const activeCat = activeSelectedCategory || activeHoveredCategory;
-
-      items.forEach((item, index) => {
-        const sliceLen = (item.total / totalAmount) * C;
-        const offset = -accumulated;
-        accumulated += sliceLen;
-
-        const color = getCategoryColor(item.name, index);
-        const isHighlighted = activeCat ? (item.name === activeCat) : false;
-        const strokeW = isHighlighted ? 17 : 12;
-        const opacity = activeCat ? (isHighlighted ? 1 : 0.3) : 1;
-
-        slicesHtml += `
-          <circle 
-            cx="60" 
-            cy="60" 
-            r="45" 
-            fill="none" 
-            stroke="${color}" 
-            stroke-width="${strokeW}" 
-            stroke-dasharray="${sliceLen.toFixed(2)} ${(C - sliceLen).toFixed(2)}" 
-            stroke-dashoffset="${offset.toFixed(2)}"
-            data-cat="${escapeHtml(item.name)}"
-            opacity="${opacity}"
-            class="transition-all duration-300 cursor-pointer"
-            onmouseenter="highlightCategory('${escapeHtml(item.name)}')"
-            onmouseleave="resetCategoryHighlight()"
-            onclick="toggleCategorySelect('${escapeHtml(item.name)}')"
-          />
-        `;
-      });
-
-      if (slicesGroup) {
-        slicesGroup.innerHTML = slicesHtml;
-      }
-
-      // Render Center Hole Default / Active
-      if (activeCat) {
-        applyCategoryHighlight(activeCat);
+    // Load State dari LocalStorage & Jalankan Migrasi Otomatis jika Diperlukan
+    try {
+      const savedV2 = localStorage.getItem(STORAGE_KEY_V2);
+      if (savedV2) {
+        S = JSON.parse(savedV2);
       } else {
-        clearCategoryHighlight();
-      }
+        // Cek apakah ada data lama dari versi sebelumnya
+        const oldTxRaw = localStorage.getItem(OLD_STORAGE_TX);
+        const oldWalletsRaw = localStorage.getItem(OLD_STORAGE_WALLETS);
 
-      // Render Daftar Kategori Bergaya Modern Card (Interaktif Klik/Hover)
-      let categoryListHtml = '';
+        if (oldTxRaw || oldWalletsRaw) {
+          const oldTx = oldTxRaw ? JSON.parse(oldTxRaw) : [];
+          const oldWallets = oldWalletsRaw ? JSON.parse(oldWalletsRaw) : [];
 
-      items.forEach((item, index) => {
-        const percent = Math.round((item.total / totalAmount) * 100);
-        const color = getCategoryColor(item.name, index);
-        const isSelected = activeCat === item.name;
-
-        categoryListHtml += `
-          <div 
-            class="category-list-row flex items-center justify-between py-2.5 px-3 rounded-xl ${isSelected ? 'bg-[#EFE8DF] border-[#3D271D] ring-1 ring-[#3D271D]' : 'bg-[#FAF7F2]'} hover:bg-[#F0E6D8] border border-[#EAE2D8]/80 transition-all cursor-pointer select-none shadow-2xs group"
-            data-cat="${escapeHtml(item.name)}"
-            onmouseenter="highlightCategory('${escapeHtml(item.name)}')"
-            onmouseleave="resetCategoryHighlight()"
-            onclick="toggleCategorySelect('${escapeHtml(item.name)}')">
-            
-            <!-- Sisi Kiri: Color Dot + Emoji + Nama Kategori + Badge Persentase -->
-            <div class="flex items-center gap-2 min-w-0 flex-1 pr-2">
-              <span class="w-2.5 h-2.5 rounded-full shrink-0 shadow-2xs transition-transform group-hover:scale-125" style="background-color: ${color};"></span>
-              <span class="text-sm shrink-0">${item.emoji || (isExpense ? '💸' : '💰')}</span>
-              <span class="text-xs font-bold text-[#2D1E18] truncate">${escapeHtml(item.name)}</span>
-              <span class="text-[9px] font-bold text-[#6F4E37] bg-white px-1.5 py-0.5 rounded-md border border-[#EAE2D8] shrink-0 leading-none">
-                ${percent}%
-              </span>
-            </div>
-
-            <!-- Sisi Kanan: Nominal Rupiah Rata Kanan -->
-            <div class="text-xs sm:text-sm font-extrabold text-right shrink-0 ${isExpense ? 'text-[#3D271D]' : 'text-[#3B4D1E]'}">
-              ${formatRupiah(item.total)}
-            </div>
-          </div>
-        `;
-      });
-
-      if (categoryListEl) categoryListEl.innerHTML = categoryListHtml;
-    }
-
-    // Interaktivitas: Sorot Kategori pada Donut SVG & List
-    function highlightCategory(catName) {
-      activeHoveredCategory = catName;
-      applyCategoryHighlight(catName);
-    }
-
-    function resetCategoryHighlight() {
-      activeHoveredCategory = null;
-      if (activeSelectedCategory) {
-        applyCategoryHighlight(activeSelectedCategory);
-      } else {
-        clearCategoryHighlight();
-      }
-    }
-
-    function toggleCategorySelect(catName) {
-      if (activeSelectedCategory === catName) {
-        activeSelectedCategory = null;
-        clearCategoryHighlight();
-      } else {
-        activeSelectedCategory = catName;
-        applyCategoryHighlight(catName);
-      }
-    }
-
-    function applyCategoryHighlight(catName) {
-      const isExpense = currentAnalyticsTab === 'expense';
-      const categoriesObj = isExpense 
-        ? currentMonthlyAnalyticsData.expenseCategories 
-        : currentMonthlyAnalyticsData.incomeCategories;
-      const totalAmount = isExpense 
-        ? currentMonthlyAnalyticsData.monthlyExpense 
-        : currentMonthlyAnalyticsData.monthlyIncome;
-
-      const item = categoriesObj ? categoriesObj[catName] : null;
-      if (!item || totalAmount <= 0) return;
-
-      const percent = Math.round((item.total / totalAmount) * 100);
-
-      const centerLabel = document.getElementById('donutCenterLabel');
-      const centerAmount = document.getElementById('donutCenterAmount');
-      const centerBadge = document.getElementById('donutCenterBadge');
-
-      if (centerLabel) {
-        centerLabel.textContent = `${item.emoji || ''} ${item.name}`;
-        centerLabel.className = 'text-[9px] font-extrabold text-[#3D271D] uppercase tracking-wider leading-tight truncate max-w-[76px] sm:max-w-[86px]';
-      }
-      if (centerAmount) {
-        centerAmount.textContent = percent + '%';
-        centerAmount.className = 'text-xl sm:text-2xl font-black text-[#3D271D] tracking-tight leading-tight my-0.5 truncate max-w-[78px] sm:max-w-[88px]';
-      }
-      if (centerBadge) {
-        centerBadge.textContent = formatRupiah(item.total);
-        centerBadge.className = 'text-[8.5px] sm:text-[9px] font-extrabold text-[#FAF7F2] bg-[#3D271D] px-1.5 sm:px-2 py-0.5 rounded-full truncate max-w-[78px] sm:max-w-[88px] leading-tight';
-      }
-
-      // Sorot Segmen pada Donut SVG
-      const slicesGroup = document.getElementById('donutSlicesGroup');
-      if (slicesGroup) {
-        const circles = slicesGroup.querySelectorAll('circle');
-        circles.forEach(c => {
-          if (c.getAttribute('data-cat') === catName) {
-            c.setAttribute('stroke-width', '17');
-            c.setAttribute('opacity', '1');
-          } else {
-            c.setAttribute('stroke-width', '12');
-            c.setAttribute('opacity', '0.3');
+          // Migrasikan wallets
+          if (Array.isArray(oldWallets) && oldWallets.length > 0) {
+            S.wallets = oldWallets.map((w, idx) => ({
+              id: typeof w.id === 'number' ? w.id : (idx + 1),
+              e: w.icon || '💳',
+              n: w.name || 'Dompet'
+            }));
           }
-        });
-      }
 
-      // Sorot Baris Kategori di List
-      const rows = document.querySelectorAll('.category-list-row');
-      rows.forEach(r => {
-        if (r.getAttribute('data-cat') === catName) {
-          r.classList.add('bg-[#EFE8DF]', 'border-[#3D271D]', 'ring-1', 'ring-[#3D271D]');
-          r.classList.remove('bg-[#FAF7F2]');
-        } else {
-          r.classList.remove('bg-[#EFE8DF]', 'border-[#3D271D]', 'ring-1', 'ring-[#3D271D]');
-          r.classList.add('bg-[#FAF7F2]');
-        }
-      });
-    }
-
-    function clearCategoryHighlight() {
-      const isExpense = currentAnalyticsTab === 'expense';
-      const monthlyIncome = currentMonthlyAnalyticsData.monthlyIncome || 0;
-      const monthlyExpense = currentMonthlyAnalyticsData.monthlyExpense || 0;
-
-      const categoriesObj = isExpense 
-        ? currentMonthlyAnalyticsData.expenseCategories 
-        : currentMonthlyAnalyticsData.incomeCategories;
-      const items = Object.values(categoriesObj || {}).sort((a, b) => b.total - a.total);
-
-      const centerLabel = document.getElementById('donutCenterLabel');
-      const centerAmount = document.getElementById('donutCenterAmount');
-      const centerBadge = document.getElementById('donutCenterBadge');
-
-      if (isExpense) {
-        let ratio = 0;
-        let badgeText = 'Bulan ini';
-        let badgeClass = 'text-[8.5px] sm:text-[9px] font-extrabold text-[#6F4E37] bg-[#EFE8DF] px-1.5 sm:px-2 py-0.5 rounded-full truncate max-w-[78px] sm:max-w-[88px] leading-tight';
-
-        if (monthlyIncome === 0 && monthlyExpense === 0) {
-          badgeText = 'Belum Ada';
-        } else if (monthlyIncome === 0 && monthlyExpense > 0) {
-          badgeText = 'Defisit 🚨';
-          badgeClass = 'text-[8.5px] sm:text-[9px] font-extrabold text-rose-700 bg-rose-50 px-1.5 sm:px-2 py-0.5 rounded-full truncate max-w-[78px] sm:max-w-[88px] leading-tight';
-        } else {
-          ratio = Math.round((monthlyExpense / monthlyIncome) * 100);
-          if (ratio === 0) {
-            badgeText = '100% Utuh 🌟';
-            badgeClass = 'text-[8.5px] sm:text-[9px] font-extrabold text-emerald-800 bg-emerald-50 px-1.5 sm:px-2 py-0.5 rounded-full truncate max-w-[78px] sm:max-w-[88px] leading-tight';
-          } else if (ratio <= 50) {
-            badgeText = `Rasio: ${ratio}% 🌱`;
-            badgeClass = 'text-[8.5px] sm:text-[9px] font-extrabold text-emerald-800 bg-emerald-50 px-1.5 sm:px-2 py-0.5 rounded-full truncate max-w-[78px] sm:max-w-[88px] leading-tight';
-          } else if (ratio <= 80) {
-            badgeText = `Rasio: ${ratio}% 👍`;
-            badgeClass = 'text-[8.5px] sm:text-[9px] font-extrabold text-amber-800 bg-amber-50 px-1.5 sm:px-2 py-0.5 rounded-full truncate max-w-[78px] sm:max-w-[88px] leading-tight';
-          } else if (ratio <= 100) {
-            badgeText = `Rasio: ${ratio}% ⚠️`;
-            badgeClass = 'text-[8.5px] sm:text-[9px] font-extrabold text-orange-800 bg-orange-50 px-1.5 sm:px-2 py-0.5 rounded-full truncate max-w-[78px] sm:max-w-[88px] leading-tight';
-          } else {
-            badgeText = `Defisit (${ratio}%) 🚨`;
-            badgeClass = 'text-[8.5px] sm:text-[9px] font-extrabold text-rose-700 bg-rose-50 px-1.5 sm:px-2 py-0.5 rounded-full truncate max-w-[78px] sm:max-w-[88px] leading-tight';
+          // Migrasikan transaksi
+          if (Array.isArray(oldTx) && oldTx.length > 0) {
+            S.tx = oldTx.map((x, idx) => ({
+              id: idx + 1,
+              t: x.type === 'income' ? 'in' : 'out',
+              c: (x.category && x.category.name) ? x.category.name : (x.t === 'income' ? 'Gaji/Uang Saku' : 'Lainnya'),
+              w: 1,
+              a: Math.abs(x.amount || 0),
+              d: x.date || todayS,
+              tm: '12.00',
+              n: x.note || ''
+            }));
+            S.nid = S.tx.length + 10;
           }
-        }
 
-        if (centerLabel) {
-          centerLabel.textContent = 'Total Keluar';
-          centerLabel.className = 'text-[9px] font-bold text-[#8C7668] uppercase tracking-wider leading-tight truncate max-w-[76px] sm:max-w-[86px]';
-        }
-        if (centerAmount) {
-          centerAmount.textContent = formatRupiah(monthlyExpense);
-          centerAmount.className = 'text-sm sm:text-base font-black text-[#2D1E18] tracking-tight leading-tight my-0.5 truncate max-w-[78px] sm:max-w-[88px]';
-        }
-        if (centerBadge) {
-          centerBadge.textContent = badgeText;
-          centerBadge.className = badgeClass;
-        }
-      } else {
-        // Tab Pemasukan
-        if (centerLabel) {
-          centerLabel.textContent = 'Total Masuk';
-          centerLabel.className = 'text-[9px] font-bold text-[#8C7668] uppercase tracking-wider leading-tight truncate max-w-[76px] sm:max-w-[86px]';
-        }
-        if (centerAmount) {
-          centerAmount.textContent = formatRupiah(monthlyIncome);
-          centerAmount.className = 'text-sm sm:text-base font-black text-[#3B4D1E] tracking-tight leading-tight my-0.5 truncate max-w-[78px] sm:max-w-[88px]';
-        }
-        if (centerBadge) {
-          centerBadge.textContent = monthlyIncome > 0 ? `${items.length} Sumber 💰` : 'Belum Ada';
-          centerBadge.className = 'text-[8.5px] sm:text-[9px] font-extrabold text-emerald-800 bg-emerald-50 px-1.5 sm:px-2 py-0.5 rounded-full truncate max-w-[78px] sm:max-w-[88px] leading-tight';
+          localStorage.setItem(STORAGE_KEY_V2, JSON.stringify(S));
         }
       }
+    } catch (err) {
+      console.warn('Gagal membaca LocalStorage:', err);
+    }
 
-      // Kembalikan semua segmen pada Donut SVG ke normal
-      const slicesGroup = document.getElementById('donutSlicesGroup');
-      if (slicesGroup) {
-        const circles = slicesGroup.querySelectorAll('circle');
-        circles.forEach(c => {
-          c.setAttribute('stroke-width', '12');
-          c.setAttribute('opacity', '1');
-        });
+    // View State (UI Controls)
+    const V = {
+      month: todayS.slice(0, 7), // YYYY-MM
+      rt: 'out',                 // Tab rekap donut: 'out' | 'in'
+      sel: null,                 // Kategori aktif yang dipilih/disorot
+      ft: 'out',                 // Tab form catat: 'out' | 'in'
+      fw: S.wallets[0] ? S.wallets[0].id : 1, // Dompet aktif form
+      fc: 'Makan',               // Kategori aktif form
+      day: todayS,               // Tanggal aktif riwayat harian
+      hf: 'all',                 // Filter riwayat: 'all' | 'out' | 'in'
+      amt: 0                     // Nilai nominal input
+    };
+
+    const saveStorage = () => {
+      try {
+        localStorage.setItem(STORAGE_KEY_V2, JSON.stringify(S));
+      } catch (err) {
+        console.error('Gagal menyimpan LocalStorage:', err);
       }
+    };
 
-      // Reset style baris kategori
-      const rows = document.querySelectorAll('.category-list-row');
-      rows.forEach(r => {
-        r.classList.remove('bg-[#EFE8DF]', 'border-[#3D271D]', 'ring-1', 'ring-[#3D271D]');
-        r.classList.add('bg-[#FAF7F2]');
-      });
-    }
+    let toastTimer = null;
+    const toast = msg => {
+      const t = $('#toast');
+      if (!t) return;
+      t.textContent = msg;
+      t.classList.remove('opacity-0', 'translate-y-20', 'pointer-events-none');
+      t.classList.add('opacity-100', 'translate-y-0');
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => {
+        t.classList.add('opacity-0', 'translate-y-20', 'pointer-events-none');
+        t.classList.remove('opacity-100', 'translate-y-0');
+      }, 2000);
+    };
 
-    function toggleAnalyticsCollapse() {
-      isAnalyticsCollapsed = !isAnalyticsCollapsed;
-      const content = document.getElementById('analyticsContentWrapper');
-      const label = document.getElementById('labelAnalyticsCollapse');
-      const icon = document.getElementById('iconAnalyticsCollapse');
-
-      if (!content || !label || !icon) return;
-
-      if (isAnalyticsCollapsed) {
-        content.classList.add('hidden');
-        label.textContent = 'Buka';
-        icon.classList.add('rotate-180');
-      } else {
-        content.classList.remove('hidden');
-        label.textContent = 'Ciutkan';
-        icon.classList.remove('rotate-180');
-      }
-    }
-
-    // Render Kartu Sisa Saldo Dompet Dinamis di Bagian Atas
-    function renderWalletCards(walletBalances) {
-      const container = document.getElementById('walletCardsContainer');
-      
-      let html = '';
-      wallets.forEach(w => {
-        const theme = getWalletTheme(w.color);
-        const balance = walletBalances[w.name] || 0;
-        const isNegative = balance < 0;
-
-        html += `
-          <div class="${theme.bgLight} border ${theme.border} ${theme.borderHover} rounded-xl p-2.5 transition flex flex-col justify-between shadow-xs">
-            <div class="flex items-center justify-between gap-1 mb-1">
-              <span class="text-xs font-bold ${theme.text} flex items-center gap-1 truncate">
-                <span class="text-sm">${w.icon}</span>
-                <span class="truncate">${escapeHtml(w.name)}</span>
-              </span>
-            </div>
-            <div class="text-xs sm:text-sm font-extrabold ${isNegative ? 'text-rose-700' : 'text-[#2D1E18]'} truncate">
-              ${formatRupiah(balance)}
-            </div>
-          </div>
-        `;
-      });
-
-      container.innerHTML = html;
-    }
-
-    // Render Pilihan Dompet di Form Cepat
-    function renderWalletPills() {
-      const container = document.getElementById('walletPillGroup');
-      const activeLabel = document.getElementById('activeWalletLabel');
-
-      // Validasi currentWallet
-      if (!wallets.some(w => w.name === currentWallet) && wallets.length > 0) {
-        currentWallet = wallets[0].name;
-      }
-
-      const activeWalletObj = getWalletByName(currentWallet) || wallets[0];
-      if (activeWalletObj) {
-        activeLabel.textContent = `${activeWalletObj.icon} ${activeWalletObj.name}`;
-      }
-
-      let html = '';
-      wallets.forEach(w => {
-        const isSelected = w.name === currentWallet;
-        const theme = getWalletTheme(w.color);
-
-        const btnClass = isSelected 
-          ? `wallet-pill active py-2 px-3 text-xs font-bold rounded-xl border-2 ${theme.pillActive} flex items-center justify-center gap-1.5 transition-all cursor-pointer`
-          : 'wallet-pill py-2 px-3 text-xs font-bold rounded-xl border border-[#D8CABE] bg-white text-[#5C453A] hover:bg-[#EFE8DF] hover:border-[#3D271D]/30 flex items-center justify-center gap-1.5 transition-all cursor-pointer';
-
-        html += `
-          <button 
-            type="button" 
-            onclick="selectWallet('${escapeHtml(w.name)}')" 
-            class="${btnClass}">
-            <span class="text-sm leading-none">${w.icon}</span>
-            <span class="truncate max-w-[90px]">${escapeHtml(w.name)}</span>
-          </button>
-        `;
-      });
-
-      container.innerHTML = html;
-    }
-
-    function selectWallet(walletName) {
-      currentWallet = walletName;
-      renderWalletPills();
-    }
-
-    function renderTransactionList(items, totalDayCount) {
-      const container = document.getElementById('transactionList');
-      const emptyState = document.getElementById('emptyState');
-      const emptyStateTitle = document.getElementById('emptyStateTitle');
-      const emptyStateDesc = document.getElementById('emptyStateDesc');
-      const countBadge = document.getElementById('transactionCountBadge');
-
-      countBadge.textContent = `${items.length} Transaksi`;
-
-      if (items.length === 0) {
-        container.innerHTML = '';
-        emptyState.classList.remove('hidden');
-        if (historyFilter === 'expense') {
-          if (emptyStateTitle) emptyStateTitle.textContent = 'Belum ada pengeluaran di tanggal ini';
-          if (emptyStateDesc) emptyStateDesc.textContent = 'Tidak ada catatan pengeluaran pada tanggal yang dipilih.';
-        } else if (historyFilter === 'income') {
-          if (emptyStateTitle) emptyStateTitle.textContent = 'Belum ada pemasukan di tanggal ini';
-          if (emptyStateDesc) emptyStateDesc.textContent = 'Tidak ada catatan pemasukan pada tanggal yang dipilih.';
+    const getWallet = id => (S.wallets.find(w => w.id === id) || { n: 'Dompet', e: '💳' });
+    const monthTx = type => S.tx.filter(x => x.d.startsWith(V.month) && (!type || x.t === type));
+    const sum = list => list.reduce((total, x) => total + (x.a || 0), 0);
+    
+    const setTabClass = (containerSelector, predicate) => {
+      $$(containerSelector + ' button').forEach(btn => {
+        const active = predicate(btn);
+        if (active) {
+          btn.className = 'py-2.5 px-3 rounded-xl font-bold text-xs transition-all flex items-center justify-center gap-1.5 bg-[#3b2417] text-white shadow-sm';
         } else {
-          if (emptyStateTitle) emptyStateTitle.textContent = 'Belum ada catatan di tanggal ini ✨';
-          if (emptyStateDesc) emptyStateDesc.textContent = 'Gunakan form di atas untuk mencatat transaksi hari ini.';
+          btn.className = 'py-2.5 px-3 rounded-xl font-bold text-xs transition-all flex items-center justify-center gap-1.5 text-[#8a7566] hover:text-[#2b1d14]';
         }
-        return;
-      }
-
-      emptyState.classList.add('hidden');
-      
-      let html = '';
-      items.forEach(t => {
-        const isExpense = t.type === 'expense';
-        const sign = isExpense ? '-' : '+';
-        const amountColor = isExpense ? 'text-[#2D1E18]' : 'text-emerald-700';
-        const badgeBg = isExpense 
-          ? 'bg-[#F5EFEB] text-[#3D271D] border-[#D8CABE]' 
-          : 'bg-emerald-50 text-emerald-800 border-emerald-200';
-        
-        // Cari dompet untuk mendapatkan icon dan warna
-        const walletObj = getWalletByName(t.wallet);
-        const walletIcon = walletObj ? walletObj.icon : '👛';
-        const walletTheme = walletObj ? getWalletTheme(walletObj.color) : WALLET_THEMES.espresso;
-
-        // Jam pencatatan & catatan singkat
-        const timeStr = t.createdAt ? new Date(t.createdAt).toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }) : '';
-        const noteDisplay = t.note ? `"${escapeHtml(t.note)}"` : (timeStr ? `Pukul ${timeStr}` : 'Tanpa catatan');
-
-        html += `
-          <div class="flex items-center justify-between py-2.5 px-3 rounded-xl bg-white hover:bg-[#FAF7F2] border border-[#E5DDD2] hover:border-[#D8CABE] transition group shadow-2xs">
-            <div class="flex items-center gap-2.5 min-w-0 flex-1">
-              <div class="w-9 h-9 rounded-xl ${badgeBg} border flex items-center justify-center text-base shrink-0">
-                ${t.category?.emoji || (isExpense ? '💸' : '💰')}
-              </div>
-              <div class="min-w-0 flex-1">
-                <!-- Baris 1: Kategori & Badge Dompet sejajar di satu baris -->
-                <div class="flex items-center gap-1.5 min-w-0">
-                  <h4 class="text-xs font-bold text-[#2D1E18] truncate max-w-[125px] sm:max-w-[160px]">${escapeHtml(t.category?.name || 'Transaksi')}</h4>
-                  <span class="text-[10px] font-bold px-1.5 py-0.5 rounded-md bg-[#FAF7F2] ${walletTheme.text} border border-[#D8CABE] shrink-0 flex items-center gap-0.5 leading-none">
-                    <span>${walletIcon}</span> <span>${escapeHtml(t.wallet)}</span>
-                  </span>
-                </div>
-                <!-- Baris 2: Catatan singkat di bawahnya -->
-                <p class="text-[10px] font-medium truncate max-w-[180px] sm:max-w-[220px] mt-0.5 leading-tight ${t.note ? 'text-[#7A6458] italic' : 'text-[#A8988C]'}">
-                  ${noteDisplay}
-                </p>
-              </div>
-            </div>
-
-            <!-- Bagian Kanan: Nominal & Tombol Hapus -->
-            <div class="flex items-center gap-1.5 shrink-0 ml-2">
-              <span class="text-xs sm:text-sm font-extrabold ${amountColor} text-right whitespace-nowrap">
-                ${sign}${formatRupiah(t.amount)}
-              </span>
-              <button 
-                type="button" 
-                onclick="promptDeleteTransaction('${t.id}')" 
-                title="Hapus Transaksi"
-                class="w-6 h-6 rounded-lg text-[#A8988C] hover:text-rose-600 hover:bg-rose-50 active:scale-90 flex items-center justify-center transition cursor-pointer">
-                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
-              </button>
-            </div>
-          </div>
-        `;
       });
+    };
 
-      container.innerHTML = html;
-    }
+    /* ==========================================================================
+       1. RENDER HEADER & TOTAL SALDO HERO CARD
+       ========================================================================== */
+    function renderHead() {
+      const [year, monthNum] = V.month.split('-');
+      const monthIdx = parseInt(monthNum, 10) - 1;
+      const monthName = MON[monthIdx] || '-';
+      
+      $('#ml').textContent = `${monthName} ${year}`;
+      $('#rm').textContent = `${monthName.slice(0, 3)} ${year}`;
 
-    function escapeHtml(str) {
-      if (!str) return '';
-      return str.toString().replace(/[&<>'"]/g, 
-        tag => ({
-          '&': '&amp;',
-          '<': '&lt;',
-          '>': '&gt;',
-          "'": '&#39;',
-          '"': '&quot;'
-        }[tag] || tag)
-      );
+      // Hitung Saldo Keseluruhan Sepanjang Waktu
+      const totalMasukAll = sum(S.tx.filter(x => x.t === 'in'));
+      const totalKeluarAll = sum(S.tx.filter(x => x.t === 'out'));
+      const netSaldo = totalMasukAll - totalKeluarAll;
+
+      $('#bal').textContent = (netSaldo < 0 ? '-' : '') + rp(netSaldo);
+
+      // Hitung Pemasukan & Pengeluaran Bulan Berjalan
+      const inMonth = sum(monthTx('in'));
+      const outMonth = sum(monthTx('out'));
+
+      $('#hin').textContent = '+' + rp(inMonth);
+      $('#hout').textContent = '-' + rp(outMonth);
     }
 
     /* ==========================================================================
-       5. MODAL KELOLA & TAMBAH DOMPET DINAMIS
+       2. RENDER REKAP BULANAN & INTERACTIVE SVG DONUT CHART
        ========================================================================== */
-    function openWalletModal() {
-      const modal = document.getElementById('walletModal');
-      const card = document.getElementById('walletModalCard');
-      
-      // Render Picker Ikon & Warna
-      renderEmojiPicker();
-      renderColorPicker();
-      renderWalletModalList();
-
-      // Reset Input Nama
-      document.getElementById('newWalletName').value = '';
-
-      modal.classList.remove('opacity-0', 'pointer-events-none');
-      card.classList.remove('scale-95');
-      card.classList.add('scale-100');
-    }
-
-    function closeWalletModal() {
-      const modal = document.getElementById('walletModal');
-      const card = document.getElementById('walletModalCard');
-      modal.classList.add('opacity-0', 'pointer-events-none');
-      card.classList.remove('scale-100');
-      card.classList.add('scale-95');
-    }
-
-    function renderEmojiPicker() {
-      const grid = document.getElementById('emojiPickerGrid');
-      let html = '';
-      AVAILABLE_WALLET_ICONS.forEach(icon => {
-        const isSelected = icon === selectedNewIcon;
-        const activeClass = isSelected 
-          ? 'border-2 border-[#3D271D] bg-[#EFE8DF] scale-105 shadow-xs' 
-          : 'border border-[#D8CABE] bg-white text-[#2D1E18] hover:bg-[#FAF7F2]';
-
-        html += `
-          <button 
-            type="button" 
-            onclick="selectNewEmoji('${icon}')" 
-            class="w-9 h-9 rounded-xl flex items-center justify-center text-lg transition-all active:scale-95 cursor-pointer ${activeClass}">
-            ${icon}
-          </button>
-        `;
+    function getCategoryGroups() {
+      const map = {};
+      monthTx(V.rt).forEach(x => {
+        map[x.c] = (map[x.c] || 0) + x.a;
       });
-      grid.innerHTML = html;
+      return Object.entries(map)
+        .map(([c, a]) => ({ c, a }))
+        .sort((a, b) => b.a - a.a);
     }
 
-    function selectNewEmoji(icon) {
-      selectedNewIcon = icon;
-      renderEmojiPicker();
-    }
+    function renderDonut() {
+      // Update Tab Styling (Pengeluaran vs Pemasukan)
+      setTabClass('#rtab', btn => btn.dataset.t === V.rt);
 
-    function renderColorPicker() {
-      const grid = document.getElementById('colorPickerGrid');
-      let html = '';
-      AVAILABLE_WALLET_COLORS.forEach(c => {
-        const theme = WALLET_THEMES[c];
-        const isSelected = c === selectedNewColor;
-        const activeClass = isSelected 
-          ? 'ring-2 ring-[#3D271D] ring-offset-2 ring-offset-white scale-110' 
-          : 'opacity-70 hover:opacity-100';
+      const groups = getCategoryGroups();
+      const total = sum(groups);
+      const R = 70;
+      const C = 2 * Math.PI * R; // ~439.82
+      let accumulated = 0;
+      let svgHtml = '';
 
-        html += `
-          <button 
-            type="button" 
-            onclick="selectNewColor('${c}')" 
-            title="${theme.name}"
-            class="w-6 h-6 rounded-full ${theme.colorDot} transition-all active:scale-90 cursor-pointer ${activeClass}">
-          </button>
+      // Background Track Circle
+      svgHtml += `
+        <circle 
+          cx="100" 
+          cy="100" 
+          r="${R}" 
+          fill="none" 
+          stroke="#f6f0e9" 
+          stroke-width="26" 
+          style="cursor: default"
+        />
+      `;
+
+      if (groups.length > 0 && total > 0) {
+        groups.forEach((item, idx) => {
+          const sliceLen = (item.a / total) * C;
+          const gap = groups.length > 1 ? 3 : 0;
+          const isSelected = V.sel === item.c;
+          const color = COL[idx % COL.length];
+          const strokeWidth = isSelected ? 34 : 26;
+          const opacity = V.sel && !isSelected ? 0.35 : 1;
+
+          svgHtml += `
+            <circle 
+              data-c="${escapeHtml(item.c)}" 
+              cx="100" 
+              cy="100" 
+              r="${R}" 
+              fill="none" 
+              stroke="${color}" 
+              stroke-width="${strokeWidth}" 
+              stroke-dasharray="${Math.max(sliceLen - gap, 0).toFixed(2)} ${C.toFixed(2)}" 
+              stroke-dashoffset="${(-accumulated).toFixed(2)}" 
+              stroke-linecap="butt" 
+              opacity="${opacity}" 
+              class="transition-all duration-300 cursor-pointer"
+            />
+          `;
+          accumulated += sliceLen;
+        });
+      }
+
+      $('#svg').innerHTML = svgHtml;
+
+      // Update Center Hole Text (Interaktif & Halus)
+      const selectedItem = groups.find(x => x.c === V.sel);
+      const ctrEl = $('#ctr');
+
+      if (selectedItem) {
+        const percent = Math.round((selectedItem.a / total) * 100);
+        ctrEl.innerHTML = `
+          <div class="animate-pop flex flex-col items-center">
+            <span class="text-3xl leading-none mb-0.5">${icoOf(V.rt, selectedItem.c)}</span>
+            <span class="text-[10px] font-extrabold text-[#8a7566] uppercase tracking-wider max-w-[110px] truncate">${escapeHtml(selectedItem.c)}</span>
+            <span class="text-lg font-black text-[#2b1d14] tracking-tight leading-tight my-0.5">${rp(selectedItem.a)}</span>
+            <span class="text-[10px] font-extrabold text-[#3b2417] bg-[#f6f0e9] px-2 py-0.5 rounded-full border border-[#eadfd3]">${percent}%</span>
+          </div>
         `;
-      });
-      grid.innerHTML = html;
-    }
+      } else {
+        ctrEl.innerHTML = `
+          <div class="animate-pop flex flex-col items-center">
+            <span class="text-[10px] font-extrabold text-[#8a7566] uppercase tracking-wider">
+              Total ${V.rt === 'out' ? 'Keluar' : 'Masuk'}
+            </span>
+            <span class="text-lg sm:text-xl font-black text-[#2b1d14] tracking-tight leading-tight my-0.5 max-w-[125px] truncate">
+              ${rp(total)}
+            </span>
+            <span class="text-[10px] font-extrabold text-[#3b2417] bg-[#f6f0e9] px-2.5 py-0.5 rounded-full border border-[#eadfd3]">
+              ${groups.length} Kategori
+            </span>
+          </div>
+        `;
+      }
 
-    function selectNewColor(c) {
-      selectedNewColor = c;
-      renderColorPicker();
-    }
+      // Render Rincian Kategori di Bawah Donut
+      const listEl = $('#list');
+      if (groups.length === 0 || total <= 0) {
+        listEl.innerHTML = `
+          <div class="py-6 text-center text-xs text-[#8a7566] font-semibold">
+            <span class="text-2xl block mb-1">🌱</span>
+            Belum ada data ${V.rt === 'out' ? 'pengeluaran' : 'pemasukan'} di bulan ini
+          </div>
+        `;
+      } else {
+        listEl.innerHTML = groups.map((item, idx) => {
+          const percent = Math.round((item.a / total) * 100);
+          const color = COL[idx % COL.length];
+          const isSelected = V.sel === item.c;
 
-    function renderWalletModalList() {
-      const listEl = document.getElementById('walletModalList');
-      const countEl = document.getElementById('walletCountHeader');
-      countEl.textContent = wallets.length;
-
-      let html = '';
-      wallets.forEach(w => {
-        const theme = getWalletTheme(w.color);
-        // Cek berapa banyak transaksi yang menggunakan dompet ini
-        const txCount = transactions.filter(t => t.wallet === w.name).length;
-
-        html += `
-          <div class="flex items-center justify-between p-2.5 rounded-xl bg-white border border-[#E5DDD2] shadow-2xs">
-            <div class="flex items-center gap-2 min-w-0">
-              <span class="text-lg w-7 text-center">${w.icon}</span>
-              <div class="min-w-0">
-                <span class="text-xs font-bold text-[#2D1E18] block truncate">${escapeHtml(w.name)}</span>
-                <span class="text-[10px] text-[#7A6458] block">${txCount} Transaksi</span>
-              </div>
-            </div>
-
+          return `
             <button 
               type="button" 
-              onclick="handleDeleteWallet('${w.id}')" 
-              title="Hapus Dompet"
-              class="p-1.5 rounded-lg text-[#A8988C] hover:text-rose-600 hover:bg-rose-50 active:scale-90 transition cursor-pointer">
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+              class="w-full flex items-center gap-2.5 p-3 rounded-2xl transition-all cursor-pointer select-none text-left ${isSelected ? 'bg-white border-2 border-[#6b4429] shadow-fintech scale-[1.01]' : 'bg-[#f6f0e9] hover:bg-[#eadfd3]/60 border-2 border-transparent'}"
+              data-c="${escapeHtml(item.c)}"
+            >
+              <span class="w-2.5 h-2.5 rounded-full shrink-0 shadow-xs" style="background-color: ${color}"></span>
+              <span class="text-lg shrink-0">${icoOf(V.rt, item.c)}</span>
+              <div class="flex-1 min-w-0 flex items-center gap-1.5">
+                <span class="font-extrabold text-xs text-[#2b1d14] truncate">${escapeHtml(item.c)}</span>
+                <span class="text-[10px] font-bold text-[#8a7566] bg-white px-1.5 py-0.5 rounded-md border border-[#eadfd3] shrink-0">
+                  ${percent}%
+                </span>
+              </div>
+              <span class="font-black text-xs text-right shrink-0 ${V.rt === 'out' ? 'text-[#2b1d14]' : 'text-[#0f8a5f]'}">
+                ${rp(item.a)}
+              </span>
             </button>
+          `;
+        }).join('');
+      }
+    }
+
+    function toggleSelectCategory(catName) {
+      V.sel = V.sel === catName ? null : catName;
+      renderDonut();
+    }
+
+    // Event Listener Interaktif Donut & List
+    $('#svg').onclick = e => {
+      const circle = e.target.closest('circle');
+      if (circle && circle.dataset.c) {
+        toggleSelectCategory(circle.dataset.c);
+      }
+    };
+
+    $('#list').onclick = e => {
+      const row = e.target.closest('button[data-c]');
+      if (row) {
+        toggleSelectCategory(row.dataset.c);
+      }
+    };
+
+    $('#rtab').onclick = e => {
+      const btn = e.target.closest('button[data-t]');
+      if (btn) {
+        V.rt = btn.dataset.t;
+        V.sel = null;
+        renderDonut();
+      }
+    };
+
+    /* ==========================================================================
+       3. RENDER SALDO PER KANTONG / DOMPET DINAMIS
+       ========================================================================== */
+    function renderWallets() {
+      // Grid Sisa Saldo Kantong
+      $('#wal').innerHTML = S.wallets.map(w => {
+        const inW = sum(S.tx.filter(x => x.w === w.id && x.t === 'in'));
+        const outW = sum(S.tx.filter(x => x.w === w.id && x.t === 'out'));
+        const balW = inW - outW;
+
+        return `
+          <div class="p-3.5 rounded-2xl bg-[#f6f0e9] border border-[#eadfd3]/80 animate-pop">
+            <span class="text-xs font-extrabold text-[#8a7566] flex items-center gap-1.5 truncate">
+              <span>${w.e}</span> <span>${escapeHtml(w.n)}</span>
+            </span>
+            <b class="block text-sm sm:text-base font-black text-[#2b1d14] mt-1.5 truncate">
+              ${balW < 0 ? '-' : ''}${rp(balW)}
+            </b>
           </div>
         `;
-      });
+      }).join('');
 
-      listEl.innerHTML = html;
-    }
-
-    function handleAddNewWallet() {
-      const nameInput = document.getElementById('newWalletName');
-      const name = nameInput.value.trim();
-
-      if (!name) {
-        showToast('Masukkan nama dompet!', 'warning');
-        nameInput.focus();
-        return;
-      }
-
-      // Cek apakah nama sudah digunakan
-      if (wallets.some(w => w.name.toLowerCase() === name.toLowerCase())) {
-        showToast(`Dompet dengan nama "${name}" sudah ada!`, 'warning');
-        nameInput.focus();
-        return;
-      }
-
-      const newWallet = {
-        id: 'wallet_' + Date.now(),
-        name: name,
-        icon: selectedNewIcon,
-        color: selectedNewColor
-      };
-
-      wallets.push(newWallet);
-      saveWallets();
-
-      // Set dompet aktif ke dompet baru
-      currentWallet = newWallet.name;
-
-      nameInput.value = '';
-      renderWalletModalList();
-      updateDashboard();
-      showToast(`Dompet "${name}" berhasil ditambahkan!`, 'success');
-    }
-
-    function handleDeleteWallet(walletId) {
-      const target = wallets.find(w => w.id === walletId);
-      if (!target) return;
-
-      // Aturan 1: Minimal harus ada 1 dompet
-      if (wallets.length <= 1) {
-        showToast('Minimal harus ada 1 dompet aktif!', 'error');
-        return;
-      }
-
-      // Aturan 2: Cek apakah masih ada transaksi yang menggunakan dompet ini
-      const relatedTx = transactions.filter(t => t.wallet === target.name);
-      if (relatedTx.length > 0) {
-        alert(
-          `Tidak dapat menghapus dompet "${target.name}"!\n\nDompet ini masih digunakan oleh ${relatedTx.length} riwayat transaksi. Hapus atau sesuaikan transaksi terkait sebelum menghapus dompet.`
-        );
-        return;
-      }
-
-      // Konfirmasi penghapusan
-      const confirmDelete = confirm(`Hapus dompet "${target.icon} ${target.name}"?`);
-      if (!confirmDelete) return;
-
-      wallets = wallets.filter(w => w.id !== walletId);
-      saveWallets();
-
-      // Jika dompet yang sedang aktif dihapus, alihkan ke dompet pertama
-      if (currentWallet === target.name) {
-        currentWallet = wallets[0] ? wallets[0].name : '';
-      }
-
-      renderWalletModalList();
-      updateDashboard();
-      showToast(`Dompet "${target.name}" telah dihapus.`, 'info');
-    }
-
-    /* ==========================================================================
-       6. QUICK INPUT CONTROLS & EVENT LISTENERS
-       ========================================================================== */
-    function setTransactionType(type) {
-      currentType = type;
-      const btnExpense = document.getElementById('btnTypeExpense');
-      const btnIncome = document.getElementById('btnTypeIncome');
-      const nominalPrefix = document.getElementById('nominalPrefix');
-      const inputNominal = document.getElementById('inputNominal');
-      const submitBtn = document.getElementById('btnSubmitTransaction');
-
-      if (type === 'expense') {
-        btnExpense.className = 'type-toggle-btn py-2 text-xs font-bold rounded-lg transition-all flex items-center justify-center gap-1.5 bg-[#3D271D] text-[#FAF7F2] shadow-xs border border-[#2D1E18] cursor-pointer';
-        btnIncome.className = 'type-toggle-btn py-2 text-xs font-bold rounded-lg transition-all flex items-center justify-center gap-1.5 text-[#7A6458] hover:text-[#2D1E18] cursor-pointer';
-
-        nominalPrefix.className = 'absolute left-3.5 font-extrabold text-lg text-[#3D271D] transition-colors';
-        inputNominal.classList.add('focus:border-[#3D271D]');
-
-        submitBtn.className = 'w-full py-3.5 px-4 rounded-xl font-extrabold text-sm text-[#FAF7F2] bg-[#3D271D] hover:bg-[#2A1A13] active:scale-[0.98] shadow-lg shadow-[#3D271D]/20 border border-[#2D1E18] transition-all flex items-center justify-center gap-2 cursor-pointer tracking-wide';
-        submitBtn.querySelector('span').textContent = 'Simpan Pengeluaran';
-      } else {
-        btnIncome.className = 'type-toggle-btn py-2 text-xs font-bold rounded-lg transition-all flex items-center justify-center gap-1.5 bg-[#3D271D] text-[#FAF7F2] shadow-xs border border-[#2D1E18] cursor-pointer';
-        btnExpense.className = 'type-toggle-btn py-2 text-xs font-bold rounded-lg transition-all flex items-center justify-center gap-1.5 text-[#7A6458] hover:text-[#2D1E18] cursor-pointer';
-
-        nominalPrefix.className = 'absolute left-3.5 font-extrabold text-lg text-[#3D271D] transition-colors';
-        inputNominal.classList.add('focus:border-[#3D271D]');
-
-        submitBtn.className = 'w-full py-3.5 px-4 rounded-xl font-extrabold text-sm text-[#FAF7F2] bg-[#3D271D] hover:bg-[#2A1A13] active:scale-[0.98] shadow-lg shadow-[#3D271D]/20 border border-[#2D1E18] transition-all flex items-center justify-center gap-2 cursor-pointer tracking-wide';
-        submitBtn.querySelector('span').textContent = 'Simpan Pemasukan';
-      }
-
-      currentCategory = CATEGORIES[type][0];
-      renderCategoryGrid();
-    }
-
-    function renderCategoryGrid() {
-      const grid = document.getElementById('categoryGrid');
-      const label = document.getElementById('selectedCategoryLabel');
-      const list = CATEGORIES[currentType];
-
-      label.textContent = `${currentCategory.emoji} ${currentCategory.name}`;
-
-      let html = '';
-      list.forEach(cat => {
-        const isSelected = cat.id === currentCategory.id;
-        const activeClass = isSelected 
-          ? 'border-2 border-[#3D271D] bg-[#3D271D] text-[#FAF7F2] shadow-xs' 
-          : 'border border-[#D8CABE] bg-white text-[#5C453A] hover:bg-[#EFE8DF] hover:border-[#3D271D]/30';
-
-        html += `
+      // Pills Selector di Form Catat Cepat
+      $('#fw').innerHTML = S.wallets.map(w => {
+        const isSelected = V.fw === w.id;
+        return `
           <button 
             type="button" 
-            onclick="selectCategory('${cat.id}')" 
-            class="category-btn py-2 px-1 rounded-xl text-center flex flex-col items-center justify-center gap-0.5 transition-all active:scale-95 cursor-pointer ${activeClass}">
-            <span class="text-lg leading-none">${cat.emoji}</span>
-            <span class="text-[10px] font-bold truncate max-w-full leading-tight mt-0.5">${cat.name}</span>
+            data-id="${w.id}" 
+            class="py-2 px-3.5 rounded-full font-bold text-xs transition-all flex items-center gap-1.5 cursor-pointer ${isSelected ? 'bg-[#3b2417] text-white shadow-sm scale-105' : 'bg-[#f6f0e9] hover:bg-[#eadfd3] text-[#2b1d14] border border-[#eadfd3]/60'}"
+          >
+            <span>${w.e}</span> <span>${escapeHtml(w.n)}</span>
           </button>
         `;
-      });
-
-      grid.innerHTML = html;
+      }).join('');
     }
 
-    function selectCategory(catId) {
-      const found = CATEGORIES[currentType].find(c => c.id === catId);
-      if (found) {
-        currentCategory = found;
-        renderCategoryGrid();
+    $('#fw').onclick = e => {
+      const btn = e.target.closest('button[data-id]');
+      if (btn) {
+        V.fw = parseInt(btn.dataset.id, 10);
+        renderWallets();
       }
-    }
-
-    // Input Nominal Auto-Format Ribuan
-    const inputNominal = document.getElementById('inputNominal');
-    inputNominal.addEventListener('input', function(e) {
-      const rawDigits = this.value.replace(/\D/g, '');
-      if (!rawDigits) {
-        this.value = '';
-        return;
-      }
-      const num = parseInt(rawDigits, 10);
-      this.value = new Intl.NumberFormat('id-ID').format(num);
-    });
-
-    function quickAddAmount(delta) {
-      const current = parseRupiahInput(inputNominal.value);
-      const next = current + delta;
-      inputNominal.value = new Intl.NumberFormat('id-ID').format(next);
-      inputNominal.focus();
-    }
-
-    function clearAmount() {
-      inputNominal.value = '';
-      inputNominal.focus();
-    }
+    };
 
     /* ==========================================================================
-       7. ADD & DELETE TRANSACTION LOGIC
+       4. RENDER FORM CATAT CEPAT (5 DETIK)
        ========================================================================== */
-    function handleAddTransaction() {
-      const amount = parseRupiahInput(inputNominal.value);
-      if (amount <= 0) {
-        showToast('Masukkan nominal lebih dari 0!', 'warning');
-        inputNominal.focus();
+    function renderForm() {
+      // Tab Pengeluaran vs Pemasukan
+      setTabClass('#ftab', btn => btn.dataset.t === V.ft);
+
+      // Validasi Kategori Aktif
+      const catList = CATS[V.ft] || [];
+      if (!catList.some(c => c[1] === V.fc)) {
+        V.fc = catList[0] ? catList[0][1] : 'Makan';
+      }
+
+      // Render Grid Kategori 3 Kolom
+      $('#fc').innerHTML = catList.map(c => {
+        const isSelected = V.fc === c[1];
+        return `
+          <button 
+            type="button" 
+            data-c="${escapeHtml(c[1])}" 
+            class="flex flex-col items-center justify-center gap-1 p-2.5 rounded-2xl font-bold text-xs transition-all cursor-pointer min-h-[66px] ${isSelected ? 'bg-[#3b2417] text-white shadow-fintech -translate-y-0.5' : 'bg-[#f6f0e9] hover:bg-[#eadfd3] text-[#2b1d14] border border-[#eadfd3]/60'}"
+          >
+            <span class="text-xl leading-none">${c[0]}</span>
+            <span class="text-[11px] truncate max-w-full">${escapeHtml(c[1])}</span>
+          </button>
+        `;
+      }).join('');
+
+      $('#save').textContent = '＋ Simpan ' + (V.ft === 'out' ? 'Pengeluaran' : 'Pemasukan');
+    }
+
+    $('#ftab').onclick = e => {
+      const btn = e.target.closest('button[data-t]');
+      if (btn) {
+        V.ft = btn.dataset.t;
+        renderForm();
+      }
+    };
+
+    $('#fc').onclick = e => {
+      const btn = e.target.closest('button[data-c]');
+      if (btn) {
+        V.fc = btn.dataset.c;
+        renderForm();
+      }
+    };
+
+    const setNominal = num => {
+      V.amt = Math.max(0, Math.floor(num || 0));
+      $('#amt').value = V.amt > 0 ? V.amt.toLocaleString('id-ID') : '';
+    };
+
+    $('#amt').oninput = e => {
+      const rawNum = parseInt(e.target.value.replace(/\D/g, '').slice(0, 12), 10) || 0;
+      setNominal(rawNum);
+    };
+
+    $('#qk').onclick = e => {
+      const btn = e.target.closest('button[data-v]');
+      if (btn) {
+        const val = btn.dataset.v;
+        if (val === '0') {
+          setNominal(0);
+        } else {
+          setNominal(V.amt + parseInt(val, 10));
+        }
+      }
+    };
+
+    $('#save').onclick = () => {
+      if (!V.amt || V.amt <= 0) {
+        const box = $('#amtbox');
+        box.classList.remove('shake');
+        void box.offsetWidth; // Trigger reflow
+        box.classList.add('shake');
+        toast('Isi nominal transaksi dulu ya!');
+        $('#amt').focus();
         return;
       }
 
-      const inputDate = document.getElementById('inputDate').value;
-      if (!inputDate) {
-        showToast('Pilih tanggal transaksi!', 'warning');
-        return;
-      }
-
-      if (!currentWallet) {
-        showToast('Pilih kantong / dompet terlebih dahulu!', 'warning');
-        return;
-      }
-
-      const note = document.getElementById('inputNote').value.trim();
+      const inputDate = $('#fd').value || todayS;
+      const now = new Date();
+      const timeStr = `${pad(now.getHours())}.${pad(now.getMinutes())}`;
+      const noteStr = ($('#fn').value || '').trim();
 
       const newTx = {
-        id: 'tx_' + Date.now() + '_' + Math.random().toString(36).substr(2, 4),
-        type: currentType,
-        amount: amount,
-        wallet: currentWallet,
-        category: { ...currentCategory },
-        date: inputDate,
-        note: note,
-        createdAt: Date.now()
+        id: S.nid++,
+        t: V.ft,
+        c: V.fc,
+        w: V.fw,
+        a: V.amt,
+        d: inputDate,
+        tm: timeStr,
+        n: noteStr
       };
 
-      // Tambahkan ke state
-      transactions.unshift(newTx);
-      saveTransactions();
+      S.tx.unshift(newTx);
+      saveStorage();
 
-      // Sesuaikan riwayat tanggal harian ke tanggal transaksi baru agar langsung tampak
-      selectedHistoryDate = inputDate;
+      // Reset Form
+      setNominal(0);
+      $('#fn').value = '';
+      toast('Transaksi tersimpan ✓');
 
-      // Jika tanggal transaksi bukan di bulan yang sedang dipilih, sesuaikan filter
-      const txMonth = inputDate.substring(0, 7);
-      if (txMonth !== selectedMonthYear) {
-        selectedMonthYear = txMonth;
-      }
-
-      updateDashboard();
-
-      // Reset form
-      inputNominal.value = '';
-      document.getElementById('inputNote').value = '';
-      
-      const typeText = currentType === 'expense' ? 'Pengeluaran' : 'Pemasukan';
-      showToast(`${typeText} Rp ${new Intl.NumberFormat('id-ID').format(amount)} disimpan ke ${currentWallet}!`, 'success');
-    }
-
-    // Modal Delete Confirmation
-    function promptDeleteTransaction(id) {
-      pendingDeleteId = id;
-      const modal = document.getElementById('deleteModal');
-      const card = document.getElementById('deleteModalCard');
-      
-      const targetTx = transactions.find(t => t.id === id);
-      if (targetTx) {
-        document.getElementById('deleteModalDesc').textContent = 
-          `Hapus "${targetTx.category?.name}" (${targetTx.wallet}) sebesar Rp ${new Intl.NumberFormat('id-ID').format(targetTx.amount)}?`;
-      }
-
-      modal.classList.remove('opacity-0', 'pointer-events-none');
-      card.classList.remove('scale-95');
-      card.classList.add('scale-100');
-    }
-
-    function closeDeleteModal() {
-      pendingDeleteId = null;
-      const modal = document.getElementById('deleteModal');
-      const card = document.getElementById('deleteModalCard');
-      modal.classList.add('opacity-0', 'pointer-events-none');
-      card.classList.remove('scale-100');
-      card.classList.add('scale-95');
-    }
-
-    document.getElementById('btnConfirmDelete').addEventListener('click', function() {
-      if (!pendingDeleteId) return;
-      
-      transactions = transactions.filter(t => t.id !== pendingDeleteId);
-      saveTransactions();
-      updateDashboard();
-      closeDeleteModal();
-      showToast('Transaksi telah dihapus.', 'info');
-    });
+      // Sesuaikan View ke Tanggal Transaksi Baru
+      V.day = inputDate;
+      V.month = inputDate.slice(0, 7);
+      renderAll();
+    };
 
     /* ==========================================================================
-       8. BULAN & TAHUN NAVIGATION
+       5. RENDER RIWAYAT TRANSAKSI HARIAN
        ========================================================================== */
-    function changeMonth(direction) {
-      const [y, m] = selectedMonthYear.split('-').map(Number);
-      let targetDate = new Date(y, m - 1 + direction, 1);
+    const shiftDate = (dateStr, days) => {
+      const d = new Date(dateStr + 'T00:00:00');
+      d.setDate(d.getDate() + days);
+      return iso(d);
+    };
+
+    function renderHist() {
+      const d = new Date(V.day + 'T00:00:00');
+      const isToday = V.day === todayS;
+      const dayLabel = `${isToday ? 'Hari Ini, ' : ''}${d.getDate()} ${MON[d.getMonth()].slice(0, 3)} ${d.getFullYear()}`;
       
-      const nextY = targetDate.getFullYear();
-      const nextM = String(targetDate.getMonth() + 1).padStart(2, '0');
-      selectedMonthYear = `${nextY}-${nextM}`;
-      updateDashboard();
-    }
+      $('#dt').textContent = dayLabel;
+      $('#dpick').value = V.day;
 
-    document.getElementById('btnPrevMonth').addEventListener('click', () => changeMonth(-1));
-    document.getElementById('btnNextMonth').addEventListener('click', () => changeMonth(1));
+      // Filter Transaksi di Tanggal Terpilih
+      const dailyAll = S.tx.filter(x => x.d === V.day);
+      const dailyOut = sum(dailyAll.filter(x => x.t === 'out'));
+      const dailyIn = sum(dailyAll.filter(x => x.t === 'in'));
 
-    document.getElementById('filterMonth').addEventListener('change', function(e) {
-      if (this.value) {
-        selectedMonthYear = this.value;
-        updateDashboard();
-      }
-    });
+      $('#so').textContent = '● Keluar: -' + rp(dailyOut);
+      $('#si').textContent = '● Masuk: +' + rp(dailyIn);
+      $('#cnt').textContent = `${dailyAll.length} Transaksi`;
 
-    document.getElementById('btnResetToCurrentMonth').addEventListener('click', () => {
-      selectedMonthYear = getCurrentMonthYearStr();
-      updateDashboard();
-    });
-
-    /* ==========================================================================
-       9. TOAST NOTIFICATION COMPONENT
-       ========================================================================== */
-    function showToast(message, type = 'info') {
-      const container = document.getElementById('toastContainer');
-      const toast = document.createElement('div');
-      
-      let bg = 'bg-[#2D1E18] text-[#FAF7F2] border-[#4A3023] shadow-xl';
-      let icon = 'ℹ️';
-      if (type === 'success') {
-        bg = 'bg-[#2D1E18] text-[#E8DCCF] border-emerald-600/50 shadow-xl';
-        icon = '✨';
-      } else if (type === 'error') {
-        bg = 'bg-[#2D1E18] text-rose-300 border-rose-500/50 shadow-xl';
-        icon = '⚠️';
-      } else if (type === 'warning') {
-        bg = 'bg-[#2D1E18] text-amber-300 border-amber-500/50 shadow-xl';
-        icon = '⚡';
-      }
-
-      toast.className = `flex items-center gap-2 py-2.5 px-4 rounded-xl text-xs font-bold shadow-xl border ${bg} transition-all duration-300 transform translate-y-3 opacity-0`;
-      toast.innerHTML = `<span>${icon}</span> <span>${message}</span>`;
-      
-      container.appendChild(toast);
-
-      requestAnimationFrame(() => {
-        toast.classList.remove('translate-y-3', 'opacity-0');
+      // Filter Tabs (Semua / Keluar / Masuk)
+      $$('#hf button').forEach(btn => {
+        const isActive = btn.dataset.f === V.hf;
+        if (isActive) {
+          btn.className = 'py-2 px-2 rounded-xl font-bold transition-all text-center bg-[#3b2417] text-white shadow-sm';
+        } else {
+          btn.className = 'py-2 px-2 rounded-xl font-bold transition-all text-center text-[#8a7566] hover:text-[#2b1d14]';
+        }
       });
 
-      setTimeout(() => {
-        toast.classList.add('opacity-0', '-translate-y-2');
-        setTimeout(() => {
-          if (toast.parentNode) {
-            toast.parentNode.removeChild(toast);
-          }
-        }, 300);
-      }, 3000);
-    }
+      const filtered = dailyAll.filter(x => V.hf === 'all' || x.t === V.hf);
+      const histEl = $('#hist');
 
-    /* ==========================================================================
-       10. INITIALIZATION & PWA ASSETS
-       ========================================================================== */
-    function initPwaIcons() {
-      // Generate raster PNG icon from SVG for iOS / Android launchers that prefer PNG
-      try {
-        const svgIcon = document.getElementById('appFavicon')?.getAttribute('href');
-        if (!svgIcon) return;
-        const img = new Image();
-        img.crossOrigin = 'anonymous';
-        img.onload = function() {
-          const canvas = document.createElement('canvas');
-          canvas.width = 192;
-          canvas.height = 192;
-          const ctx = canvas.getContext('2d');
-          ctx.drawImage(img, 0, 0, 192, 192);
-          const pngUrl = canvas.toDataURL('image/png');
-          const appleTouch = document.getElementById('appleTouchIcon');
-          if (appleTouch) {
-            appleTouch.href = pngUrl;
-          }
-        };
-        img.src = svgIcon;
-      } catch (e) {
-        // Fallback to SVG data-uri
+      if (filtered.length === 0) {
+        histEl.innerHTML = `
+          <div class="py-7 text-center text-xs text-[#8a7566] font-semibold">
+            <span class="text-2xl block mb-1">🍃</span>
+            Tidak ada transaksi di tanggal ini
+          </div>
+        `;
+      } else {
+        histEl.innerHTML = filtered.map(x => {
+          const wallet = getWallet(x.w);
+          const isIncome = x.t === 'in';
+
+          return `
+            <div class="flex items-center gap-3 p-3 rounded-2xl bg-[#f6f0e9] border border-[#eadfd3]/80 animate-pop">
+              <!-- Icon Kategori -->
+              <span class="w-10 h-10 rounded-xl bg-white shadow-2xs flex items-center justify-center text-xl shrink-0">
+                ${icoOf(x.t, x.c)}
+              </span>
+
+              <!-- Rincian Transaksi -->
+              <div class="flex-1 min-w-0">
+                <div class="flex items-center gap-1.5">
+                  <b class="text-xs font-extrabold text-[#2b1d14] truncate">${escapeHtml(x.c)}</b>
+                  <span class="text-[9px] font-bold bg-white text-[#8a7566] px-2 py-0.5 rounded-full border border-[#eadfd3] shrink-0">
+                    ${wallet.e} ${escapeHtml(wallet.n)}
+                  </span>
+                </div>
+                <small class="block text-[10px] text-[#8a7566] font-medium truncate mt-0.5">
+                  Pukul ${x.tm || '--.--'}${x.n ? ' · ' + escapeHtml(x.n) : ''}
+                </small>
+              </div>
+
+              <!-- Nominal -->
+              <div class="font-black text-xs sm:text-sm shrink-0 ${isIncome ? 'text-[#0f8a5f]' : 'text-[#d6455a]'}">
+                ${isIncome ? '+' : '-'}${rp(x.a)}
+              </div>
+
+              <!-- Tombol Hapus -->
+              <button 
+                type="button" 
+                data-id="${x.id}" 
+                title="Hapus Transaksi"
+                class="btn-del-tx w-7 h-7 rounded-lg hover:bg-rose-100 text-[#8a7566] hover:text-rose-600 flex items-center justify-center text-xs shrink-0 transition-all cursor-pointer"
+              >
+                🗑
+              </button>
+            </div>
+          `;
+        }).join('');
       }
     }
 
-    window.addEventListener('DOMContentLoaded', () => {
-      // Set default month/year ke bulan saat ini & riwayat harian ke hari ini
-      selectedMonthYear = getCurrentMonthYearStr();
-      selectedHistoryDate = getTodayDateStr();
-      
-      // Set input tanggal ke hari ini
-      document.getElementById('inputDate').value = getTodayDateStr();
+    $('#hist').onclick = e => {
+      const btn = e.target.closest('.btn-del-tx');
+      if (btn && btn.dataset.id) {
+        const id = parseInt(btn.dataset.id, 10);
+        if (confirm('Yakin ingin menghapus transaksi ini?')) {
+          S.tx = S.tx.filter(x => x.id !== id);
+          saveStorage();
+          toast('Transaksi dihapus');
+          renderAll();
+        }
+      }
+    };
 
-      // Bind type toggles
-      document.getElementById('btnTypeExpense').addEventListener('click', () => setTransactionType('expense'));
-      document.getElementById('btnTypeIncome').addEventListener('click', () => setTransactionType('income'));
+    $('#hf').onclick = e => {
+      const btn = e.target.closest('button[data-f]');
+      if (btn) {
+        V.hf = btn.dataset.f;
+        renderHist();
+      }
+    };
 
-      // Inisialisasi ikon PWA
-      initPwaIcons();
+    const goToDay = newDayStr => {
+      V.day = newDayStr;
+      V.month = newDayStr.slice(0, 7);
+      V.sel = null;
+      renderAll();
+    };
 
-      // Load data & initial render
-      loadWallets();
-      loadTransactions();
-      setTransactionType('expense');
-      updateDashboard();
-    });
+    $('#dp').onclick = () => goToDay(shiftDate(V.day, -1));
+    $('#dn').onclick = () => goToDay(shiftDate(V.day, 1));
+    $('#dpick').onchange = e => {
+      if (e.target.value) goToDay(e.target.value);
+    };
+
+    // Navigasi Bulan di Header
+    const moveMonth = offset => {
+      const [y, m] = V.month.split('-').map(Number);
+      const d = new Date(y, m - 1 + offset, 1);
+      V.month = `${d.getFullYear()}-${pad(d.getMonth() + 1)}`;
+      V.sel = null;
+      renderAll();
+    };
+
+    $('#mp').onclick = () => moveMonth(-1);
+    $('#mn').onclick = () => moveMonth(1);
+
+    /* ==========================================================================
+       6. BOTTOM SHEET: KELOLA KANTONG DOMPET
+       ========================================================================== */
+    function renderWalletSheet() {
+      $('#wl').innerHTML = S.wallets.map(w => `
+        <div class="flex items-center justify-between p-3 rounded-2xl bg-[#f6f0e9] border border-[#eadfd3]/80">
+          <span class="font-extrabold text-xs text-[#2b1d14] flex items-center gap-2">
+            <span>${w.e}</span> <span>${escapeHtml(w.n)}</span>
+          </span>
+          <button 
+            type="button" 
+            data-id="${w.id}" 
+            class="btn-del-w text-[10px] font-bold text-rose-600 bg-rose-50 hover:bg-rose-100 px-2.5 py-1 rounded-lg border border-rose-200 transition-all cursor-pointer"
+          >
+            Hapus
+          </button>
+        </div>
+      `).join('');
+    }
+
+    function openWalletSheet() {
+      renderWalletSheet();
+      const ov = $('#ov');
+      ov.classList.remove('opacity-0', 'pointer-events-none');
+      ov.classList.add('opacity-100', 'pointer-events-auto');
+      ov.firstElementChild.classList.remove('translate-y-full');
+      ov.firstElementChild.classList.add('translate-y-0');
+    }
+
+    function closeWalletSheet() {
+      const ov = $('#ov');
+      ov.classList.add('opacity-0', 'pointer-events-none');
+      ov.classList.remove('opacity-100', 'pointer-events-auto');
+      ov.firstElementChild.classList.add('translate-y-full');
+      ov.firstElementChild.classList.remove('translate-y-0');
+    }
+
+    $('#wm').onclick = openWalletSheet;
+
+    $('#ov').onclick = e => {
+      if (e.target.id === 'ov') {
+        closeWalletSheet();
+      }
+    };
+
+    $('#wl').onclick = e => {
+      const btn = e.target.closest('.btn-del-w');
+      if (!btn || !btn.dataset.id) return;
+      const id = parseInt(btn.dataset.id, 10);
+
+      // Safeguards
+      if (S.tx.some(x => x.w === id)) {
+        toast('Dompet masih memiliki riwayat transaksi');
+        return;
+      }
+      if (S.wallets.length <= 1) {
+        toast('Minimal harus menyisakan satu dompet');
+        return;
+      }
+
+      S.wallets = S.wallets.filter(w => w.id !== id);
+      if (V.fw === id) {
+        V.fw = S.wallets[0].id;
+      }
+
+      saveStorage();
+      renderWalletSheet();
+      renderWallets();
+      toast('Dompet dihapus');
+    };
+
+    $('#wadd').onclick = () => {
+      const name = ($('#wn').value || '').trim();
+      const emoji = ($('#we').value || '').trim() || '💳';
+
+      if (!name) {
+        toast('Silakan isi nama dompet');
+        $('#wn').focus();
+        return;
+      }
+
+      S.wallets.push({
+        id: S.nid++,
+        e: emoji,
+        n: name
+      });
+
+      $('#wn').value = '';
+      saveStorage();
+      renderWalletSheet();
+      renderWallets();
+      toast('Dompet baru ditambahkan ✓');
+    };
+
+    /* ==========================================================================
+       INITIALIZATION
+       ========================================================================== */
+    function renderAll() {
+      renderHead();
+      renderDonut();
+      renderWallets();
+      renderForm();
+      renderHist();
+    }
+
+    // Set default tanggal form ke hari ini
+    $('#fd').value = todayS;
+    renderAll();
   </script>
 </body>
 </html>
