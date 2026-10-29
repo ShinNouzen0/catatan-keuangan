@@ -508,6 +508,7 @@
     const CATS = {
       out: [
         ['🍔', 'Makan'],
+        ['🧋', 'Minum'],
         ['🛵', 'Transport'],
         ['🛒', 'Belanja'],
         ['💡', 'Tagihan'],
@@ -876,17 +877,22 @@
         V.fc = catList[0] ? catList[0][1] : 'Makan';
       }
 
-      // Render Grid Kategori 3 Kolom
-      $('#fc').innerHTML = catList.map(c => {
+      // Render Grid Pill Kategori Rapi & Responsif
+      const fcEl = $('#fc');
+      fcEl.className = V.ft === 'in' 
+        ? 'grid grid-cols-2 gap-1.5' 
+        : 'grid grid-cols-3 gap-1.5';
+
+      fcEl.innerHTML = catList.map(c => {
         const isSelected = V.fc === c[1];
         return `
           <button 
             type="button" 
             data-c="${escapeHtml(c[1])}" 
-            class="flex flex-col items-center justify-center gap-0.5 p-2 rounded-2xl font-bold text-xs transition-all cursor-pointer min-h-[54px] ${isSelected ? 'bg-[#3b2417] text-white shadow-card -translate-y-0.5' : 'bg-[#f6f0e9] hover:bg-[#eadfd3] text-[#2b1d14] border border-[#eadfd3]/60'}"
+            class="flex items-center justify-center gap-1.5 py-2 px-2 rounded-xl font-bold text-xs transition-all cursor-pointer min-h-[42px] ${isSelected ? 'bg-[#3b2417] text-white shadow-xs scale-[1.02]' : 'bg-[#f6f0e9] hover:bg-[#eadfd3] text-[#2b1d14] border border-[#eadfd3]/70'}"
           >
-            <span class="text-lg leading-none">${c[0]}</span>
-            <span class="text-[10px] truncate max-w-full">${escapeHtml(c[1])}</span>
+            <span class="text-base shrink-0 leading-none">${c[0]}</span>
+            <span class="text-[11px] font-extrabold truncate">${escapeHtml(c[1])}</span>
           </button>
         `;
       }).join('');
