@@ -107,6 +107,9 @@
     .shake {
       animation: sk 0.35s ease-in-out;
     }
+    .bar-rect {
+      transition: height 0.6s cubic-bezier(0.16, 1, 0.3, 1), y 0.6s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;
+    }
     /* Hide scrollbar for clean mobile horizontal sliders */
     .no-scrollbar::-webkit-scrollbar {
       display: none;
@@ -124,7 +127,7 @@
       border-radius: 99px;
     }
     @media (prefers-reduced-motion: reduce) {
-      * { animation: none !important; transition: none !important; }
+      *, .bar-rect { animation: none !important; transition: none !important; }
     }
   </style>
 </head>
@@ -133,7 +136,7 @@
   <!-- Container Utama Mobile-First (Max-w-md, pas di jempol & tidak kaku) -->
   <main class="w-full max-w-md mx-auto px-4 py-5 pb-20 flex flex-col gap-3.5">
     
-    <!-- 1. TOP HEADER (LOGO, EXPORT CSV, & NAVIGASI BULAN) -->
+    <!-- 1. TOP HEADER (LOGO, EXPORT CSV, & NAVIGASI BULAN GLOBAL) -->
     <header class="flex justify-between items-center px-1">
       <div class="flex items-center gap-2 font-extrabold text-lg text-[#2b1d14] tracking-tight">
         <span class="w-8 h-8 rounded-xl bg-[#3b2417] text-white flex items-center justify-center text-base shadow-xs">
@@ -143,7 +146,7 @@
       </div>
 
       <div class="flex items-center gap-1.5">
-        <!-- Month Navigator Pill -->
+        <!-- Month Navigator Pill Global -->
         <nav aria-label="Navigasi Bulan" class="flex items-center bg-white rounded-full p-0.5 shadow-card border border-[#eadfd3]/80 font-bold text-xs">
           <button id="mp" title="Bulan Sebelumnya" class="w-7 h-7 rounded-full flex items-center justify-center text-sm hover:bg-[#f6f0e9] text-[#3b2417] transition-all cursor-pointer">
             ‹
@@ -224,7 +227,7 @@
             Sisa Saldo Kantong
           </h2>
         </div>
-        <button id="wm" class="text-[10px] font-bold bg-[#f6f0e9] hover:bg-[#eadfd3] text-[#3b2417] px-2.5 py-1 rounded-full border border-[#eadfd3] transition-all flex items-center gap-1">
+        <button id="wm" class="text-[10px] font-bold bg-[#f6f0e9] hover:bg-[#eadfd3] text-[#3b2417] px-2.5 py-1 rounded-full border border-[#eadfd3] transition-all flex items-center gap-1 cursor-pointer">
           <span>＋</span> <span>Kelola</span>
         </button>
       </div>
@@ -235,9 +238,48 @@
       </div>
     </section>
 
-    <!-- 4. REKAP FINANSIAL BULANAN (COMPACT SVG DONUT CHART SAJA - BEBAS DAFTAR PANJANG) -->
+    <!-- 4. TREN BULANAN (BAR CHART SVG BERKELOMPOK 6 BULAN) -->
+    <section id="trendCard" class="bg-white rounded-3xl p-4 sm:p-5 shadow-card border border-[#eadfd3]/70 animate-up space-y-3">
+      <!-- Header Kartu Tren -->
+      <div class="flex items-center justify-between">
+        <div class="flex items-center gap-1.5">
+          <span class="text-sm">📈</span>
+          <h2 class="text-xs font-extrabold tracking-wider text-[#8a7566] uppercase">
+            Tren 6 Bulan
+          </h2>
+        </div>
+        <!-- Legenda Mini -->
+        <div class="flex items-center gap-2 text-[10px] font-bold">
+          <span class="inline-flex items-center gap-1 text-[#0f8a5f]">
+            <span class="w-2 h-2 rounded-full bg-[#0f8a5f]"></span> Masuk
+          </span>
+          <span class="inline-flex items-center gap-1 text-[#d6455a]">
+            <span class="w-2 h-2 rounded-full bg-[#d6455a]"></span> Keluar
+          </span>
+        </div>
+      </div>
+
+      <!-- Banner Insight Tren -->
+      <div id="trendInsight" class="p-2.5 rounded-2xl border transition-all text-xs font-bold flex items-center gap-2">
+        <!-- Diisi secara dinamis oleh JavaScript -->
+      </div>
+
+      <!-- Detail Tooltip Interaktif untuk Bulan yang Disorot -->
+      <div id="trendTooltip" class="bg-[#f6f0e9] p-2 sm:p-2.5 rounded-2xl border border-[#eadfd3]/80 flex items-center justify-between text-[11px] font-extrabold transition-all select-none">
+        <!-- Diisi secara dinamis oleh JavaScript -->
+      </div>
+
+      <!-- SVG Chart Container Responsif -->
+      <div class="w-full relative select-none pt-1">
+        <svg id="trendSvg" viewBox="0 0 340 155" class="w-full h-auto overflow-visible cursor-pointer">
+          <!-- Diisi secara dinamis oleh JavaScript -->
+        </svg>
+      </div>
+    </section>
+
+    <!-- 5. REKAP FINANSIAL BULANAN (SVG DONUT CHART INTERAKTIF & ANIMASI PUTAR) -->
     <section class="bg-white rounded-3xl p-4 sm:p-5 shadow-card border border-[#eadfd3]/70 animate-up">
-      <!-- Header Rekap Bulanan (Tanpa Navigasi Ganda - Mengikuti Header Global) -->
+      <!-- Header Rekap Bulanan -->
       <div class="flex items-center justify-between mb-3">
         <div class="flex items-center gap-1.5">
           <span class="text-sm">📊</span>
@@ -266,19 +308,19 @@
           <!-- Diisi secara dinamis oleh JavaScript -->
         </svg>
         
-        <!-- Lubang Tengah Donat Interaktif -->
+        <!-- Lubang Tengah Donat Interaktif & Count-Up -->
         <div id="ctr" class="absolute inset-0 flex flex-col items-center justify-center text-center pointer-events-none px-6">
           <!-- Diisi secara dinamis oleh JavaScript -->
         </div>
       </div>
 
-      <!-- Mini Badges Legenda Kategori di Bawah Donut (Sangat Rapi & Compact) -->
+      <!-- Mini Badges Legenda Kategori di Bawah Donut -->
       <div id="donutLegend" class="flex flex-wrap items-center justify-center gap-1.5 mt-2.5">
         <!-- Diisi secara dinamis oleh JavaScript -->
       </div>
     </section>
 
-    <!-- 5. FORM CATAT CEPAT (KOMPAK & RAMAH JEMPOL) -->
+    <!-- 6. FORM CATAT CEPAT (3 TAB: PENGELUARAN, PEMASUKAN, & TRANSFER) -->
     <section class="bg-white rounded-3xl p-4 sm:p-5 shadow-card border border-[#eadfd3]/70 animate-up space-y-3">
       <div class="flex items-center gap-1.5">
         <span class="text-sm">⚡</span>
@@ -287,13 +329,16 @@
         </h2>
       </div>
 
-      <!-- Tab Tipe: Pengeluaran vs Pemasukan -->
-      <div id="ftab" class="grid grid-cols-2 bg-[#f6f0e9] p-1 rounded-2xl gap-1 select-none border border-[#eadfd3]/60">
-        <button data-t="out" class="py-2 px-2.5 rounded-xl font-bold text-xs transition-all flex items-center justify-center gap-1 bg-[#3b2417] text-white shadow-xs">
-          <span>↑</span> <span>Pengeluaran</span>
+      <!-- Tab Tipe: Pengeluaran vs Pemasukan vs Transfer -->
+      <div id="ftab" class="grid grid-cols-3 bg-[#f6f0e9] p-1 rounded-2xl gap-1 select-none border border-[#eadfd3]/60">
+        <button data-t="out" class="py-2 px-1.5 rounded-xl font-bold text-xs transition-all flex items-center justify-center gap-1 bg-[#3b2417] text-white shadow-xs min-h-[42px]">
+          <span>↑</span> <span>Keluar</span>
         </button>
-        <button data-t="in" class="py-2 px-2.5 rounded-xl font-bold text-xs transition-all flex items-center justify-center gap-1 text-[#8a7566] hover:text-[#2b1d14]">
-          <span>↓</span> <span>Pemasukan</span>
+        <button data-t="in" class="py-2 px-1.5 rounded-xl font-bold text-xs transition-all flex items-center justify-center gap-1 text-[#8a7566] hover:text-[#2b1d14] min-h-[42px]">
+          <span>↓</span> <span>Masuk</span>
+        </button>
+        <button data-t="tf" class="py-2 px-1.5 rounded-xl font-bold text-xs transition-all flex items-center justify-center gap-1 text-[#8a7566] hover:text-[#2b1d14] min-h-[42px]">
+          <span>⇄</span> <span>Transfer</span>
         </button>
       </div>
 
@@ -313,26 +358,26 @@
 
         <!-- Tombol Cepat Tambah Nominal -->
         <div id="qk" class="flex gap-1 flex-wrap">
-          <button data-v="10000" class="py-1.5 px-2.5 rounded-full bg-[#f6f0e9] hover:bg-[#eadfd3] font-bold text-[10.5px] text-[#2b1d14] border border-[#eadfd3]/60">
+          <button data-v="10000" class="py-1.5 px-2.5 rounded-full bg-[#f6f0e9] hover:bg-[#eadfd3] font-bold text-[10.5px] text-[#2b1d14] border border-[#eadfd3]/60 min-h-[36px]">
             +10rb
           </button>
-          <button data-v="20000" class="py-1.5 px-2.5 rounded-full bg-[#f6f0e9] hover:bg-[#eadfd3] font-bold text-[10.5px] text-[#2b1d14] border border-[#eadfd3]/60">
+          <button data-v="20000" class="py-1.5 px-2.5 rounded-full bg-[#f6f0e9] hover:bg-[#eadfd3] font-bold text-[10.5px] text-[#2b1d14] border border-[#eadfd3]/60 min-h-[36px]">
             +20rb
           </button>
-          <button data-v="50000" class="py-1.5 px-2.5 rounded-full bg-[#f6f0e9] hover:bg-[#eadfd3] font-bold text-[10.5px] text-[#2b1d14] border border-[#eadfd3]/60">
+          <button data-v="50000" class="py-1.5 px-2.5 rounded-full bg-[#f6f0e9] hover:bg-[#eadfd3] font-bold text-[10.5px] text-[#2b1d14] border border-[#eadfd3]/60 min-h-[36px]">
             +50rb
           </button>
-          <button data-v="100000" class="py-1.5 px-2.5 rounded-full bg-[#f6f0e9] hover:bg-[#eadfd3] font-bold text-[10.5px] text-[#2b1d14] border border-[#eadfd3]/60">
+          <button data-v="100000" class="py-1.5 px-2.5 rounded-full bg-[#f6f0e9] hover:bg-[#eadfd3] font-bold text-[10.5px] text-[#2b1d14] border border-[#eadfd3]/60 min-h-[36px]">
             +100rb
           </button>
-          <button data-v="0" class="py-1.5 px-2.5 rounded-full bg-[#f6f0e9] hover:bg-rose-100 font-bold text-[10.5px] text-rose-700 border border-[#eadfd3]/60">
+          <button data-v="0" class="py-1.5 px-2.5 rounded-full bg-[#f6f0e9] hover:bg-rose-100 font-bold text-[10.5px] text-rose-700 border border-[#eadfd3]/60 min-h-[36px]">
             Reset
           </button>
         </div>
       </div>
 
-      <!-- Pilihan Dompet (Horizontal Slider) -->
-      <div class="space-y-1">
+      <!-- Pilihan Dompet Biasa (Pengeluaran & Pemasukan) -->
+      <div id="singleWalletBox" class="space-y-1">
         <label class="block text-[10px] font-extrabold text-[#8a7566] tracking-wider uppercase">
           Dompet
         </label>
@@ -341,8 +386,41 @@
         </div>
       </div>
 
-      <!-- Pilihan Kategori (Grid 3 Kolom Compact) -->
-      <div class="space-y-1">
+      <!-- Pilihan Dompet Khusus Fitur Transfer (Dari & Ke + Tombol Swap) -->
+      <div id="transferWalletBox" class="space-y-2.5 hidden">
+        <!-- Dari Dompet -->
+        <div class="space-y-1">
+          <div class="flex items-center justify-between">
+            <label class="block text-[10px] font-extrabold text-[#8a7566] tracking-wider uppercase">
+              Dari Dompet (Sumber)
+            </label>
+            <button 
+              type="button" 
+              id="btnSwapWallet" 
+              title="Tukar Dompet Asal & Tujuan" 
+              class="text-[10px] font-extrabold text-[#3b2417] bg-[#f6f0e9] hover:bg-[#eadfd3] px-2.5 py-1 rounded-full border border-[#eadfd3] flex items-center gap-1 transition-all active:scale-95 cursor-pointer"
+            >
+              <span>⇄</span> <span>Tukar</span>
+            </button>
+          </div>
+          <div id="fwFrom" class="flex gap-1.5 overflow-x-auto pb-1 no-scrollbar">
+            <!-- Diisi secara dinamis oleh JavaScript -->
+          </div>
+        </div>
+
+        <!-- Ke Dompet -->
+        <div class="space-y-1">
+          <label class="block text-[10px] font-extrabold text-[#8a7566] tracking-wider uppercase">
+            Ke Dompet (Tujuan)
+          </label>
+          <div id="fwTo" class="flex gap-1.5 overflow-x-auto pb-1 no-scrollbar">
+            <!-- Diisi secara dinamis oleh JavaScript -->
+          </div>
+        </div>
+      </div>
+
+      <!-- Pilihan Kategori (Khusus Pengeluaran & Pemasukan) -->
+      <div id="categoryBox" class="space-y-1">
         <label class="block text-[10px] font-extrabold text-[#8a7566] tracking-wider uppercase">
           Kategori
         </label>
@@ -360,7 +438,7 @@
           <input 
             type="date" 
             id="fd" 
-            class="w-full bg-[#f6f0e9] border border-transparent focus:border-[#6b4429] focus:bg-white rounded-xl p-2 font-semibold text-xs text-[#2b1d14] outline-none min-h-[40px] transition-all"
+            class="w-full bg-[#f6f0e9] border border-transparent focus:border-[#6b4429] focus:bg-white rounded-xl p-2 font-semibold text-xs text-[#2b1d14] outline-none min-h-[42px] transition-all"
           >
         </div>
         <div>
@@ -370,8 +448,8 @@
           <input 
             type="text" 
             id="fn" 
-            placeholder="cth: Soto" 
-            class="w-full bg-[#f6f0e9] border border-transparent focus:border-[#6b4429] focus:bg-white rounded-xl p-2 font-semibold text-xs text-[#2b1d14] outline-none min-h-[40px] transition-all placeholder-[#8a7566]/60"
+            placeholder="cth: Soto / Kirim" 
+            class="w-full bg-[#f6f0e9] border border-transparent focus:border-[#6b4429] focus:bg-white rounded-xl p-2 font-semibold text-xs text-[#2b1d14] outline-none min-h-[42px] transition-all placeholder-[#8a7566]/60"
           >
         </div>
       </div>
@@ -379,13 +457,13 @@
       <!-- CTA Tombol Simpan -->
       <button 
         id="save" 
-        class="w-full py-3 px-4 rounded-xl bg-[#3b2417] hover:bg-[#2b180e] active:scale-[0.98] text-white font-extrabold text-xs tracking-wider shadow-sm transition-all flex items-center justify-center gap-1 cursor-pointer mt-1"
+        class="w-full py-3.5 px-4 rounded-xl bg-[#3b2417] hover:bg-[#2b180e] active:scale-[0.98] text-white font-extrabold text-xs tracking-wider shadow-sm transition-all flex items-center justify-center gap-1 cursor-pointer mt-1 min-h-[46px]"
       >
         ＋ Simpan Pengeluaran
       </button>
     </section>
 
-    <!-- 6. RIWAYAT TRANSAKSI HARIAN (PADAT, RINGKAS & ERGONOMIS) -->
+    <!-- 7. RIWAYAT TRANSAKSI HARIAN (PADAT, RINGKAS & ERGONOMIS) -->
     <section class="bg-white rounded-3xl p-4 sm:p-5 shadow-card border border-[#eadfd3]/70 animate-up space-y-2.5">
       <div class="flex items-center justify-between">
         <div class="flex items-center gap-1.5">
@@ -413,22 +491,25 @@
         </button>
       </div>
 
-      <!-- Total Transaksi Harian (Keluar & Masuk) -->
+      <!-- Total Transaksi Harian (Keluar & Masuk - Tanpa Transfer) -->
       <div class="flex justify-between items-center text-[10.5px] font-bold px-1 py-0.5 border-b border-[#f6f0e9]">
         <span id="so" class="text-[#d6455a] font-extrabold truncate pr-1">● Keluar: -Rp 0</span>
         <span id="si" class="text-[#0f8a5f] font-extrabold truncate pl-1">● Masuk: +Rp 0</span>
       </div>
 
-      <!-- Filter Tabs: Semua | Keluar | Masuk -->
-      <div id="hf" class="grid grid-cols-3 bg-[#f6f0e9] p-0.5 rounded-xl gap-1 select-none border border-[#eadfd3]/60 text-xs">
-        <button data-f="all" class="py-1.5 px-2 rounded-lg font-bold text-[11px] transition-all text-center bg-[#3b2417] text-white shadow-xs">
+      <!-- Filter Tabs: Semua | Keluar | Masuk | Transfer -->
+      <div id="hf" class="grid grid-cols-4 bg-[#f6f0e9] p-0.5 rounded-xl gap-1 select-none border border-[#eadfd3]/60 text-xs">
+        <button data-f="all" class="py-1.5 px-1 rounded-lg font-bold text-[10.5px] transition-all text-center bg-[#3b2417] text-white shadow-xs">
           Semua
         </button>
-        <button data-f="out" class="py-1.5 px-2 rounded-lg font-bold text-[11px] transition-all text-center text-[#8a7566] hover:text-[#2b1d14]">
+        <button data-f="out" class="py-1.5 px-1 rounded-lg font-bold text-[10.5px] transition-all text-center text-[#8a7566] hover:text-[#2b1d14]">
           Keluar
         </button>
-        <button data-f="in" class="py-1.5 px-2 rounded-lg font-bold text-[11px] transition-all text-center text-[#8a7566] hover:text-[#2b1d14]">
+        <button data-f="in" class="py-1.5 px-1 rounded-lg font-bold text-[10.5px] transition-all text-center text-[#8a7566] hover:text-[#2b1d14]">
           Masuk
+        </button>
+        <button data-f="tf" class="py-1.5 px-1 rounded-lg font-bold text-[10.5px] transition-all text-center text-[#8a7566] hover:text-[#2b1d14]">
+          Transfer
         </button>
       </div>
 
@@ -440,7 +521,7 @@
 
   </main>
 
-  <!-- 7. MODAL BOTTOM SHEET: KELOLA DOMPET DINAMIS -->
+  <!-- 8. MODAL BOTTOM SHEET: KELOLA DOMPET DINAMIS -->
   <div id="ov" class="fixed inset-0 bg-[#140a05]/50 backdrop-blur-xs opacity-0 pointer-events-none transition-opacity duration-300 z-50 flex items-end justify-center">
     <div class="bg-white w-full max-w-md rounded-t-3xl p-4 pb-7 shadow-sheet transform translate-y-full transition-transform duration-300 ease-out max-h-[85vh] overflow-y-auto custom-scroll">
       <div class="w-9 h-1 rounded-full bg-[#eadfd3] mx-auto mb-3"></div>
@@ -482,7 +563,7 @@
         </div>
         <button 
           id="wadd" 
-          class="w-full py-2 rounded-xl bg-[#3b2417] hover:bg-[#2b180e] text-white font-extrabold text-xs shadow-xs transition-all cursor-pointer"
+          class="w-full py-2.5 rounded-xl bg-[#3b2417] hover:bg-[#2b180e] text-white font-extrabold text-xs shadow-xs transition-all cursor-pointer min-h-[42px]"
         >
           ＋ Tambah Dompet
         </button>
@@ -490,7 +571,7 @@
     </div>
   </div>
 
-  <!-- 8. TOAST NOTIFICATION -->
+  <!-- 9. TOAST NOTIFICATION -->
   <div id="toast" class="fixed left-1/2 bottom-6 -translate-x-1/2 translate-y-16 bg-[#3b2417] text-white px-4 py-2 rounded-full font-bold text-xs shadow-md transition-all duration-300 z-50 opacity-0 pointer-events-none">
     Pesan
   </div>
@@ -558,16 +639,62 @@
     const todayS = iso(new Date());
 
     const icoOf = (type, catName) => {
+      if (type === 'tf') return '🔁';
       const found = (CATS[type] || []).find(item => item[1] === catName);
       return found ? found[0] : (type === 'in' ? '💰' : '📦');
     };
 
     /* ==========================================================================
-       STATE & LOCALSTORAGE MANAGEMENT (WITH AUTO-MIGRATION)
+       ANIMATION ENGINE: COUNT-UP & SMOOTH TRANSITIONS
+       ========================================================================== */
+    const animRunning = {};
+    const animPrev = {
+      bal: 0,
+      hin: 0,
+      hout: 0,
+      ctr: 0
+    };
+    let shouldAnimateDonut = true;
+
+    function animateCountUp(targetEl, startVal, endVal, duration, formatter) {
+      if (!targetEl) return;
+      const key = targetEl.id || ('anim_' + Math.random().toString(36).slice(2));
+      if (animRunning[key]) {
+        cancelAnimationFrame(animRunning[key]);
+        delete animRunning[key];
+      }
+
+      const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (prefersReduced || startVal === endVal || isNaN(startVal) || isNaN(endVal)) {
+        targetEl.textContent = formatter(endVal);
+        return;
+      }
+
+      const startTime = performance.now();
+      const easeOutCubic = t => 1 - Math.pow(1 - t, 3);
+
+      function frame(now) {
+        const elapsed = now - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+        const eased = easeOutCubic(progress);
+        const current = Math.round(startVal + (endVal - startVal) * eased);
+        targetEl.textContent = formatter(current);
+
+        if (progress < 1) {
+          animRunning[key] = requestAnimationFrame(frame);
+        } else {
+          targetEl.textContent = formatter(endVal);
+          delete animRunning[key];
+        }
+      }
+
+      animRunning[key] = requestAnimationFrame(frame);
+    }
+
+    /* ==========================================================================
+       STATE & LOCALSTORAGE MANAGEMENT (BACKWARD COMPATIBLE)
        ========================================================================== */
     const STORAGE_KEY_V2 = 'dompetku2';
-    const OLD_STORAGE_TX = 'catatan_keuangan_transaksi_v1';
-    const OLD_STORAGE_WALLETS = 'custom_wallets';
 
     let S = {
       wallets: [
@@ -580,25 +707,21 @@
       nid: 1
     };
 
-    // Load State dari LocalStorage & Jalankan Pembersihan Data Dummy
+    // Load State dari LocalStorage & Bersihkan Data Dummy
     try {
       const savedV2 = localStorage.getItem(STORAGE_KEY_V2);
       if (savedV2) {
-        S = JSON.parse(savedV2);
-        // Pastikan wallets terformat array
-        if (!Array.isArray(S.wallets) || S.wallets.length === 0) {
-          S.wallets = [
-            { id: 1, e: '💵', n: 'Cash' },
-            { id: 2, e: '🏦', n: 'Bank' },
-            { id: 3, e: '🟠', n: 'ShopeePay' },
-            { id: 4, e: '🟢', n: 'GoPay' }
-          ];
-        }
-        // Bersihkan data dummy contoh jika sebelumnya sempat tersimpan di device
-        if (Array.isArray(S.tx)) {
-          S.tx = S.tx.filter(x => !(x.n === 'Gaji Bulanan' && x.a === 1500000) && !(x.n === 'Makan siang soto' && x.a === 35000) && !(x.n === 'Ongkos ojek online' && x.a === 20000));
-        } else {
-          S.tx = [];
+        const parsed = JSON.parse(savedV2);
+        if (parsed && typeof parsed === 'object') {
+          if (Array.isArray(parsed.wallets) && parsed.wallets.length > 0) {
+            S.wallets = parsed.wallets;
+          }
+          if (Array.isArray(parsed.tx)) {
+            S.tx = parsed.tx.filter(x => !(x.n === 'Gaji Bulanan' && x.a === 1500000) && !(x.n === 'Makan siang soto' && x.a === 35000) && !(x.n === 'Ongkos ojek online' && x.a === 20000));
+          }
+          if (typeof parsed.nid === 'number') {
+            S.nid = Math.max(parsed.nid, S.tx.length + 1);
+          }
         }
       }
     } catch (err) {
@@ -610,11 +733,12 @@
       month: todayS.slice(0, 7), // YYYY-MM
       rt: 'out',                 // Tab rekap donut: 'out' | 'in'
       sel: null,                 // Kategori aktif yang dipilih/disorot
-      ft: 'out',                 // Tab form catat: 'out' | 'in'
-      fw: S.wallets[0] ? S.wallets[0].id : 1, // Dompet aktif form
+      ft: 'out',                 // Tab form catat: 'out' | 'in' | 'tf'
+      fw: S.wallets[0] ? S.wallets[0].id : 1, // Dompet aktif form (sumber)
+      fw2: S.wallets[1] ? S.wallets[1].id : 2, // Dompet tujuan transfer
       fc: 'Makan',               // Kategori aktif form
       day: todayS,               // Tanggal aktif riwayat harian
-      hf: 'all',                 // Filter riwayat: 'all' | 'out' | 'in'
+      hf: 'all',                 // Filter riwayat: 'all' | 'out' | 'in' | 'tf'
       amt: 0                     // Nilai nominal input
     };
 
@@ -648,15 +772,15 @@
       $$(containerSelector + ' button').forEach(btn => {
         const active = predicate(btn);
         if (active) {
-          btn.className = 'py-2 px-2.5 rounded-xl font-bold text-xs transition-all flex items-center justify-center gap-1 bg-[#3b2417] text-white shadow-xs';
+          btn.className = 'py-2 px-1.5 rounded-xl font-bold text-xs transition-all flex items-center justify-center gap-1 bg-[#3b2417] text-white shadow-xs min-h-[42px]';
         } else {
-          btn.className = 'py-2 px-2.5 rounded-xl font-bold text-xs transition-all flex items-center justify-center gap-1 text-[#8a7566] hover:text-[#2b1d14]';
+          btn.className = 'py-2 px-1.5 rounded-xl font-bold text-xs transition-all flex items-center justify-center gap-1 text-[#8a7566] hover:text-[#2b1d14] min-h-[42px]';
         }
       });
     };
 
     /* ==========================================================================
-       1. RENDER HEADER & TOTAL SALDO HERO CARD
+       1. RENDER HEADER & TOTAL SALDO HERO CARD (WITH COUNT-UP)
        ========================================================================== */
     function renderHead() {
       const [year, monthNum] = V.month.split('-');
@@ -665,23 +789,213 @@
       
       $('#ml').textContent = `${monthName} ${year}`;
 
-      // Hitung Saldo Keseluruhan Sepanjang Waktu
+      // Hitung Saldo Keseluruhan Sepanjang Waktu (Transfer netral, tidak mengubah total saldo)
       const totalMasukAll = sum(S.tx.filter(x => x.t === 'in'));
       const totalKeluarAll = sum(S.tx.filter(x => x.t === 'out'));
       const netSaldo = totalMasukAll - totalKeluarAll;
 
-      $('#bal').textContent = (netSaldo < 0 ? '-' : '') + rp(netSaldo);
+      animateCountUp($('#bal'), animPrev.bal, netSaldo, 600, v => (v < 0 ? '-' : '') + rp(Math.abs(v)));
+      animPrev.bal = netSaldo;
 
-      // Hitung Pemasukan & Pengeluaran Bulan Berjalan
+      // Hitung Pemasukan & Pengeluaran Bulan Berjalan (Transfer dieksklusikan)
       const inMonth = sum(monthTx('in'));
       const outMonth = sum(monthTx('out'));
 
-      $('#hin').textContent = '+' + rp(inMonth);
-      $('#hout').textContent = '-' + rp(outMonth);
+      animateCountUp($('#hin'), animPrev.hin, inMonth, 600, v => '+' + rp(v));
+      animPrev.hin = inMonth;
+
+      animateCountUp($('#hout'), animPrev.hout, outMonth, 600, v => '-' + rp(v));
+      animPrev.hout = outMonth;
     }
 
     /* ==========================================================================
-       2. RENDER REKAP BULANAN & INTERACTIVE SVG DONUT CHART (COMPACT)
+       2. RENDER TREN 6 BULAN (BAR CHART SVG BERKELOMPOK & INSIGHT)
+       ========================================================================== */
+    function get6MonthsData() {
+      const [currY, currM] = V.month.split('-').map(Number);
+      const months = [];
+
+      for (let i = 5; i >= 0; i--) {
+        const d = new Date(currY, currM - 1 - i, 1);
+        const isoMonth = `${d.getFullYear()}-${pad(d.getMonth() + 1)}`;
+        const shortName = MON[d.getMonth()].slice(0, 3);
+        const fullLabel = `${MON[d.getMonth()]} ${d.getFullYear()}`;
+        const inAmt = sum(S.tx.filter(x => x.d.startsWith(isoMonth) && x.t === 'in'));
+        const outAmt = sum(S.tx.filter(x => x.d.startsWith(isoMonth) && x.t === 'out'));
+        months.push({
+          isoMonth,
+          shortName,
+          fullLabel,
+          inAmt,
+          outAmt,
+          isSelected: isoMonth === V.month
+        });
+      }
+      return months;
+    }
+
+    function renderTrend() {
+      const months = get6MonthsData();
+      const currentMonthData = months[5]; // Bulan aktif
+      const prevMonthData = months[4];    // 1 Bulan sebelum aktif
+
+      // 1. Render Banner Insight Tren
+      const insightEl = $('#trendInsight');
+      if (prevMonthData && prevMonthData.outAmt > 0) {
+        const currOut = currentMonthData.outAmt;
+        const prevOut = prevMonthData.outAmt;
+        const diff = currOut - prevOut;
+        const pct = Math.round((Math.abs(diff) / prevOut) * 100);
+
+        if (diff > 0) {
+          insightEl.className = 'p-2.5 rounded-2xl border transition-all text-xs font-bold flex items-center gap-2 bg-rose-50 text-rose-700 border-rose-200';
+          insightEl.innerHTML = `
+            <span class="text-base shrink-0">↗</span>
+            <div class="truncate">
+              Pengeluaran bulan ini <b>naik ${pct}%</b> dibanding bulan lalu (${rp(prevOut)})
+            </div>
+          `;
+        } else if (diff < 0) {
+          insightEl.className = 'p-2.5 rounded-2xl border transition-all text-xs font-bold flex items-center gap-2 bg-emerald-50 text-emerald-800 border-emerald-200';
+          insightEl.innerHTML = `
+            <span class="text-base shrink-0">↘</span>
+            <div class="truncate">
+              Pengeluaran bulan ini <b>hemat ${pct}%</b> dibanding bulan lalu (${rp(prevOut)}) 🌱
+            </div>
+          `;
+        } else {
+          insightEl.className = 'p-2.5 rounded-2xl border transition-all text-xs font-bold flex items-center gap-2 bg-[#f6f0e9] text-[#3b2417] border-[#eadfd3]';
+          insightEl.innerHTML = `
+            <span class="text-base shrink-0">↔</span>
+            <div class="truncate">Pengeluaran bulan ini sama persis dengan bulan lalu</div>
+          `;
+        }
+      } else {
+        insightEl.className = 'p-2.5 rounded-2xl border transition-all text-xs font-bold flex items-center gap-2 bg-[#f6f0e9] text-[#8a7566] border-[#eadfd3]';
+        insightEl.innerHTML = `
+          <span class="text-base shrink-0">🌱</span>
+          <div class="truncate">Belum ada data pengeluaran bulan lalu untuk pembanding</div>
+        `;
+      }
+
+      // 2. Render Detail Tooltip Aktif
+      updateTrendTooltip(V.month);
+
+      // 3. Render SVG Bar Chart Berkelompok (Custom SVG)
+      const maxVal = Math.max(1000, ...months.map(m => Math.max(m.inAmt, m.outAmt)));
+      const baselineY = 118;
+      let svgHtml = '';
+
+      // Grid Guidelines Muted
+      svgHtml += `
+        <line x1="12" y1="28" x2="328" y2="28" stroke="#eadfd3" stroke-width="1" stroke-dasharray="3 3" />
+        <line x1="12" y1="73" x2="328" y2="73" stroke="#eadfd3" stroke-width="1" stroke-dasharray="3 3" />
+        <line x1="12" y1="${baselineY}" x2="328" y2="${baselineY}" stroke="#eadfd3" stroke-width="1.2" />
+      `;
+
+      // 6 Grup Batang
+      months.forEach((m, idx) => {
+        const groupCenterX = 15 + idx * 51.6 + 25.8;
+        const barW = 10.5;
+        const rx = 3;
+
+        const hIn = m.inAmt > 0 ? Math.max(4, Math.round((m.inAmt / maxVal) * 88)) : 2;
+        const yIn = baselineY - hIn;
+        const xIn = groupCenterX - 11.5;
+
+        const hOut = m.outAmt > 0 ? Math.max(4, Math.round((m.outAmt / maxVal) * 88)) : 2;
+        const yOut = baselineY - hOut;
+        const xOut = groupCenterX + 1;
+
+        const opacity = m.isSelected ? 1 : 0.38;
+
+        svgHtml += `
+          <g data-m="${m.isoMonth}" class="cursor-pointer group" opacity="${opacity}">
+            <title>${m.fullLabel}: Masuk ${rp(m.inAmt)} | Keluar ${rp(m.outAmt)}</title>
+            <!-- Invisible Touch Target Area -->
+            <rect x="${groupCenterX - 24}" y="10" width="48" height="135" fill="transparent" />
+
+            <!-- Batang Pemasukan (Hijau) -->
+            <rect 
+              x="${xIn.toFixed(1)}" 
+              y="${yIn}" 
+              width="${barW}" 
+              height="${hIn}" 
+              rx="${rx}" 
+              fill="#0f8a5f" 
+              class="bar-rect"
+            />
+
+            <!-- Batang Pengeluaran (Merah Terracotta) -->
+            <rect 
+              x="${xOut.toFixed(1)}" 
+              y="${yOut}" 
+              width="${barW}" 
+              height="${hOut}" 
+              rx="${rx}" 
+              fill="#d6455a" 
+              class="bar-rect"
+            />
+
+            <!-- Label Bulan di Bawah Batang -->
+            ${m.isSelected ? `
+              <rect x="${(groupCenterX - 17).toFixed(1)}" y="125" width="34" height="18" rx="9" fill="#3b2417" />
+              <text x="${groupCenterX.toFixed(1)}" y="138" text-anchor="middle" fill="#ffffff" font-size="10" font-weight="800">
+                ${m.shortName}
+              </text>
+            ` : `
+              <text x="${groupCenterX.toFixed(1)}" y="138" text-anchor="middle" fill="#8a7566" font-size="10" font-weight="700">
+                ${m.shortName}
+              </text>
+            `}
+          </g>
+        `;
+      });
+
+      $('#trendSvg').innerHTML = svgHtml;
+    }
+
+    function updateTrendTooltip(isoMonth) {
+      const [y, m] = isoMonth.split('-').map(Number);
+      const monthName = MON[m - 1];
+      const inAmt = sum(S.tx.filter(x => x.d.startsWith(isoMonth) && x.t === 'in'));
+      const outAmt = sum(S.tx.filter(x => x.d.startsWith(isoMonth) && x.t === 'out'));
+      
+      const ttEl = $('#trendTooltip');
+      if (!ttEl) return;
+      ttEl.innerHTML = `
+        <span class="text-[#2b1d14] flex items-center gap-1.5 truncate">
+          <span>🗓️</span> <span>${monthName} ${y}</span>
+          ${isoMonth === V.month ? '<span class="text-[9px] bg-[#3b2417] text-white px-1.5 py-0.5 rounded-full font-extrabold ml-0.5">Aktif</span>' : ''}
+        </span>
+        <span class="flex items-center gap-2.5 text-[11px] font-extrabold shrink-0">
+          <span class="text-[#0f8a5f]">+${rp(inAmt)}</span>
+          <span class="text-[#d6455a]">-${rp(outAmt)}</span>
+        </span>
+      `;
+    }
+
+    // Interaktivitas Tap Bar Chart Tren
+    $('#trendSvg').onclick = e => {
+      const g = e.target.closest('g[data-m]');
+      if (g && g.dataset.m) {
+        goToMonth(g.dataset.m);
+      }
+    };
+
+    $('#trendSvg').onmouseover = e => {
+      const g = e.target.closest('g[data-m]');
+      if (g && g.dataset.m) {
+        updateTrendTooltip(g.dataset.m);
+      }
+    };
+
+    $('#trendSvg').onmouseleave = () => {
+      updateTrendTooltip(V.month);
+    };
+
+    /* ==========================================================================
+       3. RENDER REKAP BULANAN & INTERACTIVE SVG DONUT CHART (ANIMASI LINGKARAN)
        ========================================================================== */
     function getCategoryGroups() {
       const map = {};
@@ -724,21 +1038,31 @@
           const color = COL[idx % COL.length];
           const strokeWidth = isSelected ? 34 : 26;
           const opacity = V.sel && !isSelected ? 0.35 : 1;
+          const targetDash = Math.max(sliceLen - gap, 0);
+
+          // Jika shouldAnimateDonut aktif, mulai dari dash 0 lalu transisikan
+          const initialDash = shouldAnimateDonut ? 0 : targetDash;
+          const inlineTransition = shouldAnimateDonut 
+            ? 'transition: none;' 
+            : 'transition: stroke-width 0.25s ease, opacity 0.25s ease;';
 
           svgHtml += `
             <circle 
               data-c="${escapeHtml(item.c)}" 
+              data-slice="1" 
+              data-target="${targetDash.toFixed(2)}"
               cx="100" 
               cy="100" 
               r="${R}" 
               fill="none" 
               stroke="${color}" 
               stroke-width="${strokeWidth}" 
-              stroke-dasharray="${Math.max(sliceLen - gap, 0).toFixed(2)} ${C.toFixed(2)}" 
+              stroke-dasharray="${initialDash.toFixed(2)} ${C.toFixed(2)}" 
               stroke-dashoffset="${(-accumulated).toFixed(2)}" 
               stroke-linecap="butt" 
               opacity="${opacity}" 
-              class="transition-all duration-300 cursor-pointer"
+              style="${inlineTransition}"
+              class="cursor-pointer"
             />
           `;
           accumulated += sliceLen;
@@ -747,9 +1071,23 @@
 
       $('#svg').innerHTML = svgHtml;
 
-      // Update Center Hole Text (Interaktif & Halus)
+      // Jalankan animasi putar/tergambar lingkaran jika dipicu
+      const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (shouldAnimateDonut && !prefersReduced && groups.length > 0) {
+        requestAnimationFrame(() => {
+          const circles = $$('#svg circle[data-slice]');
+          circles.forEach((c, idx) => {
+            const target = c.dataset.target;
+            c.style.transition = `stroke-dasharray 0.8s cubic-bezier(0.16, 1, 0.3, 1) ${idx * 60}ms, stroke-width 0.25s ease, opacity 0.25s ease`;
+            c.setAttribute('stroke-dasharray', `${target} ${C.toFixed(2)}`);
+          });
+        });
+      }
+
+      // Update Center Hole Text & Count-Up Nominal
       const selectedItem = groups.find(x => x.c === V.sel);
       const ctrEl = $('#ctr');
+      const targetAmount = selectedItem ? selectedItem.a : total;
 
       if (selectedItem) {
         const percent = Math.round((selectedItem.a / total) * 100);
@@ -757,7 +1095,9 @@
           <div class="animate-pop flex flex-col items-center">
             <span class="text-2xl leading-none mb-0.5">${icoOf(V.rt, selectedItem.c)}</span>
             <span class="text-[9.5px] font-extrabold text-[#8a7566] uppercase tracking-wider max-w-[100px] truncate">${escapeHtml(selectedItem.c)}</span>
-            <span class="text-base sm:text-lg font-black text-[#2b1d14] tracking-tight leading-tight my-0.5">${rp(selectedItem.a)}</span>
+            <span id="ctrNominal" class="text-base sm:text-lg font-black text-[#2b1d14] tracking-tight leading-tight my-0.5">
+              ${rp(animPrev.ctr)}
+            </span>
             <span class="text-[9.5px] font-extrabold text-[#3b2417] bg-[#f6f0e9] px-2 py-0.5 rounded-full border border-[#eadfd3]">${percent}%</span>
           </div>
         `;
@@ -767,8 +1107,8 @@
             <span class="text-[9.5px] font-extrabold text-[#8a7566] uppercase tracking-wider">
               Total ${V.rt === 'out' ? 'Keluar' : 'Masuk'}
             </span>
-            <span class="text-base sm:text-lg font-black text-[#2b1d14] tracking-tight leading-tight my-0.5 max-w-[115px] truncate">
-              ${rp(total)}
+            <span id="ctrNominal" class="text-base sm:text-lg font-black text-[#2b1d14] tracking-tight leading-tight my-0.5 max-w-[115px] truncate">
+              ${rp(animPrev.ctr)}
             </span>
             <span class="text-[9px] font-extrabold text-[#3b2417] bg-[#f6f0e9] px-2 py-0.5 rounded-full border border-[#eadfd3]">
               ${groups.length} Kategori
@@ -777,7 +1117,10 @@
         `;
       }
 
-      // Render Mini Badges Legenda Kategori di Bawah Donut (Tanpa daftar panjang yang memakan ruang)
+      animateCountUp($('#ctrNominal'), animPrev.ctr, targetAmount, 500, v => rp(v));
+      animPrev.ctr = targetAmount;
+
+      // Render Mini Badges Legenda Kategori di Bawah Donut
       const legendEl = $('#donutLegend');
       if (groups.length === 0 || total <= 0) {
         legendEl.innerHTML = `
@@ -809,12 +1152,15 @@
 
     function toggleSelectCategory(catName) {
       V.sel = V.sel === catName ? null : catName;
+      // Jangan putar ulang lingkaran donut jika hanya highlight kategori
+      shouldAnimateDonut = false;
       renderDonut();
+      shouldAnimateDonut = true;
     }
 
     // Event Listener Interaktif Donut & Mini Legend
     $('#svg').onclick = e => {
-      const circle = e.target.closest('circle');
+      const circle = e.target.closest('circle[data-c]');
       if (circle && circle.dataset.c) {
         toggleSelectCategory(circle.dataset.c);
       }
@@ -832,18 +1178,19 @@
       if (btn) {
         V.rt = btn.dataset.t;
         V.sel = null;
+        shouldAnimateDonut = true;
         renderDonut();
       }
     };
 
     /* ==========================================================================
-       3. RENDER SALDO PER KANTONG / DOMPET DINAMIS (HORIZONTAL SLIDER)
+       4. RENDER SALDO PER KANTONG / DOMPET DINAMIS (MEMPERHITUNGKAN TRANSFER)
        ========================================================================== */
     function renderWallets() {
-      // Horizontal Slider Kantong
+      // Hitung saldo dompet: Masuk + Transfer Masuk - Keluar - Transfer Keluar
       $('#wal').innerHTML = S.wallets.map(w => {
-        const inW = sum(S.tx.filter(x => x.w === w.id && x.t === 'in'));
-        const outW = sum(S.tx.filter(x => x.w === w.id && x.t === 'out'));
+        const inW = sum(S.tx.filter(x => (x.w === w.id && x.t === 'in') || (x.w2 === w.id && x.t === 'tf')));
+        const outW = sum(S.tx.filter(x => (x.w === w.id && x.t === 'out') || (x.w === w.id && x.t === 'tf')));
         const balW = inW - outW;
 
         return `
@@ -858,21 +1205,54 @@
         `;
       }).join('');
 
-      // Pills Selector di Form Catat Cepat
+      // Pills Selector di Form Catat Cepat (Biasa)
       $('#fw').innerHTML = S.wallets.map(w => {
         const isSelected = V.fw === w.id;
         return `
           <button 
             type="button" 
             data-id="${w.id}" 
-            class="shrink-0 py-1.5 px-3 rounded-full font-bold text-xs transition-all flex items-center gap-1.5 cursor-pointer ${isSelected ? 'bg-[#3b2417] text-white shadow-xs scale-105' : 'bg-[#f6f0e9] hover:bg-[#eadfd3] text-[#2b1d14] border border-[#eadfd3]/60'}"
+            class="shrink-0 py-1.5 px-3 rounded-full font-bold text-xs transition-all flex items-center gap-1.5 cursor-pointer min-h-[38px] ${isSelected ? 'bg-[#3b2417] text-white shadow-xs scale-105' : 'bg-[#f6f0e9] hover:bg-[#eadfd3] text-[#2b1d14] border border-[#eadfd3]/60'}"
           >
             <span>${w.e}</span> <span>${escapeHtml(w.n)}</span>
           </button>
         `;
       }).join('');
+
+      // Pills Selector Transfer: Dari Dompet
+      $('#fwFrom').innerHTML = S.wallets.map(w => {
+        const isSelected = V.fw === w.id;
+        const isTarget = V.fw2 === w.id;
+        return `
+          <button 
+            type="button" 
+            data-id="${w.id}" 
+            class="shrink-0 py-1.5 px-3 rounded-full font-bold text-xs transition-all flex items-center gap-1.5 cursor-pointer min-h-[38px] ${isSelected ? 'bg-[#3b2417] text-white shadow-xs scale-105' : 'bg-[#f6f0e9] hover:bg-[#eadfd3] text-[#2b1d14] border border-[#eadfd3]/60'}"
+          >
+            <span>${w.e}</span> <span>${escapeHtml(w.n)}</span>
+            ${isTarget ? '<span class="text-[8.5px] font-extrabold text-amber-700 bg-amber-100 px-1 py-0.2 rounded-full">(Tujuan)</span>' : ''}
+          </button>
+        `;
+      }).join('');
+
+      // Pills Selector Transfer: Ke Dompet
+      $('#fwTo').innerHTML = S.wallets.map(w => {
+        const isSelected = V.fw2 === w.id;
+        const isSource = V.fw === w.id;
+        return `
+          <button 
+            type="button" 
+            data-id="${w.id}" 
+            class="shrink-0 py-1.5 px-3 rounded-full font-bold text-xs transition-all flex items-center gap-1.5 cursor-pointer min-h-[38px] ${isSelected ? 'bg-[#3b2417] text-white shadow-xs scale-105' : 'bg-[#f6f0e9] hover:bg-[#eadfd3] text-[#2b1d14] border border-[#eadfd3]/60'}"
+          >
+            <span>${w.e}</span> <span>${escapeHtml(w.n)}</span>
+            ${isSource ? '<span class="text-[8.5px] font-extrabold text-amber-700 bg-amber-100 px-1 py-0.2 rounded-full">(Asal)</span>' : ''}
+          </button>
+        `;
+      }).join('');
     }
 
+    // Klik Dompet Normal
     $('#fw').onclick = e => {
       const btn = e.target.closest('button[data-id]');
       if (btn) {
@@ -881,38 +1261,89 @@
       }
     };
 
+    // Klik Dompet Transfer "Dari"
+    $('#fwFrom').onclick = e => {
+      const btn = e.target.closest('button[data-id]');
+      if (btn) {
+        const id = parseInt(btn.dataset.id, 10);
+        V.fw = id;
+        if (V.fw === V.fw2) {
+          const alt = S.wallets.find(w => w.id !== id);
+          if (alt) V.fw2 = alt.id;
+        }
+        renderWallets();
+      }
+    };
+
+    // Klik Dompet Transfer "Ke"
+    $('#fwTo').onclick = e => {
+      const btn = e.target.closest('button[data-id]');
+      if (btn) {
+        const id = parseInt(btn.dataset.id, 10);
+        V.fw2 = id;
+        if (V.fw2 === V.fw) {
+          const alt = S.wallets.find(w => w.id !== id);
+          if (alt) V.fw = alt.id;
+        }
+        renderWallets();
+      }
+    };
+
+    // Swap Dompet Asal & Tujuan
+    $('#btnSwapWallet').onclick = () => {
+      const temp = V.fw;
+      V.fw = V.fw2;
+      V.fw2 = temp;
+      renderWallets();
+      toast(`Dompet ditukar: ${getWallet(V.fw).n} ⇄ ${getWallet(V.fw2).n}`);
+    };
+
     /* ==========================================================================
-       4. RENDER FORM CATAT CEPAT (5 DETIK)
+       5. RENDER FORM CATAT CEPAT (3 TAB: PENGELUARAN, PEMASUKAN, TRANSFER)
        ========================================================================== */
     function renderForm() {
       setTabClass('#ftab', btn => btn.dataset.t === V.ft);
 
-      const catList = CATS[V.ft] || [];
-      if (!catList.some(c => c[1] === V.fc)) {
-        V.fc = catList[0] ? catList[0][1] : 'Makan';
+      const singleWalletBox = $('#singleWalletBox');
+      const transferWalletBox = $('#transferWalletBox');
+      const categoryBox = $('#categoryBox');
+      const saveBtn = $('#save');
+
+      if (V.ft === 'tf') {
+        // Mode Transfer
+        singleWalletBox.classList.add('hidden');
+        transferWalletBox.classList.remove('hidden');
+        categoryBox.classList.add('hidden');
+        saveBtn.textContent = '⇄ Simpan Transfer';
+      } else {
+        // Mode Pengeluaran / Pemasukan
+        singleWalletBox.classList.remove('hidden');
+        transferWalletBox.classList.add('hidden');
+        categoryBox.classList.remove('hidden');
+
+        const catList = CATS[V.ft] || [];
+        if (!catList.some(c => c[1] === V.fc)) {
+          V.fc = catList[0] ? catList[0][1] : 'Makan';
+        }
+
+        const fcEl = $('#fc');
+        fcEl.className = V.ft === 'in' ? 'grid grid-cols-2 gap-1.5' : 'grid grid-cols-3 gap-1.5';
+        fcEl.innerHTML = catList.map(c => {
+          const isSelected = V.fc === c[1];
+          return `
+            <button 
+              type="button" 
+              data-c="${escapeHtml(c[1])}" 
+              class="flex items-center justify-center gap-1.5 py-2 px-2 rounded-xl font-bold text-xs transition-all cursor-pointer min-h-[44px] ${isSelected ? 'bg-[#3b2417] text-white shadow-xs scale-[1.02]' : 'bg-[#f6f0e9] hover:bg-[#eadfd3] text-[#2b1d14] border border-[#eadfd3]/70'}"
+            >
+              <span class="text-base shrink-0 leading-none">${c[0]}</span>
+              <span class="text-[11px] font-extrabold truncate">${escapeHtml(c[1])}</span>
+            </button>
+          `;
+        }).join('');
+
+        saveBtn.textContent = '＋ Simpan ' + (V.ft === 'out' ? 'Pengeluaran' : 'Pemasukan');
       }
-
-      // Render Grid Pill Kategori Rapi & Responsif
-      const fcEl = $('#fc');
-      fcEl.className = V.ft === 'in' 
-        ? 'grid grid-cols-2 gap-1.5' 
-        : 'grid grid-cols-3 gap-1.5';
-
-      fcEl.innerHTML = catList.map(c => {
-        const isSelected = V.fc === c[1];
-        return `
-          <button 
-            type="button" 
-            data-c="${escapeHtml(c[1])}" 
-            class="flex items-center justify-center gap-1.5 py-2 px-2 rounded-xl font-bold text-xs transition-all cursor-pointer min-h-[42px] ${isSelected ? 'bg-[#3b2417] text-white shadow-xs scale-[1.02]' : 'bg-[#f6f0e9] hover:bg-[#eadfd3] text-[#2b1d14] border border-[#eadfd3]/70'}"
-          >
-            <span class="text-base shrink-0 leading-none">${c[0]}</span>
-            <span class="text-[11px] font-extrabold truncate">${escapeHtml(c[1])}</span>
-          </button>
-        `;
-      }).join('');
-
-      $('#save').textContent = '＋ Simpan ' + (V.ft === 'out' ? 'Pengeluaran' : 'Pemasukan');
     }
 
     $('#ftab').onclick = e => {
@@ -964,36 +1395,60 @@
         return;
       }
 
+      if (V.ft === 'tf' && V.fw === V.fw2) {
+        const box = $('#transferWalletBox');
+        box.classList.remove('shake');
+        void box.offsetWidth;
+        box.classList.add('shake');
+        toast('Dompet asal dan tujuan tidak boleh sama!');
+        return;
+      }
+
       const inputDate = $('#fd').value || todayS;
       const now = new Date();
       const timeStr = `${pad(now.getHours())}.${pad(now.getMinutes())}`;
       const noteStr = ($('#fn').value || '').trim();
 
-      const newTx = {
-        id: S.nid++,
-        t: V.ft,
-        c: V.fc,
-        w: V.fw,
-        a: V.amt,
-        d: inputDate,
-        tm: timeStr,
-        n: noteStr
-      };
+      let newTx;
+      if (V.ft === 'tf') {
+        newTx = {
+          id: S.nid++,
+          t: 'tf',
+          w: V.fw,
+          w2: V.fw2,
+          a: V.amt,
+          d: inputDate,
+          tm: timeStr,
+          n: noteStr
+        };
+      } else {
+        newTx = {
+          id: S.nid++,
+          t: V.ft,
+          c: V.fc,
+          w: V.fw,
+          a: V.amt,
+          d: inputDate,
+          tm: timeStr,
+          n: noteStr
+        };
+      }
 
       S.tx.unshift(newTx);
       saveStorage();
 
       setNominal(0);
       $('#fn').value = '';
-      toast('Transaksi tersimpan ✓');
+      toast(V.ft === 'tf' ? 'Transfer berhasil dicatat ✓' : 'Transaksi tersimpan ✓');
 
       V.day = inputDate;
       V.month = inputDate.slice(0, 7);
+      shouldAnimateDonut = true;
       renderAll();
     };
 
     /* ==========================================================================
-       5. RENDER RIWAYAT TRANSAKSI HARIAN (PADAT & RINGKAS)
+       6. RENDER RIWAYAT TRANSAKSI HARIAN (MENDUKUNG TRANSFER & FILTER 4 TAB)
        ========================================================================== */
     const shiftDate = (dateStr, days) => {
       const d = new Date(dateStr + 'T00:00:00');
@@ -1013,6 +1468,7 @@
       const dailyOut = sum(dailyAll.filter(x => x.t === 'out'));
       const dailyIn = sum(dailyAll.filter(x => x.t === 'in'));
 
+      // Total keluar/masuk harian mengecualikan transfer
       $('#so').textContent = '● Keluar: -' + rp(dailyOut);
       $('#si').textContent = '● Masuk: +' + rp(dailyIn);
       $('#cnt').textContent = `${dailyAll.length} Transaksi`;
@@ -1020,9 +1476,9 @@
       $$('#hf button').forEach(btn => {
         const isActive = btn.dataset.f === V.hf;
         if (isActive) {
-          btn.className = 'py-1.5 px-2 rounded-lg font-bold text-[11px] transition-all text-center bg-[#3b2417] text-white shadow-xs';
+          btn.className = 'py-1.5 px-1 rounded-lg font-bold text-[10.5px] transition-all text-center bg-[#3b2417] text-white shadow-xs';
         } else {
-          btn.className = 'py-1.5 px-2 rounded-lg font-bold text-[11px] transition-all text-center text-[#8a7566] hover:text-[#2b1d14]';
+          btn.className = 'py-1.5 px-1 rounded-lg font-bold text-[10.5px] transition-all text-center text-[#8a7566] hover:text-[#2b1d14]';
         }
       });
 
@@ -1038,6 +1494,52 @@
         `;
       } else {
         histEl.innerHTML = filtered.map(x => {
+          if (x.t === 'tf') {
+            // Item Transfer
+            const wFrom = getWallet(x.w);
+            const wTo = getWallet(x.w2);
+
+            return `
+              <div class="flex items-center gap-2.5 p-2.5 rounded-2xl bg-[#f6f0e9] border border-[#eadfd3]/80 animate-pop">
+                <!-- Icon Transfer -->
+                <span class="w-8 h-8 rounded-xl bg-white shadow-2xs flex items-center justify-center text-base shrink-0">
+                  🔁
+                </span>
+
+                <!-- Rincian Transfer -->
+                <div class="flex-1 min-w-0">
+                  <div class="flex items-center gap-1.5">
+                    <b class="text-xs font-extrabold text-[#2b1d14] truncate">
+                      ${escapeHtml(wFrom.n)} → ${escapeHtml(wTo.n)}
+                    </b>
+                    <span class="text-[8.5px] font-bold bg-[#f6f0e9] text-[#3b2417] px-1.5 py-0.5 rounded-full border border-[#eadfd3] shrink-0">
+                      Transfer
+                    </span>
+                  </div>
+                  <small class="block text-[9.5px] text-[#8a7566] font-medium truncate">
+                    Pukul ${x.tm || '--.--'}${x.n ? ' · ' + escapeHtml(x.n) : ' · Pindah Dana'}
+                  </small>
+                </div>
+
+                <!-- Nominal Netral -->
+                <div class="font-black text-xs shrink-0 text-[#2b1d14]">
+                  ${rp(x.a)}
+                </div>
+
+                <!-- Tombol Hapus -->
+                <button 
+                  type="button" 
+                  data-id="${x.id}" 
+                  title="Hapus Transaksi"
+                  class="btn-del-tx w-6 h-6 rounded-lg hover:bg-rose-100 text-[#8a7566] hover:text-rose-600 flex items-center justify-center text-[11px] shrink-0 transition-all cursor-pointer"
+                >
+                  🗑
+                </button>
+              </div>
+            `;
+          }
+
+          // Item Normal (Pengeluaran / Pemasukan)
           const wallet = getWallet(x.w);
           const isIncome = x.t === 'in';
 
@@ -1061,7 +1563,7 @@
                 </small>
               </div>
 
-              <!-- Nominal -->
+              <!-- Nominal Berwarna -->
               <div class="font-black text-xs shrink-0 ${isIncome ? 'text-[#0f8a5f]' : 'text-[#d6455a]'}">
                 ${isIncome ? '+' : '-'}${rp(x.a)}
               </div>
@@ -1089,6 +1591,7 @@
           S.tx = S.tx.filter(x => x.id !== id);
           saveStorage();
           toast('Transaksi dihapus');
+          shouldAnimateDonut = true;
           renderAll();
         }
       }
@@ -1104,7 +1607,11 @@
 
     const goToDay = newDayStr => {
       V.day = newDayStr;
-      V.month = newDayStr.slice(0, 7);
+      const newMonth = newDayStr.slice(0, 7);
+      if (V.month !== newMonth) {
+        V.month = newMonth;
+        shouldAnimateDonut = true;
+      }
       V.sel = null;
       renderAll();
     };
@@ -1115,16 +1622,14 @@
       if (e.target.value) goToDay(e.target.value);
     };
 
-    // Navigasi Bulan Utama Global di Header
-    const moveMonth = offset => {
-      const [y, m] = V.month.split('-').map(Number);
-      const d = new Date(y, m - 1 + offset, 1);
-      V.month = `${d.getFullYear()}-${pad(d.getMonth() + 1)}`;
+    // Navigasi Bulan Utama Global
+    const goToMonth = isoMonth => {
+      if (V.month === isoMonth) return;
+      V.month = isoMonth;
       V.sel = null;
+      shouldAnimateDonut = true;
 
-      // Sinkronisasi otomatis ke Riwayat Harian:
-      // Jika tanggal riwayat yang sedang aktif tidak berada di dalam bulan baru ini,
-      // arahkan otomatis ke hari ini (bila bulannya sama) atau tanggal 1 di bulan baru
+      // Sinkronisasi otomatis ke Riwayat Harian
       if (!V.day.startsWith(V.month)) {
         if (todayS.startsWith(V.month)) {
           V.day = todayS;
@@ -1132,15 +1637,21 @@
           V.day = `${V.month}-01`;
         }
       }
-
       renderAll();
+    };
+
+    const moveMonth = offset => {
+      const [y, m] = V.month.split('-').map(Number);
+      const d = new Date(y, m - 1 + offset, 1);
+      const newMonthStr = `${d.getFullYear()}-${pad(d.getMonth() + 1)}`;
+      goToMonth(newMonthStr);
     };
 
     $('#mp').onclick = () => moveMonth(-1);
     $('#mn').onclick = () => moveMonth(1);
 
     /* ==========================================================================
-       6. BOTTOM SHEET: KELOLA KANTONG DOMPET
+       7. BOTTOM SHEET: KELOLA KANTONG DOMPET
        ========================================================================== */
     function renderWalletSheet() {
       $('#wl').innerHTML = S.wallets.map(w => `
@@ -1189,7 +1700,8 @@
       if (!btn || !btn.dataset.id) return;
       const id = parseInt(btn.dataset.id, 10);
 
-      if (S.tx.some(x => x.w === id)) {
+      // Cek apakah dompet pernah dipakai untuk transaksi atau transfer
+      if (S.tx.some(x => x.w === id || x.w2 === id)) {
         toast('Dompet masih memiliki riwayat transaksi');
         return;
       }
@@ -1201,6 +1713,9 @@
       S.wallets = S.wallets.filter(w => w.id !== id);
       if (V.fw === id) {
         V.fw = S.wallets[0].id;
+      }
+      if (V.fw2 === id) {
+        V.fw2 = S.wallets.find(w => w.id !== V.fw)?.id || S.wallets[0].id;
       }
 
       saveStorage();
@@ -1233,7 +1748,7 @@
     };
 
     /* ==========================================================================
-       7. FITUR EXPORT DATA TRANSAKSI KE CSV
+       8. FITUR EXPORT DATA TRANSAKSI KE CSV (MENDUKUNG TRANSFER)
        ========================================================================== */
     function exportCsv() {
       let txList = S.tx;
@@ -1271,10 +1786,21 @@
 
       const rows = sortedTx.map(item => {
         const tanggal = item.d || '';
-        const tipe = item.t === 'in' ? 'Pemasukan' : 'Pengeluaran';
-        const kategori = item.c || '';
+        let tipe = 'Pengeluaran';
+        let kategori = item.c || '';
+        let dompet = getWallet(item.w).n || 'Dompet';
+
+        if (item.t === 'in') {
+          tipe = 'Pemasukan';
+        } else if (item.t === 'tf') {
+          tipe = 'Transfer';
+          kategori = 'Transfer Antar Dompet';
+          const wFrom = getWallet(item.w).n;
+          const wTo = getWallet(item.w2).n;
+          dompet = `${wFrom} -> ${wTo}`;
+        }
+
         const nominal = Math.abs(item.a || 0);
-        const dompet = getWallet(item.w).n || 'Dompet';
         const catatan = item.n || '';
 
         return [
@@ -1287,7 +1813,7 @@
         ].join(',');
       });
 
-      // Sisipkan UTF-8 BOM (\uFEFF) agar simbol dan karakter terbaca sempurna di Microsoft Excel & Google Sheets
+      // Sisipkan UTF-8 BOM (\uFEFF)
       const csvContent = '\uFEFF' + headers.join(',') + '\r\n' + rows.join('\r\n');
 
       const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
@@ -1313,6 +1839,7 @@
        ========================================================================== */
     function renderAll() {
       renderHead();
+      renderTrend();
       renderDonut();
       renderWallets();
       renderForm();
