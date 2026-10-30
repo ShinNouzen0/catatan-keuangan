@@ -110,6 +110,23 @@
     .bar-rect {
       transition: height 0.6s cubic-bezier(0.16, 1, 0.3, 1), y 0.6s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;
     }
+    /* Collapsible card animation */
+    .trend-body {
+      display: grid;
+      grid-template-rows: 0fr;
+      transition: grid-template-rows 0.32s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .trend-body.open {
+      grid-template-rows: 1fr;
+    }
+    .trend-inner {
+      overflow: hidden;
+      opacity: 0;
+      transition: opacity 0.25s ease-in-out;
+    }
+    .trend-body.open .trend-inner {
+      opacity: 1;
+    }
     /* Hide scrollbar for clean mobile horizontal sliders */
     .no-scrollbar::-webkit-scrollbar {
       display: none;
@@ -127,7 +144,7 @@
       border-radius: 99px;
     }
     @media (prefers-reduced-motion: reduce) {
-      *, .bar-rect { animation: none !important; transition: none !important; }
+      *, .bar-rect, .trend-body, .trend-inner { animation: none !important; transition: none !important; }
     }
   </style>
 </head>
@@ -238,42 +255,66 @@
       </div>
     </section>
 
-    <!-- 4. TREN BULANAN (BAR CHART SVG BERKELOMPOK 6 BULAN) -->
-    <section id="trendCard" class="bg-white rounded-3xl p-4 sm:p-5 shadow-card border border-[#eadfd3]/70 animate-up space-y-3">
-      <!-- Header Kartu Tren -->
-      <div class="flex items-center justify-between">
+    <!-- 4. TREN BULANAN (BAR CHART SVG BERKELOMPOK 6 BULAN - COLLAPSIBLE) -->
+    <section id="trendCard" class="bg-white rounded-3xl p-3.5 sm:p-4 shadow-card border border-[#eadfd3]/70 animate-up transition-all">
+      <!-- Header Kartu Tren (Klik-able untuk Toggle Ciutkan/Buka) -->
+      <div id="trendHeader" class="flex items-center justify-between cursor-pointer select-none">
         <div class="flex items-center gap-1.5">
           <span class="text-sm">📈</span>
           <h2 class="text-xs font-extrabold tracking-wider text-[#8a7566] uppercase">
             Tren 6 Bulan
           </h2>
         </div>
-        <!-- Legenda Mini -->
-        <div class="flex items-center gap-2 text-[10px] font-bold">
-          <span class="inline-flex items-center gap-1 text-[#0f8a5f]">
-            <span class="w-2 h-2 rounded-full bg-[#0f8a5f]"></span> Masuk
-          </span>
-          <span class="inline-flex items-center gap-1 text-[#d6455a]">
-            <span class="w-2 h-2 rounded-full bg-[#d6455a]"></span> Keluar
-          </span>
+
+        <div class="flex items-center gap-1.5">
+          <!-- Tombol Ciutkan / Buka -->
+          <button 
+            type="button" 
+            id="btnToggleTrend" 
+            aria-expanded="false" 
+            class="inline-flex items-center gap-1 py-1 px-2.5 rounded-full bg-[#f6f0e9] hover:bg-[#eadfd3] text-[#3b2417] text-[10.5px] font-extrabold border border-[#eadfd3] transition-all cursor-pointer active:scale-95"
+          >
+            <span id="trendToggleText">Buka</span>
+            <svg id="trendChevron" class="w-3.5 h-3.5 transform transition-transform duration-300" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+            </svg>
+          </button>
         </div>
       </div>
 
-      <!-- Banner Insight Tren -->
-      <div id="trendInsight" class="p-2.5 rounded-2xl border transition-all text-xs font-bold flex items-center gap-2">
-        <!-- Diisi secara dinamis oleh JavaScript -->
-      </div>
+      <!-- Collapsible Container dengan Animasi Grid CSS Mulus (Default Tertutup) -->
+      <div id="trendBody" class="trend-body">
+        <div class="trend-inner space-y-1.5 pt-2">
+          
+          <!-- Baris Insight & Legenda Mini (Compact Spacing py-1) -->
+          <div class="flex items-center justify-between gap-1.5">
+            <div id="trendInsight" class="flex-1 py-1 px-2.5 rounded-xl border transition-all text-[10.5px] font-bold flex items-center gap-1.5 truncate">
+              <!-- Diisi secara dinamis oleh JavaScript -->
+            </div>
 
-      <!-- Detail Tooltip Interaktif untuk Bulan yang Disorot -->
-      <div id="trendTooltip" class="bg-[#f6f0e9] p-2 sm:p-2.5 rounded-2xl border border-[#eadfd3]/80 flex items-center justify-between text-[11px] font-extrabold transition-all select-none">
-        <!-- Diisi secara dinamis oleh JavaScript -->
-      </div>
+            <!-- Legenda Mini -->
+            <div class="flex items-center gap-1.5 text-[9.5px] font-bold shrink-0 px-0.5">
+              <span class="inline-flex items-center gap-1 text-[#0f8a5f]">
+                <span class="w-2 h-2 rounded-full bg-[#0f8a5f]"></span> Masuk
+              </span>
+              <span class="inline-flex items-center gap-1 text-[#d6455a]">
+                <span class="w-2 h-2 rounded-full bg-[#d6455a]"></span> Keluar
+              </span>
+            </div>
+          </div>
 
-      <!-- SVG Chart Container Responsif -->
-      <div class="w-full relative select-none pt-1">
-        <svg id="trendSvg" viewBox="0 0 340 155" class="w-full h-auto overflow-visible cursor-pointer">
-          <!-- Diisi secara dinamis oleh JavaScript -->
-        </svg>
+          <!-- Detail Tooltip Interaktif untuk Bulan yang Disorot (Compact Spacing py-1) -->
+          <div id="trendTooltip" class="bg-[#f6f0e9] py-1 px-2.5 rounded-xl border border-[#eadfd3]/80 flex items-center justify-between text-[10.5px] font-extrabold transition-all select-none">
+            <!-- Diisi secara dinamis oleh JavaScript -->
+          </div>
+
+          <!-- SVG Chart Container Responsif & Compact (Bantet & Hemat Ruang Vertikal) -->
+          <div class="w-full relative select-none pt-0.5 flex items-center justify-center">
+            <svg id="trendSvg" viewBox="0 0 340 106" class="w-full h-24 sm:h-28 overflow-visible cursor-pointer">
+              <!-- Diisi secara dinamis oleh JavaScript -->
+            </svg>
+          </div>
+        </div>
       </div>
     </section>
 
@@ -739,7 +780,8 @@
       fc: 'Makan',               // Kategori aktif form
       day: todayS,               // Tanggal aktif riwayat harian
       hf: 'all',                 // Filter riwayat: 'all' | 'out' | 'in' | 'tf'
-      amt: 0                     // Nilai nominal input
+      amt: 0,                    // Nilai nominal input
+      trendOpen: false           // Kartu tren default tertutup (collapsed)
     };
 
     const saveStorage = () => {
@@ -839,7 +881,7 @@
       const currentMonthData = months[5]; // Bulan aktif
       const prevMonthData = months[4];    // 1 Bulan sebelum aktif
 
-      // 1. Render Banner Insight Tren
+      // 1. Render Banner Insight Tren (Compact Spacing py-1)
       const insightEl = $('#trendInsight');
       if (prevMonthData && prevMonthData.outAmt > 0) {
         const currOut = currentMonthData.outAmt;
@@ -848,62 +890,62 @@
         const pct = Math.round((Math.abs(diff) / prevOut) * 100);
 
         if (diff > 0) {
-          insightEl.className = 'p-2.5 rounded-2xl border transition-all text-xs font-bold flex items-center gap-2 bg-rose-50 text-rose-700 border-rose-200';
+          insightEl.className = 'flex-1 py-1 px-2.5 rounded-xl border transition-all text-[10.5px] font-bold flex items-center gap-1.5 bg-rose-50 text-rose-700 border-rose-200 truncate';
           insightEl.innerHTML = `
-            <span class="text-base shrink-0">↗</span>
+            <span class="text-xs shrink-0">↗</span>
             <div class="truncate">
-              Pengeluaran bulan ini <b>naik ${pct}%</b> dibanding bulan lalu (${rp(prevOut)})
+              Pengeluaran <b>naik ${pct}%</b> vs bln lalu (${rp(prevOut)})
             </div>
           `;
         } else if (diff < 0) {
-          insightEl.className = 'p-2.5 rounded-2xl border transition-all text-xs font-bold flex items-center gap-2 bg-emerald-50 text-emerald-800 border-emerald-200';
+          insightEl.className = 'flex-1 py-1 px-2.5 rounded-xl border transition-all text-[10.5px] font-bold flex items-center gap-1.5 bg-emerald-50 text-emerald-800 border-emerald-200 truncate';
           insightEl.innerHTML = `
-            <span class="text-base shrink-0">↘</span>
+            <span class="text-xs shrink-0">↘</span>
             <div class="truncate">
-              Pengeluaran bulan ini <b>hemat ${pct}%</b> dibanding bulan lalu (${rp(prevOut)}) 🌱
+              Pengeluaran <b>hemat ${pct}%</b> vs bln lalu (${rp(prevOut)}) 🌱
             </div>
           `;
         } else {
-          insightEl.className = 'p-2.5 rounded-2xl border transition-all text-xs font-bold flex items-center gap-2 bg-[#f6f0e9] text-[#3b2417] border-[#eadfd3]';
+          insightEl.className = 'flex-1 py-1 px-2.5 rounded-xl border transition-all text-[10.5px] font-bold flex items-center gap-1.5 bg-[#f6f0e9] text-[#3b2417] border-[#eadfd3] truncate';
           insightEl.innerHTML = `
-            <span class="text-base shrink-0">↔</span>
-            <div class="truncate">Pengeluaran bulan ini sama persis dengan bulan lalu</div>
+            <span class="text-xs shrink-0">↔</span>
+            <div class="truncate">Pengeluaran sama persis vs bulan lalu</div>
           `;
         }
       } else {
-        insightEl.className = 'p-2.5 rounded-2xl border transition-all text-xs font-bold flex items-center gap-2 bg-[#f6f0e9] text-[#8a7566] border-[#eadfd3]';
+        insightEl.className = 'flex-1 py-1 px-2.5 rounded-xl border transition-all text-[10.5px] font-bold flex items-center gap-1.5 bg-[#f6f0e9] text-[#8a7566] border-[#eadfd3] truncate';
         insightEl.innerHTML = `
-          <span class="text-base shrink-0">🌱</span>
-          <div class="truncate">Belum ada data pengeluaran bulan lalu untuk pembanding</div>
+          <span class="text-xs shrink-0">🌱</span>
+          <div class="truncate">Belum ada data pembanding bulan lalu</div>
         `;
       }
 
       // 2. Render Detail Tooltip Aktif
       updateTrendTooltip(V.month);
 
-      // 3. Render SVG Bar Chart Berkelompok (Custom SVG)
+      // 3. Render SVG Bar Chart Berkelompok (Custom SVG - Bantet & Compact)
       const maxVal = Math.max(1000, ...months.map(m => Math.max(m.inAmt, m.outAmt)));
-      const baselineY = 118;
+      const baselineY = 76;
       let svgHtml = '';
 
       // Grid Guidelines Muted
       svgHtml += `
-        <line x1="12" y1="28" x2="328" y2="28" stroke="#eadfd3" stroke-width="1" stroke-dasharray="3 3" />
-        <line x1="12" y1="73" x2="328" y2="73" stroke="#eadfd3" stroke-width="1" stroke-dasharray="3 3" />
+        <line x1="12" y1="16" x2="328" y2="16" stroke="#eadfd3" stroke-width="1" stroke-dasharray="3 3" />
+        <line x1="12" y1="46" x2="328" y2="46" stroke="#eadfd3" stroke-width="1" stroke-dasharray="3 3" />
         <line x1="12" y1="${baselineY}" x2="328" y2="${baselineY}" stroke="#eadfd3" stroke-width="1.2" />
       `;
 
       // 6 Grup Batang
       months.forEach((m, idx) => {
         const groupCenterX = 15 + idx * 51.6 + 25.8;
-        const barW = 10.5;
-        const rx = 3;
+        const barW = 10;
+        const rx = 2.5;
 
-        const hIn = m.inAmt > 0 ? Math.max(4, Math.round((m.inAmt / maxVal) * 88)) : 2;
+        const hIn = m.inAmt > 0 ? Math.max(3, Math.round((m.inAmt / maxVal) * 54)) : 2;
         const yIn = baselineY - hIn;
-        const xIn = groupCenterX - 11.5;
+        const xIn = groupCenterX - 11;
 
-        const hOut = m.outAmt > 0 ? Math.max(4, Math.round((m.outAmt / maxVal) * 88)) : 2;
+        const hOut = m.outAmt > 0 ? Math.max(3, Math.round((m.outAmt / maxVal) * 54)) : 2;
         const yOut = baselineY - hOut;
         const xOut = groupCenterX + 1;
 
@@ -913,7 +955,7 @@
           <g data-m="${m.isoMonth}" class="cursor-pointer group" opacity="${opacity}">
             <title>${m.fullLabel}: Masuk ${rp(m.inAmt)} | Keluar ${rp(m.outAmt)}</title>
             <!-- Invisible Touch Target Area -->
-            <rect x="${groupCenterX - 24}" y="10" width="48" height="135" fill="transparent" />
+            <rect x="${groupCenterX - 24}" y="6" width="48" height="96" fill="transparent" />
 
             <!-- Batang Pemasukan (Hijau) -->
             <rect 
@@ -939,12 +981,12 @@
 
             <!-- Label Bulan di Bawah Batang -->
             ${m.isSelected ? `
-              <rect x="${(groupCenterX - 17).toFixed(1)}" y="125" width="34" height="18" rx="9" fill="#3b2417" />
-              <text x="${groupCenterX.toFixed(1)}" y="138" text-anchor="middle" fill="#ffffff" font-size="10" font-weight="800">
+              <rect x="${(groupCenterX - 16).toFixed(1)}" y="81" width="32" height="16" rx="8" fill="#3b2417" />
+              <text x="${groupCenterX.toFixed(1)}" y="93" text-anchor="middle" fill="#ffffff" font-size="9" font-weight="800">
                 ${m.shortName}
               </text>
             ` : `
-              <text x="${groupCenterX.toFixed(1)}" y="138" text-anchor="middle" fill="#8a7566" font-size="10" font-weight="700">
+              <text x="${groupCenterX.toFixed(1)}" y="93" text-anchor="middle" fill="#8a7566" font-size="9" font-weight="700">
                 ${m.shortName}
               </text>
             `}
@@ -966,14 +1008,40 @@
       ttEl.innerHTML = `
         <span class="text-[#2b1d14] flex items-center gap-1.5 truncate">
           <span>🗓️</span> <span>${monthName} ${y}</span>
-          ${isoMonth === V.month ? '<span class="text-[9px] bg-[#3b2417] text-white px-1.5 py-0.5 rounded-full font-extrabold ml-0.5">Aktif</span>' : ''}
+          ${isoMonth === V.month ? '<span class="text-[8.5px] bg-[#3b2417] text-white px-1.5 py-0.2 rounded-full font-extrabold ml-0.5">Aktif</span>' : ''}
         </span>
-        <span class="flex items-center gap-2.5 text-[11px] font-extrabold shrink-0">
+        <span class="flex items-center gap-2 text-[10.5px] font-extrabold shrink-0">
           <span class="text-[#0f8a5f]">+${rp(inAmt)}</span>
           <span class="text-[#d6455a]">-${rp(outAmt)}</span>
         </span>
       `;
     }
+
+    // Interaktivitas Toggle Ciutkan / Buka Kartu Tren
+    function updateTrendCollapse() {
+      const body = $('#trendBody');
+      const btn = $('#btnToggleTrend');
+      const text = $('#trendToggleText');
+      const chevron = $('#trendChevron');
+      if (!body || !btn) return;
+
+      if (V.trendOpen) {
+        body.classList.add('open');
+        text.textContent = 'Ciutkan';
+        chevron.classList.add('rotate-180');
+        btn.setAttribute('aria-expanded', 'true');
+      } else {
+        body.classList.remove('open');
+        text.textContent = 'Buka';
+        chevron.classList.remove('rotate-180');
+        btn.setAttribute('aria-expanded', 'false');
+      }
+    }
+
+    $('#trendHeader').onclick = () => {
+      V.trendOpen = !V.trendOpen;
+      updateTrendCollapse();
+    };
 
     // Interaktivitas Tap Bar Chart Tren
     $('#trendSvg').onclick = e => {
@@ -1844,6 +1912,7 @@
       renderWallets();
       renderForm();
       renderHist();
+      updateTrendCollapse();
     }
 
     $('#fd').value = todayS;
