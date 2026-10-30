@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#4a2c1b"/>
+      <stop offset="50%" stop-color="#3b2417"/>
+      <stop offset="100%" stop-color="#23140c"/>
+    </linearGradient>
+    <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f5d49f"/>
+      <stop offset="100%" stop-color="#d9a066"/>
+    </linearGradient>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="12" stdDeviation="16" flood-color="#000000" flood-opacity="0.35"/>
+    </filter>
+  </defs>
+
+  <!-- Background with smooth rounded corners -->
+  <rect width="512" height="512" rx="112" fill="url(#bgGrad)"/>
+  
+  <!-- Subtle inner border -->
+  <rect x="12" y="12" width="488" height="488" rx="100" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="4"/>
+
+  <!-- Wallet / Purse Icon Graphic -->
+  <g filter="url(#shadow)">
+    <!-- Metallic Clasp Balls -->
+    <circle cx="236" cy="135" r="22" fill="url(#goldGrad)" stroke="#a0653a" stroke-width="4"/>
+    <circle cx="276" cy="135" r="22" fill="url(#goldGrad)" stroke="#a0653a" stroke-width="4"/>
+
+    <!-- Metallic Frame Bar -->
+    <rect x="130" y="160" width="252" height="26" rx="10" fill="url(#goldGrad)" stroke="#a0653a" stroke-width="4"/>
+
+    <!-- Main Purse Body -->
+    <path d="M145 186 L367 186 L410 330 C416 376, 382 414, 335 414 L177 414 C130 414, 96 376, 102 330 Z" fill="#efe7de"/>
+    
+    <!-- Accent Flap Curve -->
+    <path d="M145 186 L367 186 C354 265, 312 288, 256 288 C200 288, 158 265, 145 186 Z" fill="#eadfd3"/>
+    
+    <!-- Center Metallic Clasp -->
+    <rect x="232" y="266" width="48" height="38" rx="12" fill="url(#goldGrad)" stroke="#a0653a" stroke-width="3"/>
+    <rect x="242" y="276" width="28" height="18" rx="6" fill="#f5d49f"/>
+
+    <!-- Stitching detail -->
+    <path d="M125 335 C121 370, 145 398, 178 398 L334 398 C367 398, 391 370, 387 335" fill="none" stroke="#d5c4b3" stroke-width="4" stroke-dasharray="8 6"/>
+  </g>
+</svg>
