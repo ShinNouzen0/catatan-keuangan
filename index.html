@@ -133,7 +133,7 @@
   <!-- Container Utama Mobile-First (Max-w-md, pas di jempol & tidak kaku) -->
   <main class="w-full max-w-md mx-auto px-4 py-5 pb-20 flex flex-col gap-3.5">
     
-    <!-- 1. TOP HEADER (LOGO & NAVIGASI BULAN) -->
+    <!-- 1. TOP HEADER (LOGO, EXPORT CSV, & NAVIGASI BULAN) -->
     <header class="flex justify-between items-center px-1">
       <div class="flex items-center gap-2 font-extrabold text-lg text-[#2b1d14] tracking-tight">
         <span class="w-8 h-8 rounded-xl bg-[#3b2417] text-white flex items-center justify-center text-base shadow-xs">
@@ -142,18 +142,33 @@
         <span>DompetKu</span>
       </div>
 
-      <!-- Month Navigator Pill -->
-      <nav aria-label="Navigasi Bulan" class="flex items-center bg-white rounded-full p-0.5 shadow-card border border-[#eadfd3]/80 font-bold text-xs">
-        <button id="mp" title="Bulan Sebelumnya" class="w-7 h-7 rounded-full flex items-center justify-center text-sm hover:bg-[#f6f0e9] text-[#3b2417]">
-          ‹
+      <div class="flex items-center gap-1.5">
+        <!-- Month Navigator Pill -->
+        <nav aria-label="Navigasi Bulan" class="flex items-center bg-white rounded-full p-0.5 shadow-card border border-[#eadfd3]/80 font-bold text-xs">
+          <button id="mp" title="Bulan Sebelumnya" class="w-7 h-7 rounded-full flex items-center justify-center text-sm hover:bg-[#f6f0e9] text-[#3b2417] transition-all cursor-pointer">
+            ‹
+          </button>
+          <span id="ml" class="min-w-[88px] text-center px-1 font-extrabold text-[#2b1d14] text-[11px] select-none">
+            -
+          </span>
+          <button id="mn" title="Bulan Berikutnya" class="w-7 h-7 rounded-full flex items-center justify-center text-sm hover:bg-[#f6f0e9] text-[#3b2417] transition-all cursor-pointer">
+            ›
+          </button>
+        </nav>
+
+        <!-- Tombol Kecil & Estetik Export CSV -->
+        <button 
+          id="btnExportCsv" 
+          type="button"
+          title="Export Data ke CSV" 
+          aria-label="Export Data ke CSV"
+          class="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-white hover:bg-[#f6f0e9] border border-[#eadfd3]/80 shadow-card flex items-center justify-center text-[#3b2417] hover:text-[#2b180e] transition-all cursor-pointer shrink-0 active:scale-95"
+        >
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+          </svg>
         </button>
-        <span id="ml" class="min-w-[94px] text-center px-1 font-extrabold text-[#2b1d14] text-[11px]">
-          -
-        </span>
-        <button id="mn" title="Bulan Berikutnya" class="w-7 h-7 rounded-full flex items-center justify-center text-sm hover:bg-[#f6f0e9] text-[#3b2417]">
-          ›
-        </button>
-      </nav>
+      </div>
     </header>
 
     <!-- 2. KARTU SALDO UTAMA (HERO COMPACT & ELEGAN) -->
@@ -1216,6 +1231,82 @@
       renderWallets();
       toast('Dompet baru ditambahkan ✓');
     };
+
+    /* ==========================================================================
+       7. FITUR EXPORT DATA TRANSAKSI KE CSV
+       ========================================================================== */
+    function exportCsv() {
+      let txList = S.tx;
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY_V2);
+        if (raw) {
+          const parsed = JSON.parse(raw);
+          if (Array.isArray(parsed.tx)) {
+            txList = parsed.tx;
+          }
+        }
+      } catch (err) {
+        console.warn('Gagal membaca data storage saat export CSV:', err);
+      }
+
+      if (!txList || txList.length === 0) {
+        toast('Belum ada transaksi untuk diekspor 🌱');
+        return;
+      }
+
+      // Kolom Header: Tanggal, Tipe, Kategori, Nominal, Dompet, Catatan
+      const headers = ['Tanggal', 'Tipe', 'Kategori', 'Nominal', 'Dompet', 'Catatan'];
+
+      const escapeCsvCell = val => {
+        if (val === null || val === undefined) return '""';
+        const str = String(val);
+        if (str.includes(',') || str.includes('"') || str.includes('\n') || str.includes('\r')) {
+          return `"${str.replace(/"/g, '""')}"`;
+        }
+        return `"${str}"`;
+      };
+
+      // Urutkan transaksi dari tanggal terbaru
+      const sortedTx = [...txList].sort((a, b) => (b.d > a.d ? 1 : (b.d < a.d ? -1 : (b.id - a.id))));
+
+      const rows = sortedTx.map(item => {
+        const tanggal = item.d || '';
+        const tipe = item.t === 'in' ? 'Pemasukan' : 'Pengeluaran';
+        const kategori = item.c || '';
+        const nominal = Math.abs(item.a || 0);
+        const dompet = getWallet(item.w).n || 'Dompet';
+        const catatan = item.n || '';
+
+        return [
+          escapeCsvCell(tanggal),
+          escapeCsvCell(tipe),
+          escapeCsvCell(kategori),
+          escapeCsvCell(nominal),
+          escapeCsvCell(dompet),
+          escapeCsvCell(catatan)
+        ].join(',');
+      });
+
+      // Sisipkan UTF-8 BOM (\uFEFF) agar simbol dan karakter terbaca sempurna di Microsoft Excel & Google Sheets
+      const csvContent = '\uFEFF' + headers.join(',') + '\r\n' + rows.join('\r\n');
+
+      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = 'Rekap_Keuangan_DompetKu.csv';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+
+      toast('Berhasil mengunduh CSV ✓');
+    }
+
+    const btnExport = $('#btnExportCsv');
+    if (btnExport) {
+      btnExport.onclick = exportCsv;
+    }
 
     /* ==========================================================================
        INITIALIZATION
