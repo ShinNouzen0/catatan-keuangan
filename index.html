@@ -5,9 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>DompetKu - Catatan Keuangan Pribadi</title>
   <meta name="description" content="Aplikasi pencatat keuangan pribadi modern dan minimalis.">
-  <meta name="theme-color" content="#171F44">
+  <meta name="theme-color" content="#08557F">
 
-  <!-- Mobile & PWA App Icons (Tambah ke Layar Utama / Add to Home Screen) -->
+  <!-- Mobile & PWA App Icons -->
   <link rel="manifest" href="manifest.json">
   <link rel="icon" type="image/svg+xml" href="icon.svg">
   <link rel="icon" type="image/png" sizes="64x64" href="favicon.png">
@@ -22,647 +22,1282 @@
   <meta name="apple-mobile-web-app-title" content="DompetKu">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="application-name" content="DompetKu">
-  
-  <!-- Font Plus Jakarta Sans -->
+
+  <!-- Font Manrope -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-  
-  <!-- Tailwind CSS CDN -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          fontFamily: {
-            sans: ['"Plus Jakarta Sans"', 'system-ui', '-apple-system', 'sans-serif'],
-          },
-          colors: {
-            abyss: {
-              DEFAULT: '#171F44', // Midnight Abyss (swatch)
-              deep: '#0B1026',    // Deep background
-              card: '#171F44',    // Card background
-              surface: '#131A3B', // Element surface
-              subtle: '#0E1430',  // Inputs & inner containers
-              line: '#263363',    // Borders
-              mute: '#9AA8C7',    // Muted text
-            },
-            jade: {
-              DEFAULT: '#74FFED', // Aqua Jade (swatch)
-              soft: '#9CFFF4',
-              dim: 'rgba(116, 255, 237, 0.15)',
-            },
-            pink: {
-              DEFAULT: '#FE51D1', // Baby Pink (swatch)
-              soft: '#FF7EE0',
-              dim: 'rgba(254, 81, 209, 0.15)',
-            }
-          },
-          boxShadow: {
-            card: '0 12px 32px -10px rgba(5, 8, 20, 0.65), 0 0 1px 1px rgba(116, 255, 237, 0.08)',
-            hero: '0 20px 45px -12px rgba(11, 16, 38, 0.85), 0 0 35px -8px rgba(116, 255, 237, 0.15)',
-            sheet: '0 -20px 45px rgba(5, 8, 20, 0.85)',
-            glowJade: '0 0 24px -4px rgba(116, 255, 237, 0.35)',
-            glowPink: '0 0 24px -4px rgba(254, 81, 209, 0.35)',
-          }
-        }
-      }
-    }
-  </script>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&display=swap" rel="stylesheet">
 
   <style>
     :root {
-      --bg: #0B1026;
-      --card: #171F44;
-      --surface: #131A3B;
-      --subtle: #0E1430;
-      --border: #263363;
-      --jade: #74FFED;
-      --pink: #FE51D1;
-      --mute: #9AA8C7;
-      color-scheme: dark;
+      --canvas: #EEF3F8;
+      --surface: #fff;
+      --paper: rgba(255, 255, 255, .96);
+      --ink9: #0A1A2B;
+      --ink7: #3A4B5E;
+      --ink6: #46586B;
+      --line: rgba(10, 26, 43, .1);
+      --line2: rgba(10, 26, 43, .22);
+      --b100: #DCEFFA;
+      --b600: #0E8DD0;
+      --b700: #0A6FA6;
+      --b800: #08557F;
+      --p100: #FCE4F1;
+      --p500: #DD2D90;
+      --p700: #B8146F;
+      --income: var(--b700);
+      --expense: var(--p700);
+      --primary: var(--b700);
+      --onp: #fff;
+      --logo: #08557F;
+      --glass: rgba(255, 255, 255, .78);
+      --ease: cubic-bezier(.2, .8, .2, 1);
+      color-scheme: light;
       padding-top: env(safe-area-inset-top, 0px);
-      padding-bottom: env(safe-area-inset-bottom, 0px);
     }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --canvas: rgba(255, 255, 255, .07);
+        --surface: #0F2133;
+        --paper: rgba(11, 26, 40, .96);
+        --ink9: #EAF2F9;
+        --ink7: #C3D2E0;
+        --ink6: #9FB2C6;
+        --line: rgba(255, 255, 255, .1);
+        --line2: rgba(255, 255, 255, .24);
+        --b100: #16344B;
+        --b700: #5CB8EA;
+        --p100: #3A1829;
+        --p700: #F566B4;
+        --primary: #5CB8EA;
+        --onp: #07121D;
+        --logo: #EAF2F9;
+        --glass: rgba(15, 33, 51, .72);
+        color-scheme: dark;
+      }
+    }
+
     * {
       box-sizing: border-box;
-      -webkit-tap-highlight-color: transparent;
       margin: 0;
+      -webkit-tap-highlight-color: transparent;
     }
+
+    html {
+      scroll-padding-top: env(safe-area-inset-top, 0px);
+    }
+
     body {
-      background-color: var(--bg);
-      background-image: 
-        radial-gradient(circle at 50% 0%, rgba(116, 255, 237, 0.08) 0%, transparent 50%),
-        radial-gradient(circle at 85% 25%, rgba(254, 81, 209, 0.06) 0%, transparent 45%);
-      background-attachment: fixed;
-      color: #ffffff;
-      font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
-      min-height: 100vh;
+      font-family: 'Manrope', system-ui, -apple-system, sans-serif;
+      background: #08557F;
+      color: var(--ink9);
+      font-variant-numeric: tabular-nums;
       display: flex;
       justify-content: center;
+      min-height: 100vh;
+      line-height: 1.5;
     }
+
     button {
       font: inherit;
       color: inherit;
       border: 0;
       background: none;
       cursor: pointer;
-      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      transition: all .25s var(--ease);
     }
+
     button:active {
-      transform: scale(0.96);
+      transform: scale(.97);
     }
-    @keyframes up {
+
+    :focus-visible {
+      outline: 2px solid var(--primary);
+      outline-offset: 2px;
+    }
+
+    .bg {
+      position: fixed;
+      inset: -80px;
+      z-index: -1;
+      filter: blur(40px);
+      background: 
+        radial-gradient(34% 22% at 90% 8%, rgba(255, 255, 255, .4), transparent 70%),
+        radial-gradient(50% 30% at 10% 68%, rgba(221, 45, 144, .95), transparent 72%),
+        radial-gradient(45% 28% at 92% 90%, rgba(221, 45, 144, .7), transparent 72%),
+        radial-gradient(45% 25% at 84% 52%, rgba(124, 198, 238, .8), transparent 72%),
+        linear-gradient(180deg, #08557F 0%, #0A6FA6 38%, #0E8DD0 62%, #0A6FA6 100%);
+    }
+
+    body::after {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      pointer-events: none;
+      background: repeating-linear-gradient(90deg, rgba(255, 255, 255, .1) 0 1px, transparent 1px 7px);
+    }
+
+    @media (prefers-color-scheme: dark) {
+      .bg {
+        background: 
+          radial-gradient(34% 22% at 90% 8%, rgba(92, 184, 234, .3), transparent 70%),
+          radial-gradient(50% 30% at 10% 68%, rgba(184, 20, 111, .8), transparent 72%),
+          radial-gradient(45% 28% at 92% 90%, rgba(138, 15, 85, .7), transparent 72%),
+          linear-gradient(180deg, #07121D 0%, #0B3550 45%, #07121D 100%);
+      }
+      body::after {
+        background: repeating-linear-gradient(90deg, rgba(255, 255, 255, .04) 0 1px, transparent 1px 7px);
+      }
+    }
+
+    .app {
+      width: 100%;
+      max-width: 440px;
+      padding: 12px 16px 0;
+    }
+
+    .top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: var(--glass);
+      -webkit-backdrop-filter: blur(24px) saturate(1.5);
+      backdrop-filter: blur(24px) saturate(1.5);
+      border: 1px solid rgba(255, 255, 255, .5);
+      border-radius: 999px;
+      padding: 4px 4px 4px 16px;
+      box-shadow: 0 12px 30px -16px rgba(8, 50, 80, .6);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 800;
+      font-size: 19px;
+      letter-spacing: -.02em;
+    }
+
+    .brand svg {
+      width: 30px;
+      height: 30px;
+    }
+
+    #dot {
+      transition: transform .32s var(--ease), opacity .32s;
+    }
+
+    #dot.go {
+      transform: translateX(14px);
+      opacity: 0;
+    }
+
+    .mnav {
+      display: flex;
+      align-items: center;
+      font-weight: 700;
+      font-size: 14px;
+    }
+
+    .mnav button {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      font-size: 18px;
+      display: grid;
+      place-items: center;
+    }
+
+    .mnav button:hover {
+      background: var(--canvas);
+    }
+
+    .mnav span {
+      min-width: 92px;
+      text-align: center;
+    }
+
+    .hero {
+      color: #fff;
+      padding: 32px 4px 4px;
+      position: relative;
+      animation: in .6s var(--ease) both;
+    }
+
+    .hero .deco {
+      position: absolute;
+      right: -70px;
+      top: -6px;
+      width: 270px;
+      opacity: .09;
+      pointer-events: none;
+    }
+
+    .ov {
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      line-height: 16px;
+    }
+
+    .hero .ov {
+      color: #DCEFFA;
+    }
+
+    .bal {
+      display: flex;
+      align-items: flex-start;
+      gap: 6px;
+      font-weight: 300;
+      font-size: 64px;
+      line-height: 70px;
+      letter-spacing: -.045em;
+      margin: 6px 0 24px;
+      position: relative;
+    }
+
+    .bal small {
+      font-size: 20px;
+      line-height: 28px;
+      font-weight: 700;
+      letter-spacing: 0;
+      margin-top: 9px;
+      color: #DCEFFA;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      border-top: 1px solid rgba(255, 255, 255, .35);
+      position: relative;
+    }
+
+    .stats div {
+      padding: 14px 0 0;
+    }
+
+    .stats div + div {
+      padding-left: 18px;
+      border-left: 1px solid rgba(255, 255, 255, .35);
+    }
+
+    .stats small {
+      display: block;
+      font-size: 12px;
+      font-weight: 700;
+      color: #DCEFFA;
+    }
+
+    .stats b {
+      font-size: 20px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    @keyframes in {
       from { opacity: 0; transform: translateY(12px); }
-      to { opacity: 1; transform: translateY(0); }
+      to { opacity: 1; transform: none; }
     }
+
+    .wallets {
+      display: flex;
+      gap: 12px;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      margin: 20px -16px 0;
+      padding: 14px 16px 22px;
+      scrollbar-width: none;
+    }
+
+    .wallets::-webkit-scrollbar {
+      display: none;
+    }
+
+    .wc {
+      flex: none;
+      width: 172px;
+      height: 108px;
+      padding: 14px 18px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      text-align: left;
+      color: #fff;
+      position: relative;
+      scroll-snap-align: start;
+      filter: drop-shadow(0 8px 10px rgba(8, 50, 80, .3));
+      border-radius: 24px;
+    }
+
+    .wc:before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: 24px;
+      background: var(--c);
+      -webkit-mask: radial-gradient(circle 12px at 100% 50%, transparent 98%, #000 100%);
+      mask: radial-gradient(circle 12px at 100% 50%, transparent 98%, #000 100%);
+    }
+
+    .wc:after {
+      content: "";
+      position: absolute;
+      right: 5px;
+      top: 50%;
+      width: 7px;
+      height: 7px;
+      margin-top: -3.5px;
+      border-radius: 50%;
+      background: #fff;
+    }
+
+    .wc > * {
+      position: relative;
+      z-index: 1;
+    }
+
+    .wc small {
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .wc b {
+      font-size: 21px;
+      font-weight: 800;
+      letter-spacing: -.02em;
+    }
+
+    .wc.sel {
+      transform: translateY(-8px);
+      filter: drop-shadow(0 16px 16px rgba(8, 50, 80, .5));
+    }
+
+    .wc.add {
+      --c: rgba(10, 26, 43, .55);
+    }
+
+    .paper {
+      margin: 0 -16px;
+      background: var(--paper);
+      -webkit-backdrop-filter: blur(20px);
+      backdrop-filter: blur(20px);
+      border-radius: 36px 36px 0 0;
+      padding: 32px 20px calc(56px + env(safe-area-inset-bottom, 0px));
+      box-shadow: 0 -24px 50px -24px rgba(8, 50, 80, .55);
+    }
+
+    .sec + .sec {
+      margin-top: 36px;
+      padding-top: 32px;
+      border-top: 1px solid var(--line);
+    }
+
+    .sh {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 18px;
+    }
+
+    .sh .ov {
+      color: var(--ink6);
+    }
+
+    .sh .ov i {
+      font-style: normal;
+      color: var(--p700);
+      margin-right: 10px;
+    }
+
+    .chip {
+      font-size: 13px;
+      font-weight: 700;
+      background: var(--b100);
+      color: var(--b800);
+      padding: 0 14px;
+      border-radius: 999px;
+      min-height: 40px;
+      display: inline-flex;
+      align-items: center;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      .chip {
+        color: var(--b700);
+      }
+    }
+
+    .seg {
+      display: grid;
+      grid-template-columns: repeat(var(--n), 1fr);
+      position: relative;
+      background: var(--canvas);
+      border-radius: 999px;
+      padding: 4px;
+      margin-bottom: 20px;
+      user-select: none;
+    }
+
+    .seg:before {
+      content: "";
+      position: absolute;
+      top: 4px;
+      bottom: 4px;
+      left: 4px;
+      width: calc((100% - 8px) / var(--n));
+      background: var(--surface);
+      border-radius: 999px;
+      box-shadow: 0 1px 3px rgba(10, 26, 43, .12), inset 0 0 0 2px var(--ac, var(--ink6));
+      transform: translateX(calc(var(--i) * 100%));
+      transition: transform .32s var(--ease), box-shadow .3s;
+    }
+
+    .seg button {
+      position: relative;
+      min-height: 44px;
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--ink6);
+      border-radius: 999px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+    }
+
+    .seg button.on {
+      color: var(--ink9);
+      font-weight: 800;
+    }
+
+    .donut {
+      position: relative;
+      width: 240px;
+      height: 240px;
+      margin: 0 auto 20px;
+    }
+
+    .donut svg {
+      width: 100%;
+      height: 100%;
+      overflow: visible;
+    }
+
+    .donut circle[data-c] {
+      fill: none;
+      cursor: pointer;
+      transition: stroke-width .3s var(--ease), opacity .3s;
+    }
+
+    .ctr {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      pointer-events: none;
+      padding: 0 50px;
+    }
+
+    .ctr svg {
+      width: 28px;
+      height: 28px;
+      color: var(--ink7);
+      margin-bottom: 2px;
+    }
+
+    .ctr .n {
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--ink6);
+    }
+
+    .ctr .v {
+      font-size: 23px;
+      line-height: 30px;
+      font-weight: 700;
+      letter-spacing: -.02em;
+      white-space: nowrap;
+    }
+
+    .ctr .p {
+      font-size: 12px;
+      font-weight: 700;
+      background: var(--canvas);
+      padding: 2px 10px;
+      border-radius: 999px;
+      margin-top: 2px;
+    }
+
+    .fade {
+      display: contents;
+      animation: pop .35s var(--ease);
+    }
+
     @keyframes pop {
-      from { opacity: 0; transform: scale(0.94); }
-      to { opacity: 1; transform: scale(1); }
+      from { opacity: 0; transform: scale(.94); }
+      to { opacity: 1; transform: none; }
     }
-    @keyframes sk {
-      20% { transform: translateX(-5px); }
-      40% { transform: translateX(5px); }
-      60% { transform: translateX(-3px); }
-      80% { transform: translateX(3px); }
-      100% { transform: translateX(0); }
+
+    .row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-height: 56px;
+      padding: 8px 12px;
+      border-radius: 18px;
+      width: 100%;
+      text-align: left;
+      margin-bottom: 2px;
+      cursor: pointer;
     }
-    .animate-up {
-      animation: up 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
+
+    .row.sel {
+      background: var(--canvas);
     }
-    .animate-pop {
-      animation: pop 0.3s cubic-bezier(0.16, 1, 0.3, 1) both;
+
+    .row:hover {
+      background: var(--canvas);
     }
+
+    .row .dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      flex: none;
+    }
+
+    .row svg {
+      color: var(--ink7);
+      flex: none;
+    }
+
+    .row .nm {
+      flex: 1;
+      font-weight: 700;
+      font-size: 15px;
+    }
+
+    .row .pc {
+      font-size: 12px;
+      color: var(--ink6);
+      font-weight: 600;
+      margin-left: 8px;
+    }
+
+    .row .am {
+      font-weight: 800;
+      font-size: 15px;
+    }
+
+    .empty {
+      text-align: center;
+      color: var(--ink6);
+      font-size: 14px;
+      padding: 20px;
+    }
+
+    .amt {
+      display: flex;
+      align-items: baseline;
+      gap: 8px;
+      border-bottom: 2px solid var(--ink6);
+      padding: 0 0 6px;
+      transition: border-color .25s;
+    }
+
+    .amt:focus-within {
+      border-color: var(--primary);
+    }
+
+    .amt span {
+      font-weight: 700;
+      font-size: 20px;
+      color: var(--ink6);
+    }
+
+    .amt input {
+      flex: 1;
+      min-width: 0;
+      border: 0;
+      background: none;
+      outline: 0;
+      font: 300 52px/60px 'Manrope', system-ui, sans-serif;
+      letter-spacing: -.04em;
+      color: var(--ink9);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .amt input::placeholder {
+      color: var(--ink6);
+      opacity: .45;
+    }
+
+    .qk {
+      display: flex;
+      gap: 8px;
+      margin-top: 14px;
+      flex-wrap: wrap;
+    }
+
+    .pill {
+      min-height: 44px;
+      padding: 0 16px;
+      border-radius: 999px;
+      border: 1px solid var(--line2);
+      font-weight: 700;
+      font-size: 14px;
+      display: inline-flex;
+      align-items: center;
+      cursor: pointer;
+    }
+
+    .pill:hover {
+      background: var(--canvas);
+    }
+
+    .pill.on {
+      background: var(--primary);
+      border-color: var(--primary);
+      color: var(--onp);
+    }
+
+    .pls {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .lbl {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin: 24px 0 10px;
+    }
+
+    .lbl .ov {
+      color: var(--ink6);
+    }
+
+    .cats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+    }
+
+    .cat {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      min-height: 84px;
+      border-radius: 22px;
+      border: 1px solid var(--line2);
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--ink7);
+      cursor: pointer;
+    }
+
+    .cat:hover {
+      background: var(--canvas);
+    }
+
+    .cat.on {
+      background: var(--primary);
+      border-color: var(--primary);
+      color: var(--onp);
+      transform: translateY(-3px);
+    }
+
+    .cat.on:after {
+      content: "";
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--onp);
+    }
+
+    .f2 {
+      display: grid;
+      grid-template-columns: 1fr 1.2fr;
+      gap: 12px;
+      margin-top: 24px;
+    }
+
+    .f2 .ov {
+      color: var(--ink6);
+      margin-bottom: 8px;
+    }
+
+    input.t {
+      width: 100%;
+      min-height: 48px;
+      border: 1px solid var(--ink6);
+      border-radius: 14px;
+      padding: 0 12px;
+      font: 600 15px 'Manrope', system-ui, sans-serif;
+      background: var(--surface);
+      color: var(--ink9);
+      outline: 0;
+    }
+
+    input.t:focus {
+      border: 2px solid var(--primary);
+      padding: 0 11px;
+    }
+
+    .cta {
+      position: relative;
+      overflow: hidden;
+      width: 100%;
+      min-height: 58px;
+      margin-top: 24px;
+      border-radius: 999px;
+      background: var(--ink9);
+      color: var(--surface);
+      font-weight: 800;
+      font-size: 15px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+
+    .cta i {
+      position: absolute;
+      left: 24px;
+      top: 50%;
+      margin-top: -6px;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: var(--dc, #DD2D90);
+    }
+
+    .cta.go i {
+      animation: coin .55s var(--ease) forwards;
+    }
+
+    @keyframes coin {
+      to { left: calc(100% - 36px); opacity: 0; }
+    }
+
+    .dnav {
+      display: flex;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .dnav > button {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      font-size: 20px;
+      border: 1px solid var(--line2);
+      display: grid;
+      place-items: center;
+    }
+
+    .dnav > button:hover {
+      background: var(--canvas);
+    }
+
+    .dnav label {
+      flex: 1;
+      text-align: center;
+      font-weight: 800;
+      font-size: 17px;
+      letter-spacing: -.01em;
+      position: relative;
+      cursor: pointer;
+      padding: 12px 0;
+    }
+
+    .dnav input {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      width: 100%;
+      cursor: pointer;
+    }
+
+    .sum {
+      display: flex;
+      justify-content: space-between;
+      font-size: 13px;
+      font-weight: 700;
+      padding: 0 4px 18px;
+    }
+
+    .in { color: var(--income); }
+    .out { color: var(--expense); }
+    .tfc { color: var(--ink7); }
+
+    .tx {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      min-height: 72px;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--line);
+      animation: pop .35s var(--ease) both;
+    }
+
+    .tx.new {
+      animation: pop .35s var(--ease) both, hl 1.6s ease-out;
+    }
+
+    @keyframes hl {
+      from { background: var(--b100); }
+      to { background: transparent; }
+    }
+
+    .tx .ic {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      border: 1px solid var(--line2);
+      display: grid;
+      place-items: center;
+      flex: none;
+      color: var(--ink7);
+    }
+
+    .tx .m {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .tx .m b {
+      font-size: 15px;
+    }
+
+    .tx .m small {
+      display: block;
+      color: var(--ink6);
+      font-size: 12px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .tx .a {
+      font-weight: 800;
+      font-size: 15px;
+      white-space: nowrap;
+    }
+
+    .tx .x {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      color: var(--ink6);
+      display: grid;
+      place-items: center;
+      cursor: pointer;
+    }
+
+    .tx .x:hover {
+      background: var(--p100);
+      color: var(--p700);
+    }
+
+    .scrim {
+      position: fixed;
+      inset: 0;
+      background: rgba(10, 26, 43, .55);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .3s var(--ease);
+      z-index: 50;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+    }
+
+    .scrim.on {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .sheet {
+      background: var(--surface);
+      width: 100%;
+      max-width: 440px;
+      border-radius: 32px 32px 0 0;
+      padding: 12px 20px calc(24px + env(safe-area-inset-bottom, 0px));
+      transform: translateY(100%);
+      transition: transform .32s var(--ease);
+      max-height: 85vh;
+      overflow-y: auto;
+    }
+
+    .scrim.on .sheet {
+      transform: none;
+    }
+
+    .grab {
+      width: 42px;
+      height: 5px;
+      border-radius: 9px;
+      background: var(--ink6);
+      opacity: .4;
+      margin: 0 auto 16px;
+    }
+
+    .sheet h3 {
+      font-size: 20px;
+      line-height: 28px;
+      margin-bottom: 16px;
+    }
+
+    .wr {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-height: 56px;
+      padding: 4px 8px 4px 14px;
+      border-radius: 18px;
+      background: var(--canvas);
+      margin-bottom: 8px;
+      font-weight: 700;
+    }
+
+    .wr span {
+      flex: 1;
+    }
+
+    .danger {
+      background: var(--p100);
+      color: var(--p700);
+    }
+
+    .toast {
+      position: fixed;
+      left: 50%;
+      bottom: calc(24px + env(safe-area-inset-bottom, 0px));
+      transform: translate(-50%, 80px);
+      background: var(--ink9);
+      color: var(--surface);
+      padding: 12px 20px;
+      border-radius: 999px;
+      font-weight: 700;
+      font-size: 14px;
+      transition: all .32s var(--ease);
+      z-index: 60;
+      opacity: 0;
+      white-space: nowrap;
+      pointer-events: none;
+    }
+
+    .toast.on {
+      transform: translate(-50%, 0);
+      opacity: 1;
+    }
+
     .shake {
-      animation: sk 0.35s ease-in-out;
+      animation: sk .35s;
     }
-    .bar-rect {
-      transition: height 0.6s cubic-bezier(0.16, 1, 0.3, 1), y 0.6s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;
+
+    @keyframes sk {
+      25% { transform: translateX(-6px); }
+      75% { transform: translateX(6px); }
     }
-    /* Collapsible card animation */
+
+    /* Collapsible Tren 6 Bulan */
     .trend-body {
       display: grid;
       grid-template-rows: 0fr;
-      transition: grid-template-rows 0.32s cubic-bezier(0.16, 1, 0.3, 1);
+      transition: grid-template-rows .32s var(--ease);
     }
+
     .trend-body.open {
       grid-template-rows: 1fr;
     }
+
     .trend-inner {
       overflow: hidden;
       opacity: 0;
-      transition: opacity 0.25s ease-in-out;
+      transition: opacity .25s var(--ease);
     }
+
     .trend-body.open .trend-inner {
       opacity: 1;
     }
-    /* Hide scrollbar for clean mobile horizontal sliders */
-    .no-scrollbar::-webkit-scrollbar {
-      display: none;
+
+    .bar-rect {
+      transition: height 0.6s var(--ease), y 0.6s var(--ease), opacity 0.3s ease;
     }
-    .no-scrollbar {
-      -ms-overflow-style: none;
-      scrollbar-width: none;
+
+    @media (max-width: 360px) {
+      .bal { font-size: 54px; }
     }
-    /* Custom thin scrollbar */
-    .custom-scroll::-webkit-scrollbar {
-      width: 4px;
-    }
-    .custom-scroll::-webkit-scrollbar-thumb {
-      background: #263363;
-      border-radius: 99px;
-    }
+
     @media (prefers-reduced-motion: reduce) {
-      *, .bar-rect, .trend-body, .trend-inner { animation: none !important; transition: none !important; }
+      *, .bar-rect, .trend-body, .trend-inner {
+        animation: none !important;
+        transition: none !important;
+      }
     }
   </style>
 </head>
-<body class="bg-[#0B1026] text-white antialiased">
+<body>
+  <div class="bg"></div>
 
-  <!-- Container Utama Mobile-First (Max-w-md, pas di jempol & modern cyber-fintech) -->
-  <main class="w-full max-w-md mx-auto px-4 py-5 pb-20 flex flex-col gap-3.5">
-    
-    <!-- 1. TOP HEADER (LOGO DOMPETKU, EXPORT CSV, & NAVIGASI BULAN GLOBAL) -->
-    <header class="flex justify-between items-center px-1">
-      <div class="flex items-center gap-2.5 font-extrabold text-lg text-white tracking-tight">
-        <div class="w-8 h-8 rounded-xl overflow-hidden shadow-sm shadow-[#74FFED]/25 border border-[#74FFED]/35 shrink-0 bg-[#171F44] flex items-center justify-center p-0.5">
-          <img src="icon.svg" alt="Logo DompetKu" class="w-full h-full object-contain">
-        </div>
-        <span class="bg-gradient-to-r from-white via-[#E8EDF8] to-[#9AA8C7] bg-clip-text text-transparent">
-          DompetKu
-        </span>
+  <div class="app">
+    <!-- TOP HEADER -->
+    <header class="top">
+      <div class="brand">
+        <svg viewBox="0 0 48 48" role="img" aria-label="DompetKu">
+          <defs>
+            <mask id="dk1">
+              <rect width="48" height="48" fill="#fff"/>
+              <path d="M44 20H32A4 4 0 0 0 32 28H44Z" fill="#000"/>
+            </mask>
+          </defs>
+          <path mask="url(#dk1)" d="M12 6H24A18 18 0 0 1 24 42H12A4 4 0 0 1 8 38V10A4 4 0 0 1 12 6Z" style="fill:var(--logo)"/>
+          <circle id="dot" cx="32" cy="24" r="2.5" fill="#DD2D90"/>
+        </svg>
+        <span>DompetKu</span>
       </div>
 
-      <div class="flex items-center gap-1.5">
-        <!-- Month Navigator Pill Global -->
-        <nav aria-label="Navigasi Bulan" class="flex items-center bg-[#171F44] rounded-full p-0.5 shadow-card border border-[#263363] font-bold text-xs">
-          <button id="mp" title="Bulan Sebelumnya" class="w-7 h-7 rounded-full flex items-center justify-center text-sm hover:bg-[#131A3B] text-[#74FFED] transition-all cursor-pointer">
-            ‹
-          </button>
-          <span id="ml" class="min-w-[88px] text-center px-1 font-extrabold text-white text-[11px] select-none">
-            -
-          </span>
-          <button id="mn" title="Bulan Berikutnya" class="w-7 h-7 rounded-full flex items-center justify-center text-sm hover:bg-[#131A3B] text-[#74FFED] transition-all cursor-pointer">
-            ›
-          </button>
-        </nav>
-
-        <!-- Tombol Kecil & Estetik Export CSV -->
-        <button 
-          id="btnExportCsv" 
-          type="button"
-          title="Export Data ke CSV" 
-          aria-label="Export Data ke CSV"
-          class="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-[#171F44] hover:bg-[#131A3B] border border-[#263363] shadow-card flex items-center justify-center text-[#74FFED] hover:text-white transition-all cursor-pointer shrink-0 active:scale-95"
-        >
-          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+      <div class="mnav" style="display:flex;align-items:center;gap:2px">
+        <!-- Tombol Estetik Export CSV -->
+        <button id="btnExportCsv" type="button" title="Export CSV" aria-label="Export Data ke CSV" style="width:36px;height:36px;border-radius:50%;display:grid;place-items:center;color:var(--ink7);cursor:pointer">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4 16v1a3 3 0 0 0 3 3h10a3 3 0 0 0 3-3v-1M12 4v12M8 12l4 4 4-4"/>
           </svg>
         </button>
+        <button id="mp" aria-label="Bulan sebelumnya">‹</button>
+        <span id="ml"></span>
+        <button id="mn" aria-label="Bulan berikutnya">›</button>
       </div>
     </header>
 
-    <!-- 2. KARTU SALDO UTAMA (HERO MIDNIGHT ABYSS & GLOWING PLANET EFFECT) -->
-    <section class="bg-gradient-to-br from-[#1E2856] via-[#171F44] to-[#0E1430] text-white rounded-3xl p-4 sm:p-5 relative overflow-hidden shadow-hero border border-[#2D3C75] animate-up select-none">
-      <!-- Ambient Cosmic Glow (Aqua Jade + Baby Pink orbs) -->
-      <div class="absolute -right-10 -top-10 w-44 h-44 rounded-full bg-[#74FFED]/20 blur-2xl pointer-events-none"></div>
-      <div class="absolute -left-10 -bottom-10 w-40 h-40 rounded-full bg-[#FE51D1]/18 blur-2xl pointer-events-none"></div>
+    <!-- HERO SECTION -->
+    <section class="hero">
+      <svg class="deco" viewBox="0 0 48 48">
+        <defs>
+          <mask id="dk2">
+            <rect width="48" height="48" fill="#fff"/>
+            <path d="M44 20H32A4 4 0 0 0 32 28H44Z" fill="#000"/>
+          </mask>
+        </defs>
+        <path mask="url(#dk2)" fill="#fff" d="M12 6H24A18 18 0 0 1 24 42H12A4 4 0 0 1 8 38V10A4 4 0 0 1 12 6Z"/>
+      </svg>
+      <div class="ov">Total saldo saat ini</div>
+      <div class="bal"><small>Rp</small><span id="bal">0</span></div>
+      <div class="stats">
+        <div>
+          <small>↓ Masuk bulan ini</small>
+          <b id="hin">+Rp 0</b>
+        </div>
+        <div>
+          <small>↑ Keluar bulan ini</small>
+          <b id="hout">−Rp 0</b>
+        </div>
+      </div>
+    </section>
+
+    <!-- HORIZONTAL WALLET CARDS -->
+    <div class="wallets" id="wal"></div>
+
+    <!-- MAIN PAPER CONTAINER -->
+    <main class="paper">
       
-      <div class="flex items-center justify-between relative z-10">
-        <span class="text-[10px] font-bold tracking-widest text-[#9AA8C7] uppercase">
-          Total Saldo Saat Ini
-        </span>
-        <span class="text-[9px] font-bold bg-[#74FFED]/15 text-[#74FFED] border border-[#74FFED]/30 px-2 py-0.5 rounded-full backdrop-blur-md">
-          ● Real-Time
-        </span>
-      </div>
+      <!-- 01. REKAP BULANAN & DONUT CHART -->
+      <section class="sec">
+        <div class="sh">
+          <span class="ov"><i>01</i>Rekap</span>
+          <span class="chip" id="rm"></span>
+        </div>
+        <div class="seg" id="rtab" style="--n:2;--i:0">
+          <button data-t="out" class="on">Pengeluaran</button>
+          <button data-t="in">Pemasukan</button>
+        </div>
+        <div class="donut">
+          <svg viewBox="0 0 200 200" id="svg" aria-hidden="true"></svg>
+          <div class="ctr" id="ctr"></div>
+        </div>
+        <div id="list"></div>
+      </section>
 
-      <div class="text-2xl sm:text-3xl font-black tracking-tight text-white my-2.5 relative z-10 drop-shadow-sm" id="bal">
-        Rp 0
-      </div>
-
-      <!-- Grid Ringkasan Pemasukan & Pengeluaran Bulan Berjalan -->
-      <div class="grid grid-cols-2 gap-2 relative z-10 pt-0.5">
-        <!-- Mini Pemasukan (Aqua Jade) -->
-        <div class="bg-[#0B1026]/75 backdrop-blur-md border border-[#74FFED]/30 rounded-2xl p-2.5 flex flex-col shadow-xs">
-          <span class="text-[9.5px] font-extrabold text-[#74FFED] flex items-center gap-1">
-            ↗ Pemasukan
-          </span>
-          <b class="text-xs sm:text-sm font-black text-[#74FFED] truncate mt-0.5" id="hin">
-            +Rp 0
-          </b>
-          <span class="text-[8.5px] text-[#9AA8C7]/80 font-medium mt-0.5">Bulan terpilih</span>
+      <!-- 02. CATAT CEPAT (3 TAB: KELUAR, MASUK, TRANSFER) -->
+      <section class="sec">
+        <div class="sh">
+          <span class="ov"><i>02</i>Catat cepat</span>
+        </div>
+        <div class="seg" id="ftab" style="--n:3;--i:0">
+          <button data-t="out" class="on">↑ Keluar</button>
+          <button data-t="in">↓ Masuk</button>
+          <button data-t="tf">⇄ Transfer</button>
         </div>
 
-        <!-- Mini Pengeluaran (Baby Pink) -->
-        <div class="bg-[#0B1026]/75 backdrop-blur-md border border-[#FE51D1]/30 rounded-2xl p-2.5 flex flex-col shadow-xs">
-          <span class="text-[9.5px] font-extrabold text-[#FE51D1] flex items-center gap-1">
-            ↘ Pengeluaran
-          </span>
-          <b class="text-xs sm:text-sm font-black text-[#FE51D1] truncate mt-0.5" id="hout">
-            -Rp 0
-          </b>
-          <span class="text-[8.5px] text-[#9AA8C7]/80 font-medium mt-0.5">Bulan terpilih</span>
-        </div>
-      </div>
-    </section>
-
-    <!-- 3. SISA SALDO KANTONG (HORIZONTAL/FLEX RAPID SLIDER) -->
-    <section class="bg-[#171F44] rounded-3xl p-3.5 sm:p-4 shadow-card border border-[#263363] animate-up">
-      <div class="flex items-center justify-between mb-2 px-0.5">
-        <div class="flex items-center gap-1.5">
-          <span class="text-sm">👝</span>
-          <h2 class="text-[11px] font-extrabold tracking-wider text-[#9AA8C7] uppercase">
-            Sisa Saldo Kantong
-          </h2>
-        </div>
-        <button id="wm" class="text-[10px] font-bold bg-[#0E1430] hover:bg-[#131A3B] text-[#74FFED] px-2.5 py-1 rounded-full border border-[#74FFED]/35 transition-all flex items-center gap-1 cursor-pointer">
-          <span>＋</span> <span>Kelola</span>
-        </button>
-      </div>
-
-      <!-- Horizontal Flex Scrollbar-Free Slider -->
-      <div id="wal" class="flex gap-2 overflow-x-auto pb-1 pt-0.5 no-scrollbar scroll-smooth">
-        <!-- Diisi secara dinamis oleh JavaScript -->
-      </div>
-    </section>
-
-    <!-- 4. REKAP FINANSIAL BULANAN (SVG DONUT CHART INTERAKTIF & ANIMASI PUTAR) -->
-    <section class="bg-[#171F44] rounded-3xl p-4 sm:p-5 shadow-card border border-[#263363] animate-up">
-      <!-- Header Rekap Bulanan -->
-      <div class="flex items-center justify-between mb-3">
-        <div class="flex items-center gap-1.5">
-          <span class="text-sm">📊</span>
-          <h2 class="text-xs font-extrabold tracking-wider text-[#9AA8C7] uppercase">
-            Rekap Bulanan
-          </h2>
-        </div>
-        <span class="text-[10px] font-bold text-[#74FFED] bg-[#0E1430] px-2.5 py-1 rounded-full border border-[#263363]">
-          Grafik Proporsi
-        </span>
-      </div>
-
-      <!-- Segmented Tab Switch: Pengeluaran (Baby Pink) vs Pemasukan (Aqua Jade) -->
-      <div id="rtab" class="grid grid-cols-2 bg-[#0E1430] p-1 rounded-2xl gap-1 mb-2 select-none border border-[#263363]">
-        <button data-t="out" class="py-2 px-2.5 rounded-xl font-black text-xs transition-all flex items-center justify-center gap-1 bg-[#FE51D1] text-[#0B1026] shadow-md shadow-[#FE51D1]/20">
-          <span>💸</span> <span>Pengeluaran</span>
-        </button>
-        <button data-t="in" class="py-2 px-2.5 rounded-xl font-bold text-xs transition-all flex items-center justify-center gap-1 text-[#9AA8C7] hover:text-white">
-          <span>💰</span> <span>Pemasukan</span>
-        </button>
-      </div>
-
-      <!-- Grafik Donut SVG & Center Hole Interaktif -->
-      <div class="relative w-44 h-44 sm:w-48 sm:h-48 mx-auto my-1 flex items-center justify-center select-none">
-        <svg viewBox="0 0 200 200" id="svg" class="w-full h-full -rotate-90 transform">
-          <!-- Diisi secara dinamis oleh JavaScript -->
-        </svg>
-        
-        <!-- Lubang Tengah Donat Interaktif & Count-Up -->
-        <div id="ctr" class="absolute inset-0 flex flex-col items-center justify-center text-center pointer-events-none px-6">
-          <!-- Diisi secara dinamis oleh JavaScript -->
-        </div>
-      </div>
-
-      <!-- Mini Badges Legenda Kategori di Bawah Donut -->
-      <div id="donutLegend" class="flex flex-wrap items-center justify-center gap-1.5 mt-2.5">
-        <!-- Diisi secara dinamis oleh JavaScript -->
-      </div>
-    </section>
-
-    <!-- 5. FORM CATAT CEPAT (3 TAB: PENGELUARAN, PEMASUKAN, & TRANSFER) -->
-    <section class="bg-[#171F44] rounded-3xl p-4 sm:p-5 shadow-card border border-[#263363] animate-up space-y-3">
-      <div class="flex items-center gap-1.5">
-        <span class="text-sm">⚡</span>
-        <h2 class="text-[11px] font-extrabold tracking-wider text-[#9AA8C7] uppercase">
-          Catat Cepat
-        </h2>
-      </div>
-
-      <!-- Tab Tipe: Pengeluaran vs Pemasukan vs Transfer -->
-      <div id="ftab" class="grid grid-cols-3 bg-[#0E1430] p-1 rounded-2xl gap-1 select-none border border-[#263363]">
-        <button data-t="out" class="py-2 px-1.5 rounded-xl font-black text-xs transition-all flex items-center justify-center gap-1 bg-[#FE51D1] text-[#0B1026] shadow-md shadow-[#FE51D1]/20 min-h-[42px]">
-          <span>↑</span> <span>Keluar</span>
-        </button>
-        <button data-t="in" class="py-2 px-1.5 rounded-xl font-bold text-xs transition-all flex items-center justify-center gap-1 text-[#9AA8C7] hover:text-white min-h-[42px]">
-          <span>↓</span> <span>Masuk</span>
-        </button>
-        <button data-t="tf" class="py-2 px-1.5 rounded-xl font-bold text-xs transition-all flex items-center justify-center gap-1 text-[#9AA8C7] hover:text-white min-h-[42px]">
-          <span>⇄</span> <span>Transfer</span>
-        </button>
-      </div>
-
-      <!-- Input Nominal Besar & Quick Chips -->
-      <div class="space-y-1.5">
-        <div id="amtbox" class="flex items-center gap-2 bg-[#0E1430] border-2 border-[#263363] focus-within:border-[#74FFED] focus-within:shadow-md focus-within:shadow-[#74FFED]/15 rounded-2xl px-3.5 py-1.5 transition-all">
-          <span class="font-black text-lg text-[#74FFED]">Rp</span>
-          <input 
-            id="amt" 
-            type="text" 
-            inputmode="numeric" 
-            placeholder="0" 
-            autocomplete="off"
-            class="flex-1 min-w-0 bg-transparent border-0 outline-none font-black text-2xl text-white py-0.5 placeholder-[#9AA8C7]/30"
-          >
+        <div class="amt" id="amtbox">
+          <span>Rp</span>
+          <input id="amt" inputmode="numeric" placeholder="0" autocomplete="off" aria-label="Nominal">
         </div>
 
-        <!-- Tombol Cepat Tambah Nominal -->
-        <div id="qk" class="flex gap-1 flex-wrap">
-          <button data-v="10000" class="py-1.5 px-2.5 rounded-full bg-[#131A3B] hover:bg-[#1E2856] font-extrabold text-[10.5px] text-white border border-[#263363] min-h-[36px]">
-            +10rb
-          </button>
-          <button data-v="20000" class="py-1.5 px-2.5 rounded-full bg-[#131A3B] hover:bg-[#1E2856] font-extrabold text-[10.5px] text-white border border-[#263363] min-h-[36px]">
-            +20rb
-          </button>
-          <button data-v="50000" class="py-1.5 px-2.5 rounded-full bg-[#131A3B] hover:bg-[#1E2856] font-extrabold text-[10.5px] text-white border border-[#263363] min-h-[36px]">
-            +50rb
-          </button>
-          <button data-v="100000" class="py-1.5 px-2.5 rounded-full bg-[#131A3B] hover:bg-[#1E2856] font-extrabold text-[10.5px] text-white border border-[#263363] min-h-[36px]">
-            +100rb
-          </button>
-          <button data-v="0" class="py-1.5 px-2.5 rounded-full bg-[#0E1430] hover:bg-[#FE51D1]/20 font-extrabold text-[10.5px] text-[#FE51D1] border border-[#FE51D1]/35 min-h-[36px]">
-            Reset
-          </button>
+        <div class="qk" id="qk">
+          <button type="button" class="pill" data-v="10000">+10rb</button>
+          <button type="button" class="pill" data-v="20000">+20rb</button>
+          <button type="button" class="pill" data-v="50000">+50rb</button>
+          <button type="button" class="pill" data-v="100000">+100rb</button>
+          <button type="button" class="pill" data-v="0">Reset</button>
         </div>
-      </div>
 
-      <!-- Pilihan Dompet Biasa (Pengeluaran & Pemasukan) -->
-      <div id="singleWalletBox" class="space-y-1">
-        <label class="block text-[10px] font-extrabold text-[#9AA8C7] tracking-wider uppercase">
-          Dompet
-        </label>
-        <div id="fw" class="flex gap-1.5 overflow-x-auto pb-1 no-scrollbar">
-          <!-- Diisi secara dinamis oleh JavaScript -->
+        <div class="lbl">
+          <span class="ov" id="wl1">Dompet</span>
         </div>
-      </div>
+        <div class="pls" id="fw"></div>
 
-      <!-- Pilihan Dompet Khusus Fitur Transfer (Dari & Ke + Tombol Swap) -->
-      <div id="transferWalletBox" class="space-y-2.5 hidden">
-        <!-- Dari Dompet -->
-        <div class="space-y-1">
-          <div class="flex items-center justify-between">
-            <label class="block text-[10px] font-extrabold text-[#9AA8C7] tracking-wider uppercase">
-              Dari Dompet (Sumber)
-            </label>
-            <button 
-              type="button" 
-              id="btnSwapWallet" 
-              title="Tukar Dompet Asal & Tujuan" 
-              class="text-[10px] font-extrabold text-[#74FFED] bg-[#0E1430] hover:bg-[#131A3B] px-2.5 py-1 rounded-full border border-[#74FFED]/35 flex items-center gap-1 transition-all active:scale-95 cursor-pointer"
-            >
-              <span>⇄</span> <span>Tukar</span>
-            </button>
+        <div id="w2s" hidden>
+          <div class="lbl">
+            <span class="ov">Ke dompet</span>
+            <button type="button" class="chip" id="swap">⇄ Tukar</button>
           </div>
-          <div id="fwFrom" class="flex gap-1.5 overflow-x-auto pb-1 no-scrollbar">
-            <!-- Diisi secara dinamis oleh JavaScript -->
+          <div class="pls" id="fw2"></div>
+        </div>
+
+        <div id="cs">
+          <div class="lbl">
+            <span class="ov">Kategori</span>
+          </div>
+          <div class="cats" id="fc"></div>
+        </div>
+
+        <div class="f2">
+          <div>
+            <div class="ov">Tanggal</div>
+            <input class="t" type="date" id="fd" aria-label="Tanggal">
+          </div>
+          <div>
+            <div class="ov">Catatan</div>
+            <input class="t" id="fn" placeholder="cth: Sarapan soto" aria-label="Catatan">
           </div>
         </div>
 
-        <!-- Ke Dompet -->
-        <div class="space-y-1">
-          <label class="block text-[10px] font-extrabold text-[#9AA8C7] tracking-wider uppercase">
-            Ke Dompet (Tujuan)
+        <button type="button" class="cta" id="save">
+          <i></i>
+          <span id="sl">Simpan Pengeluaran</span>
+        </button>
+      </section>
+
+      <!-- 03. RIWAYAT TRANSAKSI HARIAN -->
+      <section class="sec">
+        <div class="sh">
+          <span class="ov"><i>03</i>Riwayat</span>
+          <span class="chip" id="cnt"></span>
+        </div>
+
+        <div class="dnav">
+          <button type="button" id="dp" aria-label="Hari sebelumnya">‹</button>
+          <label id="dl">
+            <span id="dt"></span>
+            <input type="date" id="dpick" aria-label="Pilih tanggal">
           </label>
-          <div id="fwTo" class="flex gap-1.5 overflow-x-auto pb-1 no-scrollbar">
-            <!-- Diisi secara dinamis oleh JavaScript -->
-          </div>
-        </div>
-      </div>
-
-      <!-- Pilihan Kategori (Khusus Pengeluaran & Pemasukan) -->
-      <div id="categoryBox" class="space-y-1">
-        <label class="block text-[10px] font-extrabold text-[#9AA8C7] tracking-wider uppercase">
-          Kategori
-        </label>
-        <div id="fc" class="grid grid-cols-3 gap-1.5">
-          <!-- Diisi secara dinamis oleh JavaScript -->
-        </div>
-      </div>
-
-      <!-- Tanggal & Catatan Opsional (Side-by-side 2 Kolom di HP) -->
-      <div class="grid grid-cols-2 gap-2 pt-0.5">
-        <div>
-          <label class="block text-[10px] font-extrabold text-[#9AA8C7] tracking-wider uppercase mb-1">
-            Tanggal
-          </label>
-          <input 
-            type="date" 
-            id="fd" 
-            class="w-full bg-[#0E1430] border border-[#263363] focus:border-[#74FFED] rounded-xl p-2 font-semibold text-xs text-white outline-none min-h-[42px] transition-all"
-          >
-        </div>
-        <div>
-          <label class="block text-[10px] font-extrabold text-[#9AA8C7] tracking-wider uppercase mb-1">
-            Catatan
-          </label>
-          <input 
-            type="text" 
-            id="fn" 
-            placeholder="cth: Soto / Kirim" 
-            class="w-full bg-[#0E1430] border border-[#263363] focus:border-[#74FFED] rounded-xl p-2 font-semibold text-xs text-white outline-none min-h-[42px] transition-all placeholder-[#9AA8C7]/40"
-          >
-        </div>
-      </div>
-
-      <!-- CTA Tombol Simpan (Start Hiring Today Style: Baby Pink Bold!) -->
-      <button 
-        id="save" 
-        class="w-full py-3.5 px-4 rounded-xl bg-[#FE51D1] hover:bg-[#e640bd] active:scale-[0.98] text-[#0B1026] font-black text-xs tracking-wider shadow-lg shadow-[#FE51D1]/25 transition-all flex items-center justify-center gap-1 cursor-pointer mt-1 min-h-[46px]"
-      >
-        ＋ Simpan Pengeluaran
-      </button>
-    </section>
-
-    <!-- 6. RIWAYAT TRANSAKSI HARIAN (PADAT, RINGKAS & ERGONOMIS) -->
-    <section class="bg-[#171F44] rounded-3xl p-4 sm:p-5 shadow-card border border-[#263363] animate-up space-y-2.5">
-      <div class="flex items-center justify-between">
-        <div class="flex items-center gap-1.5">
-          <span class="text-sm">🗓️</span>
-          <h2 class="text-[11px] font-extrabold tracking-wider text-[#9AA8C7] uppercase">
-            Riwayat Harian
-          </h2>
-        </div>
-        <span id="cnt" class="text-[10px] font-bold bg-[#0E1430] text-[#74FFED] px-2 py-0.5 rounded-full border border-[#263363]">
-          0 Transaksi
-        </span>
-      </div>
-
-      <!-- Bar Navigasi Tanggal Harian + Date Picker Tersembunyi -->
-      <div class="flex items-center bg-[#0E1430] rounded-2xl p-0.5 border border-[#263363]">
-        <button id="dp" title="Hari Sebelumnya" class="w-8 h-8 rounded-xl flex items-center justify-center text-base hover:bg-[#131A3B] text-[#74FFED]">
-          ‹
-        </button>
-        <label id="dl" class="flex-1 text-center font-bold text-xs relative cursor-pointer py-1.5 px-1">
-          <span id="dt" class="text-white font-extrabold text-[11px] block truncate">-</span>
-          <input type="date" id="dpick" class="absolute inset-0 opacity-0 w-full h-full cursor-pointer">
-        </label>
-        <button id="dn" title="Hari Berikutnya" class="w-8 h-8 rounded-xl flex items-center justify-center text-base hover:bg-[#131A3B] text-[#74FFED]">
-          ›
-        </button>
-      </div>
-
-      <!-- Total Transaksi Harian (Keluar: Baby Pink, Masuk: Aqua Jade) -->
-      <div class="flex justify-between items-center text-[10.5px] font-bold px-1 py-0.5 border-b border-[#263363]/60">
-        <span id="so" class="text-[#FE51D1] font-extrabold truncate pr-1">● Keluar: -Rp 0</span>
-        <span id="si" class="text-[#74FFED] font-extrabold truncate pl-1">● Masuk: +Rp 0</span>
-      </div>
-
-      <!-- Filter Tabs: Semua | Keluar | Masuk | Transfer -->
-      <div id="hf" class="grid grid-cols-4 bg-[#0E1430] p-0.5 rounded-xl gap-1 select-none border border-[#263363] text-xs">
-        <button data-f="all" class="py-1.5 px-1 rounded-lg font-black text-[10.5px] transition-all text-center bg-[#74FFED] text-[#0B1026] shadow-xs">
-          Semua
-        </button>
-        <button data-f="out" class="py-1.5 px-1 rounded-lg font-bold text-[10.5px] transition-all text-center text-[#9AA8C7] hover:text-white">
-          Keluar
-        </button>
-        <button data-f="in" class="py-1.5 px-1 rounded-lg font-bold text-[10.5px] transition-all text-center text-[#9AA8C7] hover:text-white">
-          Masuk
-        </button>
-        <button data-f="tf" class="py-1.5 px-1 rounded-lg font-bold text-[10.5px] transition-all text-center text-[#9AA8C7] hover:text-white">
-          Transfer
-        </button>
-      </div>
-
-      <!-- List Transaksi Harian yang Ringkas -->
-      <div id="hist" class="space-y-1.5 max-h-72 overflow-y-auto pr-0.5 custom-scroll">
-        <!-- Diisi secara dinamis oleh JavaScript -->
-      </div>
-    </section>
-
-    <!-- 7. TREN BULANAN (BAR CHART SVG BERKELOMPOK 6 BULAN - COLLAPSIBLE DI BAWAH) -->
-    <section id="trendCard" class="bg-[#171F44] rounded-3xl p-3.5 sm:p-4 shadow-card border border-[#263363] animate-up transition-all">
-      <!-- Header Kartu Tren (Klik-able untuk Toggle Ciutkan/Buka) -->
-      <div id="trendHeader" class="flex items-center justify-between cursor-pointer select-none">
-        <div class="flex items-center gap-1.5">
-          <span class="text-sm">📈</span>
-          <h2 class="text-xs font-extrabold tracking-wider text-[#9AA8C7] uppercase">
-            Tren 6 Bulan
-          </h2>
+          <button type="button" id="dn" aria-label="Hari berikutnya">›</button>
         </div>
 
-        <div class="flex items-center gap-1.5">
-          <!-- Tombol Ciutkan / Buka -->
-          <button 
-            type="button" 
-            id="btnToggleTrend" 
-            aria-expanded="false" 
-            class="inline-flex items-center gap-1 py-1 px-2.5 rounded-full bg-[#0E1430] hover:bg-[#131A3B] text-[#74FFED] text-[10.5px] font-extrabold border border-[#74FFED]/35 transition-all cursor-pointer active:scale-95"
-          >
+        <div class="sum">
+          <span class="out" id="so"></span>
+          <span class="in" id="si"></span>
+        </div>
+
+        <div class="seg" id="hf" style="--n:4;--i:0">
+          <button data-f="all" class="on">Semua</button>
+          <button data-f="out">Keluar</button>
+          <button data-f="in">Masuk</button>
+          <button data-f="tf">Transfer</button>
+        </div>
+
+        <div id="hist"></div>
+      </section>
+
+      <!-- 04. TREN 6 BULAN (COLLAPSIBLE DI PALING BAWAH) -->
+      <section class="sec" id="trendCard">
+        <div class="sh" id="trendHeader" style="cursor:pointer;user-select:none">
+          <span class="ov"><i>04</i>Tren 6 Bulan</span>
+          <button type="button" id="btnToggleTrend" class="chip" aria-expanded="false" style="cursor:pointer;display:inline-flex;align-items:center;gap:6px">
             <span id="trendToggleText">Buka</span>
-            <svg id="trendChevron" class="w-3.5 h-3.5 transform transition-transform duration-300" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+            <svg id="trendChevron" style="width:14px;height:14px;transform:rotate(0deg);transition:transform .3s var(--ease)" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
             </svg>
           </button>
         </div>
-      </div>
 
-      <!-- Collapsible Container dengan Animasi Grid CSS Mulus (Default Tertutup) -->
-      <div id="trendBody" class="trend-body">
-        <div class="trend-inner space-y-1.5 pt-2">
-          
-          <!-- Baris Insight & Legenda Mini (Compact Spacing py-1) -->
-          <div class="flex items-center justify-between gap-1.5">
-            <div id="trendInsight" class="flex-1 py-1 px-2.5 rounded-xl border transition-all text-[10.5px] font-bold flex items-center gap-1.5 truncate">
-              <!-- Diisi secara dinamis oleh JavaScript -->
+        <div id="trendBody" class="trend-body">
+          <div class="trend-inner" style="overflow:hidden;padding-top:8px">
+            <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:10px">
+              <div id="trendInsight" style="flex:1;padding:6px 12px;border-radius:12px;font-size:12px;font-weight:700;display:flex;align-items:center;gap:6px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;background:var(--canvas);color:var(--ink7)"></div>
+              <div style="display:flex;align-items:center;gap:10px;font-size:11px;font-weight:700;flex-shrink:0">
+                <span style="display:inline-flex;align-items:center;gap:4px;color:var(--b700)">
+                  <span style="width:8px;height:8px;border-radius:50%;background:var(--b700)"></span> Masuk
+                </span>
+                <span style="display:inline-flex;align-items:center;gap:4px;color:var(--p700)">
+                  <span style="width:8px;height:8px;border-radius:50%;background:var(--p700)"></span> Keluar
+                </span>
+              </div>
             </div>
 
-            <!-- Legenda Mini: Aqua Jade (Masuk) & Baby Pink (Keluar) -->
-            <div class="flex items-center gap-1.5 text-[9.5px] font-bold shrink-0 px-0.5">
-              <span class="inline-flex items-center gap-1 text-[#74FFED]">
-                <span class="w-2 h-2 rounded-full bg-[#74FFED]"></span> Masuk
-              </span>
-              <span class="inline-flex items-center gap-1 text-[#FE51D1]">
-                <span class="w-2 h-2 rounded-full bg-[#FE51D1]"></span> Keluar
-              </span>
+            <div id="trendTooltip" style="background:var(--canvas);padding:6px 12px;border-radius:12px;display:flex;justify-content:space-between;align-items:center;font-size:12px;font-weight:800;margin-bottom:8px"></div>
+
+            <div style="width:100%;display:flex;align-items:center;justify-content:center;overflow:hidden">
+              <svg id="trendSvg" viewBox="0 0 340 106" style="width:100%;height:115px;overflow:visible;cursor:pointer"></svg>
             </div>
           </div>
-
-          <!-- Detail Tooltip Interaktif untuk Bulan yang Disorot (Compact Spacing py-1) -->
-          <div id="trendTooltip" class="bg-[#0E1430] py-1 px-2.5 rounded-xl border border-[#263363] flex items-center justify-between text-[10.5px] font-extrabold transition-all select-none">
-            <!-- Diisi secara dinamis oleh JavaScript -->
-          </div>
-
-          <!-- SVG Chart Container Responsif & Compact (Bantet & Hemat Ruang Vertikal) -->
-          <div class="w-full relative select-none pt-0.5 flex items-center justify-center">
-            <svg id="trendSvg" viewBox="0 0 340 106" class="w-full h-24 sm:h-28 overflow-visible cursor-pointer">
-              <!-- Diisi secara dinamis oleh JavaScript -->
-            </svg>
-          </div>
         </div>
-      </div>
-    </section>
+      </section>
 
-  </main>
+    </main>
+  </div>
 
-  <!-- 8. MODAL BOTTOM SHEET: KELOLA DOMPET DINAMIS -->
-  <div id="ov" class="fixed inset-0 bg-[#050814]/75 backdrop-blur-sm opacity-0 pointer-events-none transition-opacity duration-300 z-50 flex items-end justify-center">
-    <div class="bg-[#171F44] w-full max-w-md rounded-t-3xl p-4 pb-7 shadow-sheet border-t border-[#263363] transform translate-y-full transition-transform duration-300 ease-out max-h-[85vh] overflow-y-auto custom-scroll text-white">
-      <div class="w-9 h-1 rounded-full bg-[#2D3C75] mx-auto mb-3"></div>
-      
-      <div class="flex items-center justify-between mb-3">
-        <h3 class="text-xs font-extrabold text-white uppercase tracking-wider">
-          Kelola Kantong Dompet
-        </h3>
-        <button onclick="closeWalletSheet()" class="w-6 h-6 rounded-full bg-[#0E1430] text-[#9AA8C7] hover:text-white flex items-center justify-center font-bold text-xs cursor-pointer">
-          ✕
-        </button>
+  <!-- MODAL BOTTOM SHEET: KELOLA DOMPET -->
+  <div class="scrim" id="sc">
+    <div class="sheet">
+      <div class="grab"></div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+        <h3 style="margin-bottom:0">Kelola Dompet</h3>
+        <button type="button" id="btnCloseSheet" style="width:32px;height:32px;border-radius:50%;background:var(--canvas);color:var(--ink6);display:grid;place-items:center;font-weight:800;font-size:14px">✕</button>
       </div>
-
-      <!-- Daftar Dompet yang Ada -->
-      <div id="wl" class="space-y-1.5 mb-3.5">
-        <!-- Diisi secara dinamis oleh JavaScript -->
+      <div id="wl"></div>
+      <div class="f2" style="grid-template-columns:72px 1fr;margin-top:14px">
+        <input class="t" id="we" value="💳" maxlength="2" style="text-align:center;font-size:18px" aria-label="Emoji (opsional)">
+        <input class="t" id="wn" placeholder="Nama dompet baru" aria-label="Nama dompet">
       </div>
-
-      <!-- Form Tambah Dompet Baru -->
-      <div class="p-3 bg-[#0E1430] rounded-2xl border border-[#263363] space-y-2">
-        <span class="block text-[10px] font-extrabold text-[#9AA8C7] uppercase tracking-wider">
-          Tambah Dompet Baru
-        </span>
-        <div class="grid grid-cols-[54px_1fr] gap-1.5">
-          <input 
-            type="text" 
-            id="we" 
-            value="💳" 
-            maxlength="2"
-            title="Emoji Dompet"
-            class="w-full bg-[#131A3B] border border-[#263363] focus:border-[#74FFED] text-white rounded-xl p-2 text-center text-base outline-none"
-          >
-          <input 
-            type="text" 
-            id="wn" 
-            placeholder="Nama dompet (cth: Dana)" 
-            class="w-full bg-[#131A3B] border border-[#263363] focus:border-[#74FFED] text-white rounded-xl p-2 text-xs font-semibold outline-none placeholder-[#9AA8C7]/50"
-          >
-        </div>
-        <button 
-          id="wadd" 
-          class="w-full py-2.5 rounded-xl bg-[#FE51D1] hover:bg-[#e640bd] text-[#0B1026] font-black text-xs shadow-md shadow-[#FE51D1]/20 transition-all cursor-pointer min-h-[42px]"
-        >
-          ＋ Tambah Dompet
-        </button>
-      </div>
+      <button type="button" class="cta" id="wadd" style="margin-top:20px"><i></i>Tambah Dompet</button>
     </div>
   </div>
 
-  <!-- 9. TOAST NOTIFICATION -->
-  <div id="toast" class="fixed left-1/2 bottom-6 -translate-x-1/2 translate-y-16 bg-[#171F44] border border-[#74FFED]/60 text-white px-4 py-2 rounded-full font-bold text-xs shadow-xl shadow-[#74FFED]/20 transition-all duration-300 z-50 opacity-0 pointer-events-none">
-    Pesan
-  </div>
+  <!-- TOAST NOTIFICATION -->
+  <div class="toast" id="toast" role="status"></div>
 
-  <!-- JAVASCRIPT LOGIC ENGINE -->
+  <!-- JAVASCRIPT ENGINE (100% PRESERVED & INTEGRATED) -->
   <script>
     /* ==========================================================================
-       UTILITY & HELPER FUNCTIONS
+       UTILITIES & ICON ENGINE
        ========================================================================== */
     const $ = selector => document.querySelector(selector);
     const $$ = selector => document.querySelectorAll(selector);
-    
-    // Format Rupiah Indonesia
-    const rp = num => 'Rp ' + Math.abs(Math.round(num || 0)).toLocaleString('id-ID');
-    const pad = num => String(num).padStart(2, '0');
-    const iso = date => date.getFullYear() + '-' + pad(date.getMonth() + 1) + '-' + pad(date.getDate());
-    
-    // Escape HTML untuk proteksi XSS
+
+    const num = n => Math.abs(Math.round(n || 0)).toLocaleString('id-ID');
+    const rp = n => 'Rp ' + num(n);
+    const pad = n => String(n).padStart(2, '0');
+    const iso = d => d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate());
+
     const escapeHtml = str => {
       if (!str) return '';
       return String(str)
@@ -673,99 +1308,63 @@
         .replace(/'/g, '&#039;');
     };
 
-    // Master Kategori Finansial
+    // Vector Icon Paths (Clean geometric stroke paths)
+    const P = {
+      fork: 'M7 3v8M4.5 3v5a2.5 2.5 0 0 0 5 0V3M7 11v10M17 3c-2.2 2-3 4.6-3 8h3v10',
+      glass: 'M6 3h12l-2 15a3 3 0 0 1-3 3h-2a3 3 0 0 1-3-3L6 3z M6 8h12 M13 1l2 2',
+      pin: 'M12 21s-6-5.5-6-10.5a6 6 0 0 1 12 0C18 15.5 12 21 12 21zM12 12a1.6 1.6 0 1 0 0-3.2 1.6 1.6 0 0 0 0 3.2z',
+      bag: 'M5 8h14l-1 12H6zM9 8V6.5a3 3 0 0 1 6 0V8',
+      bolt: 'M13 3 5 14h6l-1 7 8-11h-6z',
+      cup: 'M5 9h11v5a5 5 0 0 1-5 5h-1a5 5 0 0 1-5-5zM16 10h2a2 2 0 0 1 0 4h-2M8 3v3M12 3v3',
+      dots: 'M5 12h.01M12 12h.01M19 12h.01',
+      down: 'M12 4v12M6 11l6 6 6-6M5 21h14',
+      star: 'M12 3l2.6 5.6 6.1.7-4.5 4.2 1.2 6L12 16.5l-5.4 3 1.2-6L3.3 9.3l6.1-.7z',
+      lap: 'M5 6h14v10H5zM3 20h18',
+      plus: 'M12 5v14M5 12h14',
+      swap: 'M4 8h14l-3-3M20 16H6l3 3'
+    };
+
+    const svgIco = (k, s = 22) => `<svg viewBox="0 0 24 24" width="${s}" height="${s}" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="${P[k] || P.dots}"/></svg>`;
+
+    // Master Categories: Including "Minum"
     const CATS = {
       out: [
-        ['🍔', 'Makan'],
-        ['🧋', 'Minum'],
-        ['🛵', 'Transport'],
-        ['🛒', 'Belanja'],
-        ['💡', 'Tagihan'],
-        ['☕', 'Nongkrong'],
-        ['📦', 'Lainnya']
+        ['fork', 'Makan'],
+        ['glass', 'Minum'],
+        ['pin', 'Transport'],
+        ['bag', 'Belanja'],
+        ['bolt', 'Tagihan'],
+        ['cup', 'Nongkrong'],
+        ['dots', 'Lainnya']
       ],
       in: [
-        ['💰', 'Gaji/Uang Saku'],
-        ['🎁', 'Bonus'],
-        ['💻', 'Freelance'],
-        ['📥', 'Lainnya']
+        ['down', 'Gaji/Uang Saku'],
+        ['star', 'Bonus'],
+        ['lap', 'Freelance'],
+        ['plus', 'Lainnya']
       ]
     };
 
-    // Palet Warna Cyber-Fintech (Aqua Jade, Baby Pink, Midnight Highlights)
-    const COL = [
-      '#74FFED', // Aqua Jade
-      '#FE51D1', // Baby Pink
-      '#38BDF8', // Electric Sky Blue
-      '#A78BFA', // Soft Violet
-      '#FBBF24', // Amber Gold
-      '#F472B6', // Neon Rose
-      '#34D399', // Mint Emerald
-      '#818CF8'  // Indigo Glow
-    ];
+    // Color Ramps for Donut & Categories
+    const RAMP = {
+      out: ['#B8146F', '#DD2D90', '#F566B4', '#F9A3D2', '#8A0F55', '#FCD0E7', '#E052A0'],
+      in: ['#08557F', '#0E8DD0', '#7CC6EE', '#B5DEF5', '#0A6FA6', '#053A58', '#3996C6']
+    };
 
-    const MON = [
-      'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
-      'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'
-    ];
-
+    const COLW = ['#08557F', '#B8146F', '#0A1A2B', '#0A6FA6', '#0E8DD0', '#8A0F55'];
+    const MON = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
     const todayS = iso(new Date());
 
-    const icoOf = (type, catName) => {
-      if (type === 'tf') return '🔁';
-      const found = (CATS[type] || []).find(item => item[1] === catName);
-      return found ? found[0] : (type === 'in' ? '💰' : '📦');
+    const ik = (t, c) => {
+      if (t === 'tf') return 'swap';
+      const found = (CATS[t] || []).find(x => x[1] === c);
+      return found ? found[0] : (t === 'in' ? 'down' : 'dots');
     };
 
-    /* ==========================================================================
-       ANIMATION ENGINE: COUNT-UP & SMOOTH TRANSITIONS
-       ========================================================================== */
-    const animRunning = {};
-    const animPrev = {
-      bal: 0,
-      hin: 0,
-      hout: 0,
-      ctr: 0
-    };
-    let shouldAnimateDonut = true;
-
-    function animateCountUp(targetEl, startVal, endVal, duration, formatter) {
-      if (!targetEl) return;
-      const key = targetEl.id || ('anim_' + Math.random().toString(36).slice(2));
-      if (animRunning[key]) {
-        cancelAnimationFrame(animRunning[key]);
-        delete animRunning[key];
-      }
-
-      const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-      if (prefersReduced || startVal === endVal || isNaN(startVal) || isNaN(endVal)) {
-        targetEl.textContent = formatter(endVal);
-        return;
-      }
-
-      const startTime = performance.now();
-      const easeOutCubic = t => 1 - Math.pow(1 - t, 3);
-
-      function frame(now) {
-        const elapsed = now - startTime;
-        const progress = Math.min(elapsed / duration, 1);
-        const eased = easeOutCubic(progress);
-        const current = Math.round(startVal + (endVal - startVal) * eased);
-        targetEl.textContent = formatter(current);
-
-        if (progress < 1) {
-          animRunning[key] = requestAnimationFrame(frame);
-        } else {
-          targetEl.textContent = formatter(endVal);
-          delete animRunning[key];
-        }
-      }
-
-      animRunning[key] = requestAnimationFrame(frame);
-    }
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
     /* ==========================================================================
-       STATE & LOCALSTORAGE MANAGEMENT (BACKWARD COMPATIBLE + REPAIR)
+       STORAGE & STATE (BACKWARD COMPATIBLE + DEDUPLICATION)
        ========================================================================== */
     const STORAGE_KEY_V2 = 'dompetku2';
 
@@ -788,7 +1387,6 @@
       }
     };
 
-    // Generator ID Baru yang Terjamin Unik (Global ID Space untuk Wallets & Transaksi)
     function getNextId() {
       let max = 0;
       if (Array.isArray(S.wallets)) {
@@ -815,7 +1413,6 @@
       return next;
     }
 
-    // Auto-Repair & Deduplikasi ID Dompet
     function repairWalletsAndIds() {
       if (!Array.isArray(S.wallets) || S.wallets.length === 0) {
         S.wallets = [
@@ -868,27 +1465,11 @@
       }
     }
 
-    // Validasi Pemilihan Dompet pada Form Catat Cepat & Transfer
-    function validateFormWallets() {
-      if (!Array.isArray(S.wallets) || S.wallets.length === 0) return;
-      if (!S.wallets.some(w => w.id === V.fw)) {
-        V.fw = S.wallets[0].id;
-      }
-      if (S.wallets.length > 1) {
-        if (!S.wallets.some(w => w.id === V.fw2) || V.fw2 === V.fw) {
-          const alt = S.wallets.find(w => w.id !== V.fw);
-          V.fw2 = alt ? alt.id : S.wallets[0].id;
-        }
-      } else {
-        V.fw2 = S.wallets[0].id;
-      }
-    }
-
-    // Load State dari LocalStorage & Jalankan Perbaikan ID
+    // Load data from LocalStorage
     try {
-      const savedV2 = localStorage.getItem(STORAGE_KEY_V2);
-      if (savedV2) {
-        const parsed = JSON.parse(savedV2);
+      const saved = localStorage.getItem(STORAGE_KEY_V2) || localStorage.getItem('dompetku3');
+      if (saved) {
+        const parsed = JSON.parse(saved);
         if (parsed && typeof parsed === 'object') {
           if (Array.isArray(parsed.wallets) && parsed.wallets.length > 0) {
             S.wallets = parsed.wallets;
@@ -907,89 +1488,568 @@
 
     repairWalletsAndIds();
 
-    // View State (UI Controls)
+    // View State
     const V = {
       month: todayS.slice(0, 7), // YYYY-MM
-      rt: 'out',                 // Tab rekap donut: 'out' | 'in'
-      sel: null,                 // Kategori aktif yang dipilih/disorot
-      ft: 'out',                 // Tab form catat: 'out' | 'in' | 'tf'
-      fw: S.wallets[0] ? S.wallets[0].id : 1, // Dompet aktif form (sumber)
-      fw2: S.wallets[1] ? S.wallets[1].id : (S.wallets[0] ? S.wallets[0].id : 2), // Dompet tujuan transfer
-      fc: 'Makan',               // Kategori aktif form
-      day: todayS,               // Tanggal aktif riwayat harian
-      hf: 'all',                 // Filter riwayat: 'all' | 'out' | 'in' | 'tf'
-      amt: 0,                    // Nilai nominal input
-      trendOpen: false           // Kartu tren default tertutup (collapsed)
+      rt: 'out',                 // Rekap tab: 'out' | 'in'
+      sel: null,                 // Kategori aktif yang dipilih
+      ft: 'out',                 // Form catat tab: 'out' | 'in' | 'tf'
+      fw: S.wallets[0] ? S.wallets[0].id : 1,
+      fw2: S.wallets[1] ? S.wallets[1].id : (S.wallets[0] ? S.wallets[0].id : 2),
+      fc: 'Makan',
+      day: todayS,
+      hf: 'all',
+      amt: 0,
+      trendOpen: false,
+      newId: 0
     };
+
+    function validateFormWallets() {
+      if (!Array.isArray(S.wallets) || S.wallets.length === 0) return;
+      if (!S.wallets.some(w => w.id === V.fw)) {
+        V.fw = S.wallets[0].id;
+      }
+      if (S.wallets.length > 1) {
+        if (!S.wallets.some(w => w.id === V.fw2) || V.fw2 === V.fw) {
+          const alt = S.wallets.find(w => w.id !== V.fw);
+          V.fw2 = alt ? alt.id : S.wallets[0].id;
+        }
+      } else {
+        V.fw2 = S.wallets[0].id;
+      }
+    }
     validateFormWallets();
 
     let toastTimer = null;
-    const toast = msg => {
+    const toast = m => {
       const t = $('#toast');
       if (!t) return;
-      t.textContent = msg;
-      t.classList.remove('opacity-0', 'translate-y-16', 'pointer-events-none');
-      t.classList.add('opacity-100', 'translate-y-0');
+      t.textContent = m;
+      t.classList.add('on');
       clearTimeout(toastTimer);
-      toastTimer = setTimeout(() => {
-        t.classList.add('opacity-0', 'translate-y-16', 'pointer-events-none');
-        t.classList.remove('opacity-100', 'translate-y-0');
-      }, 1800);
+      toastTimer = setTimeout(() => t.classList.remove('on'), 1800);
     };
 
-    const getWallet = id => (S.wallets.find(w => w.id === id) || { n: 'Dompet', e: '💳' });
-    const monthTx = type => S.tx.filter(x => x.d.startsWith(V.month) && (!type || x.t === type));
-    const sum = list => list.reduce((total, x) => total + (x.a || 0), 0);
-    
-    const setTabClass = (containerSelector, predicate) => {
-      $$(containerSelector + ' button').forEach(btn => {
-        const active = predicate(btn);
-        if (active) {
-          const type = btn.dataset.t;
-          if (type === 'in') {
-            btn.className = 'py-2 px-1.5 rounded-xl font-black text-xs transition-all flex items-center justify-center gap-1 bg-[#74FFED] text-[#0B1026] shadow-md shadow-[#74FFED]/20 min-h-[42px]';
-          } else if (type === 'out') {
-            btn.className = 'py-2 px-1.5 rounded-xl font-black text-xs transition-all flex items-center justify-center gap-1 bg-[#FE51D1] text-[#0B1026] shadow-md shadow-[#FE51D1]/20 min-h-[42px]';
-          } else {
-            btn.className = 'py-2 px-1.5 rounded-xl font-black text-xs transition-all flex items-center justify-center gap-1 bg-gradient-to-r from-[#FE51D1] to-[#74FFED] text-[#0B1026] shadow-md min-h-[42px]';
-          }
-        } else {
-          btn.className = 'py-2 px-1.5 rounded-xl font-bold text-xs transition-all flex items-center justify-center gap-1 text-[#9AA8C7] hover:text-white min-h-[42px]';
-        }
+    const wn = id => S.wallets.find(w => w.id === id) || { n: 'Dompet', e: '' };
+    const sum = list => list.reduce((tot, x) => tot + (x.a || 0), 0);
+    const mTx = t => S.tx.filter(x => x.d.startsWith(V.month) && (!t || x.t === t));
+
+    // Perhitungan Saldo Dompet (termasuk transfer)
+    const balOf = id => S.tx.reduce((total, x) => {
+      if (x.t === 'in' && x.w === id) return total + x.a;
+      if (x.t === 'out' && x.w === id) return total - x.a;
+      if (x.t === 'tf') {
+        if (x.w === id) return total - x.a;
+        if (x.w2 === id) return total + x.a;
+      }
+      return total;
+    }, 0);
+
+    // Segmented Control Helper
+    const setSeg = (selector, keys, currentKey, activeColor) => {
+      const el = $(selector);
+      if (!el) return;
+      const idx = keys.indexOf(currentKey);
+      el.style.setProperty('--i', idx >= 0 ? idx : 0);
+      if (activeColor) el.style.setProperty('--ac', activeColor);
+      el.querySelectorAll('button').forEach(btn => {
+        const val = btn.dataset.t || btn.dataset.f;
+        btn.classList.toggle('on', val === currentKey);
       });
     };
 
-    /* ==========================================================================
-       1. RENDER HEADER & TOTAL SALDO HERO CARD (WITH COUNT-UP)
-       ========================================================================== */
-    function renderHead() {
-      const [year, monthNum] = V.month.split('-');
-      const monthIdx = parseInt(monthNum, 10) - 1;
-      const monthName = MON[monthIdx] || '-';
-      
-      $('#ml').textContent = `${monthName} ${year}`;
-
-      // Hitung Saldo Keseluruhan Sepanjang Waktu
-      const totalMasukAll = sum(S.tx.filter(x => x.t === 'in'));
-      const totalKeluarAll = sum(S.tx.filter(x => x.t === 'out'));
-      const netSaldo = totalMasukAll - totalKeluarAll;
-
-      animateCountUp($('#bal'), animPrev.bal, netSaldo, 600, v => (v < 0 ? '-' : '') + rp(Math.abs(v)));
-      animPrev.bal = netSaldo;
-
-      // Hitung Pemasukan & Pengeluaran Bulan Berjalan
-      const inMonth = sum(monthTx('in'));
-      const outMonth = sum(monthTx('out'));
-
-      animateCountUp($('#hin'), animPrev.hin, inMonth, 600, v => '+' + rp(v));
-      animPrev.hin = inMonth;
-
-      animateCountUp($('#hout'), animPrev.hout, outMonth, 600, v => '-' + rp(v));
-      animPrev.hout = outMonth;
+    // Tween Animation Engine
+    function tween(el, to, formatter) {
+      if (!el) return;
+      const from = el._v || 0;
+      el._v = to;
+      cancelAnimationFrame(el._r);
+      if (reduce || from === to || isNaN(from) || isNaN(to)) {
+        el.textContent = formatter(to);
+        return;
+      }
+      const t0 = performance.now();
+      (function frame(t) {
+        const p = Math.min((t - t0) / 600, 1);
+        const e = 1 - Math.pow(1 - p, 3);
+        el.textContent = formatter(p < 1 ? Math.round(from + (to - from) * e) : to);
+        if (p < 1) el._r = requestAnimationFrame(frame);
+      })(t0);
     }
 
     /* ==========================================================================
-       2. RENDER TREN 6 BULAN (BAR CHART SVG BERKELOMPOK & INSIGHT)
+       1. HEAD & TOTAL SALDO (HERO)
+       ========================================================================== */
+    function renderHead() {
+      const [y, m] = V.month.split('-');
+      const mIdx = parseInt(m, 10) - 1;
+      const monthName = MON[mIdx] || '-';
+
+      $('#ml').textContent = `${monthName} ${y}`;
+      $('#rm').textContent = `${monthName.slice(0, 3)} ${y}`;
+
+      const totalIn = sum(S.tx.filter(x => x.t === 'in'));
+      const totalOut = sum(S.tx.filter(x => x.t === 'out'));
+      const net = totalIn - totalOut;
+
+      tween($('#bal'), net, v => (v < 0 ? '−' : '') + num(v));
+      tween($('#hin'), sum(mTx('in')), v => '+' + rp(v));
+      tween($('#hout'), sum(mTx('out')), v => '−' + rp(v));
+    }
+
+    /* ==========================================================================
+       2. REKAP BULANAN & INTERACTIVE DONUT CHART
+       ========================================================================== */
+    function groups() {
+      const map = {};
+      mTx(V.rt).forEach(x => {
+        map[x.c] = (map[x.c] || 0) + x.a;
+      });
+      return Object.entries(map).map(([c, a]) => ({ c, a })).sort((a, b) => b.a - a.a);
+    }
+
+    function renderDonut(anim = true) {
+      setSeg('#rtab', ['out', 'in'], V.rt, V.rt === 'out' ? 'var(--p500)' : 'var(--b600)');
+
+      const g = groups();
+      const tot = sum(g);
+      const R = 70;
+      const C = 2 * Math.PI * R;
+      const cl = RAMP[V.rt] || RAMP.out;
+      const mid = {};
+      let off = 0;
+
+      const segs = g.map((x, i) => {
+        const L = (x.a / tot) * C;
+        const o = off;
+        off += L;
+        mid[x.c] = o + L / 2;
+        return {
+          c: x.c,
+          len: Math.max(L - (g.length > 1 ? 3 : 0), 0),
+          o,
+          col: cl[i % cl.length]
+        };
+      });
+
+      const rot = V.sel && mid[V.sel] !== undefined ? (-mid[V.sel] / C) * 360 : -90;
+      const sv = $('#svg');
+
+      if (anim || !sv.querySelector('#rg')) {
+        sv.innerHTML = `
+          <g id="rg" style="transform-origin:100px 100px;transform:rotate(${rot}deg);transition:transform .7s var(--ease)">
+            <circle cx="100" cy="100" r="${R}" fill="none" style="stroke:var(--canvas);stroke-width:26px" />
+            ${segs.map(s => `
+              <circle 
+                data-c="${escapeHtml(s.c)}" 
+                data-d="${s.len.toFixed(2)} ${C.toFixed(2)}" 
+                cx="100" 
+                cy="100" 
+                r="${R}" 
+                stroke="${s.col}" 
+                stroke-width="26" 
+                stroke-dasharray="${anim && !reduce ? '0 ' + C : s.len.toFixed(2) + ' ' + C}" 
+                stroke-dashoffset="${(-s.o).toFixed(2)}" 
+                style="opacity:${V.sel && V.sel !== s.c ? .35 : 1}" 
+              />
+            `).join('')}
+          </g>
+          <circle cx="196" cy="100" r="5" style="fill:var(--p500);stroke:var(--paper);stroke-width:2px" />
+        `;
+
+        if (anim && !reduce) {
+          requestAnimationFrame(() => {
+            requestAnimationFrame(() => {
+              sv.querySelectorAll('circle[data-d]').forEach((c, i) => {
+                c.style.transition = `stroke-dasharray .8s var(--ease) ${i * 70}ms, stroke-width .3s, opacity .3s`;
+                c.setAttribute('stroke-dasharray', c.dataset.d);
+              });
+            });
+          });
+        }
+      } else {
+        sv.querySelectorAll('circle[data-c]').forEach(c => {
+          const isSelected = c.dataset.c === V.sel;
+          c.style.strokeWidth = isSelected ? '34px' : '26px';
+          c.style.opacity = V.sel && !isSelected ? .35 : 1;
+        });
+        const rg = $('#rg');
+        if (rg) rg.style.transform = `rotate(${rot}deg)`;
+      }
+
+      const s = g.find(x => x.c === V.sel);
+      const ctr = $('#ctr');
+
+      if (s) {
+        ctr.innerHTML = `
+          <div class="fade">
+            ${svgIco(ik(V.rt, s.c), 28)}
+            <div class="n">${escapeHtml(s.c)}</div>
+            <div class="v">${rp(s.a)}</div>
+            <div class="p">${Math.round((s.a / tot) * 100)}%</div>
+          </div>
+        `;
+      } else {
+        ctr.innerHTML = `
+          <div class="fade">
+            <div class="n">Total ${V.rt === 'out' ? 'keluar' : 'masuk'}</div>
+            <div class="v">${rp(tot)}</div>
+            <div class="p">${g.length} kategori</div>
+          </div>
+        `;
+      }
+
+      const listEl = $('#list');
+      if (g.length > 0 && tot > 0) {
+        listEl.innerHTML = g.map((x, i) => `
+          <button type="button" class="row ${V.sel === x.c ? 'sel' : ''}" data-c="${escapeHtml(x.c)}">
+            <span class="dot" style="background:${cl[i % cl.length]}"></span>
+            ${svgIco(ik(V.rt, x.c), 20)}
+            <span class="nm">${escapeHtml(x.c)}<span class="pc">${Math.round((x.a / tot) * 100)}%</span></span>
+            <span class="am">${rp(x.a)}</span>
+          </button>
+        `).join('');
+      } else {
+        listEl.innerHTML = '<div class="empty">Belum ada transaksi bulan ini 🌱</div>';
+      }
+    }
+
+    const pickCategory = c => {
+      V.sel = V.sel === c ? null : c;
+      renderDonut(false);
+    };
+
+    $('#svg').onclick = e => {
+      const circle = e.target.closest('circle[data-c]');
+      if (circle && circle.dataset.c) pickCategory(circle.dataset.c);
+    };
+
+    $('#list').onclick = e => {
+      const r = e.target.closest('.row');
+      if (r && r.dataset.c) pickCategory(r.dataset.c);
+    };
+
+    $('#rtab').onclick = e => {
+      const btn = e.target.closest('button[data-t]');
+      if (btn && btn.dataset.t !== V.rt) {
+        V.rt = btn.dataset.t;
+        V.sel = null;
+        renderDonut(true);
+      }
+    };
+
+    /* ==========================================================================
+       3. SISA SALDO KANTONG / WALLETS SLIDER
+       ========================================================================== */
+    function renderWallets() {
+      validateFormWallets();
+
+      $('#wal').innerHTML = S.wallets.map((w, i) => {
+        const b = balOf(w.id);
+        const isSel = V.fw === w.id;
+        return `
+          <button type="button" class="wc ${isSel ? 'sel' : ''}" data-id="${w.id}" style="--c:${COLW[i % COLW.length]}">
+            <small>${w.e ? w.e + ' ' : ''}${escapeHtml(w.n)}</small>
+            <b>${b < 0 ? '−' : ''}${rp(b)}</b>
+          </button>
+        `;
+      }).join('') + `
+        <button type="button" class="wc add" id="btnManageWallets">
+          <small>＋ Kelola</small>
+          <b style="font-size:14px;font-weight:700">dompet</b>
+        </button>
+      `;
+
+      const pills = (cur, dis) => S.wallets.map(w => `
+        <button type="button" class="pill ${cur === w.id ? 'on' : ''}" data-id="${w.id}" ${dis === w.id ? 'disabled style="opacity:.4;cursor:not-allowed"' : ''}>
+          ${w.e ? w.e + ' ' : ''}${escapeHtml(w.n)}
+        </button>
+      `).join('');
+
+      $('#fw').innerHTML = pills(V.fw, V.ft === 'tf' ? V.fw2 : 0);
+      $('#fw2').innerHTML = pills(V.fw2, V.fw);
+    }
+
+    $('#wal').onclick = e => {
+      const addBtn = e.target.closest('#btnManageWallets');
+      if (addBtn) {
+        openSheet();
+        return;
+      }
+      const b = e.target.closest('.wc[data-id]');
+      if (b) {
+        V.fw = parseInt(b.dataset.id, 10);
+        if (V.fw2 === V.fw) {
+          V.fw2 = (S.wallets.find(w => w.id !== V.fw) || { id: V.fw }).id;
+        }
+        renderWallets();
+      }
+    };
+
+    $('#fw').onclick = e => {
+      const b = e.target.closest('.pill');
+      if (b && !b.disabled && b.dataset.id) {
+        V.fw = parseInt(b.dataset.id, 10);
+        renderWallets();
+      }
+    };
+
+    $('#fw2').onclick = e => {
+      const b = e.target.closest('.pill');
+      if (b && !b.disabled && b.dataset.id) {
+        V.fw2 = parseInt(b.dataset.id, 10);
+        renderWallets();
+      }
+    };
+
+    $('#swap').onclick = () => {
+      const temp = V.fw;
+      V.fw = V.fw2;
+      V.fw2 = temp;
+      renderWallets();
+      toast(`Dompet ditukar: ${wn(V.fw).n} ⇄ ${wn(V.fw2).n}`);
+    };
+
+    /* ==========================================================================
+       4. FORM CATAT CEPAT
+       ========================================================================== */
+    function renderForm() {
+      setSeg('#ftab', ['out', 'in', 'tf'], V.ft, V.ft === 'out' ? 'var(--p500)' : V.ft === 'in' ? 'var(--b600)' : 'var(--ink6)');
+
+      const tf = V.ft === 'tf';
+      $('#w2s').hidden = !tf;
+      $('#cs').hidden = tf;
+      $('#wl1').textContent = tf ? 'Dari dompet' : 'Dompet';
+
+      const catList = CATS[V.ft] || [];
+      if (!tf && !catList.some(c => c[1] === V.fc)) {
+        V.fc = catList[0] ? catList[0][1] : 'Makan';
+      }
+
+      if (!tf) {
+        $('#fc').innerHTML = catList.map(c => `
+          <button type="button" class="cat ${V.fc === c[1] ? 'on' : ''}" data-c="${escapeHtml(c[1])}">
+            ${svgIco(c[0], 24)}
+            <span>${escapeHtml(c[1])}</span>
+          </button>
+        `).join('');
+      }
+
+      $('#sl').textContent = tf ? 'Simpan Transfer' : V.ft === 'out' ? 'Simpan Pengeluaran' : 'Simpan Pemasukan';
+      $('#save').style.setProperty('--dc', tf ? '#0A6FA6' : V.ft === 'out' ? '#DD2D90' : '#0E8DD0');
+
+      renderWallets();
+    }
+
+    $('#ftab').onclick = e => {
+      const btn = e.target.closest('button[data-t]');
+      if (btn && btn.dataset.t) {
+        V.ft = btn.dataset.t;
+        renderForm();
+      }
+    };
+
+    $('#fc').onclick = e => {
+      const b = e.target.closest('.cat');
+      if (b && b.dataset.c) {
+        V.fc = b.dataset.c;
+        renderForm();
+      }
+    };
+
+    const setAmt = n => {
+      V.amt = Math.max(0, Math.floor(n || 0));
+      $('#amt').value = V.amt ? V.amt.toLocaleString('id-ID') : '';
+    };
+
+    $('#amt').oninput = e => {
+      const raw = parseInt(e.target.value.replace(/\D/g, '').slice(0, 12), 10) || 0;
+      setAmt(raw);
+    };
+
+    $('#qk').onclick = e => {
+      const btn = e.target.closest('button[data-v]');
+      if (btn) {
+        const v = btn.dataset.v;
+        if (v === '0') setAmt(0);
+        else setAmt(V.amt + parseInt(v, 10));
+      }
+    };
+
+    const triggerShake = msg => {
+      const box = $('#amtbox');
+      box.classList.remove('shake');
+      void box.offsetWidth;
+      box.classList.add('shake');
+      toast(msg);
+    };
+
+    $('#save').onclick = () => {
+      if (!V.amt || V.amt <= 0) return triggerShake('Isi nominal dulu ya!');
+      if (V.ft === 'tf' && V.fw === V.fw2) return triggerShake('Dompet asal dan tujuan harus berbeda!');
+
+      const d = $('#fd').value || todayS;
+      const n = new Date();
+      const timeStr = `${pad(n.getHours())}.${pad(n.getMinutes())}`;
+      const noteStr = ($('#fn').value || '').trim();
+      const isTransfer = V.ft === 'tf';
+
+      let newTx;
+      if (isTransfer) {
+        newTx = {
+          id: getNextId(),
+          t: 'tf',
+          w: V.fw,
+          w2: V.fw2,
+          a: V.amt,
+          d,
+          tm: timeStr,
+          n: noteStr
+        };
+      } else {
+        newTx = {
+          id: getNextId(),
+          t: V.ft,
+          c: V.fc,
+          w: V.fw,
+          a: V.amt,
+          d,
+          tm: timeStr,
+          n: noteStr
+        };
+      }
+
+      S.tx.unshift(newTx);
+      saveStorage();
+      V.newId = newTx.id;
+
+      // Animasi Coin CTA
+      const b = $('#save');
+      const dot = $('#dot');
+      if (b) b.classList.add('go');
+      if (dot) dot.classList.add('go');
+      setTimeout(() => {
+        if (b) b.classList.remove('go');
+        if (dot) dot.classList.remove('go');
+      }, 700);
+
+      setAmt(0);
+      $('#fn').value = '';
+      toast(isTransfer ? 'Transfer berhasil dicatat ✓' : 'Transaksi tersimpan ✓');
+
+      V.day = d;
+      V.month = d.slice(0, 7);
+      V.sel = null;
+      renderAll(true);
+    };
+
+    /* ==========================================================================
+       5. RIWAYAT TRANSAKSI HARIAN
+       ========================================================================== */
+    const shift = (s, days) => {
+      const d = new Date(s + 'T00:00:00');
+      d.setDate(d.getDate() + days);
+      return iso(d);
+    };
+
+    function renderHist() {
+      const d = new Date(V.day + 'T00:00:00');
+      const isToday = V.day === todayS;
+      $('#dt').textContent = `${isToday ? 'Hari Ini, ' : ''}${d.getDate()} ${MON[d.getMonth()].slice(0, 3)} ${d.getFullYear()}`;
+      $('#dpick').value = V.day;
+
+      const daily = S.tx.filter(x => x.d === V.day);
+      const outAmt = sum(daily.filter(x => x.t === 'out'));
+      const inAmt = sum(daily.filter(x => x.t === 'in'));
+
+      $('#so').textContent = '↑ Keluar −' + rp(outAmt);
+      $('#si').textContent = '↓ Masuk +' + rp(inAmt);
+      $('#cnt').textContent = `${daily.length} transaksi`;
+
+      setSeg('#hf', ['all', 'out', 'in', 'tf'], V.hf);
+
+      const filtered = daily.filter(x => V.hf === 'all' || x.t === V.hf);
+      const histEl = $('#hist');
+
+      if (filtered.length === 0) {
+        histEl.innerHTML = '<div class="empty">Tidak ada transaksi di tanggal ini 🍃</div>';
+      } else {
+        histEl.innerHTML = filtered.map(x => {
+          const tf = x.t === 'tf';
+          const sg = tf ? '' : x.t === 'in' ? '+' : '−';
+          const ar = tf ? '⇄' : x.t === 'in' ? '↓' : '↑';
+          const title = tf ? `${wn(x.w).n} → ${wn(x.w2).n}` : x.c;
+          const sub = `${tf ? '' : (wn(x.w).n + ' · ')}Pukul ${x.tm || '--.--'}${x.n ? ' · ' + escapeHtml(x.n) : (tf ? ' · Pindah Dana' : '')}`;
+
+          return `
+            <div class="tx ${x.id === V.newId ? 'new' : ''}">
+              <div class="ic">${svgIco(ik(x.t, x.c), 20)}</div>
+              <div class="m">
+                <b>${escapeHtml(title)}</b>
+                <small>${sub}</small>
+              </div>
+              <div class="a ${tf ? 'tfc' : x.t}">${sg}${rp(x.a)} ${ar}</div>
+              <button type="button" class="x" data-id="${x.id}" aria-label="Hapus transaksi" title="Hapus transaksi">
+                ${svgIco('plus', 18).replace('<path', '<path transform="rotate(45 12 12)"')}
+              </button>
+            </div>
+          `;
+        }).join('');
+      }
+    }
+
+    $('#hist').onclick = e => {
+      const b = e.target.closest('.x');
+      if (b && b.dataset.id) {
+        const id = parseInt(b.dataset.id, 10);
+        if (confirm('Yakin ingin menghapus transaksi ini?')) {
+          S.tx = S.tx.filter(x => x.id !== id);
+          saveStorage();
+          toast('Transaksi dihapus');
+          renderAll(false);
+        }
+      }
+    };
+
+    $('#hf').onclick = e => {
+      const btn = e.target.closest('button[data-f]');
+      if (btn && btn.dataset.f) {
+        V.hf = btn.dataset.f;
+        renderHist();
+      }
+    };
+
+    const goDay = newDay => {
+      V.day = newDay;
+      const m = newDay.slice(0, 7);
+      const monthChanged = m !== V.month;
+      V.month = m;
+      V.sel = null;
+      renderAll(monthChanged);
+    };
+
+    $('#dp').onclick = () => goDay(shift(V.day, -1));
+    $('#dn').onclick = () => goDay(shift(V.day, 1));
+    $('#dpick').onchange = e => {
+      if (e.target.value) goDay(e.target.value);
+    };
+
+    const moveMonth = offset => {
+      const [y, m] = V.month.split('-').map(Number);
+      const d = new Date(y, m - 1 + offset, 1);
+      V.month = `${d.getFullYear()}-${pad(d.getMonth() + 1)}`;
+      V.sel = null;
+      if (!V.day.startsWith(V.month)) {
+        V.day = todayS.startsWith(V.month) ? todayS : `${V.month}-01`;
+      }
+      renderAll(true);
+    };
+
+    $('#mp').onclick = () => moveMonth(-1);
+    $('#mn').onclick = () => moveMonth(1);
+
+    /* ==========================================================================
+       6. TREN 6 BULAN (COLLAPSIBLE DI BAWAH)
        ========================================================================== */
     function get6MonthsData() {
       const [currY, currM] = V.month.split('-').map(Number);
@@ -1019,7 +2079,6 @@
       const currentMonthData = months[5];
       const prevMonthData = months[4];
 
-      // 1. Render Banner Insight Tren
       const insightEl = $('#trendInsight');
       if (prevMonthData && prevMonthData.outAmt > 0) {
         const currOut = currentMonthData.outAmt;
@@ -1028,56 +2087,41 @@
         const pct = Math.round((Math.abs(diff) / prevOut) * 100);
 
         if (diff > 0) {
-          insightEl.className = 'flex-1 py-1 px-2.5 rounded-xl border transition-all text-[10.5px] font-bold flex items-center gap-1.5 bg-[#FE51D1]/15 text-[#FE51D1] border-[#FE51D1]/30 truncate';
-          insightEl.innerHTML = `
-            <span class="text-xs shrink-0">↗</span>
-            <div class="truncate">
-              Pengeluaran <b>naik ${pct}%</b> vs bln lalu (${rp(prevOut)})
-            </div>
-          `;
+          insightEl.style.background = 'var(--p100)';
+          insightEl.style.color = 'var(--p700)';
+          insightEl.innerHTML = `<span style="font-size:14px">↗</span> <div>Pengeluaran <b>naik ${pct}%</b> vs bln lalu (${rp(prevOut)})</div>`;
         } else if (diff < 0) {
-          insightEl.className = 'flex-1 py-1 px-2.5 rounded-xl border transition-all text-[10.5px] font-bold flex items-center gap-1.5 bg-[#74FFED]/15 text-[#74FFED] border-[#74FFED]/30 truncate';
-          insightEl.innerHTML = `
-            <span class="text-xs shrink-0">↘</span>
-            <div class="truncate">
-              Pengeluaran <b>hemat ${pct}%</b> vs bln lalu (${rp(prevOut)}) 🌱
-            </div>
-          `;
+          insightEl.style.background = 'var(--b100)';
+          insightEl.style.color = 'var(--b800)';
+          insightEl.innerHTML = `<span style="font-size:14px">↘</span> <div>Pengeluaran <b>hemat ${pct}%</b> vs bln lalu (${rp(prevOut)}) 🌱</div>`;
         } else {
-          insightEl.className = 'flex-1 py-1 px-2.5 rounded-xl border transition-all text-[10.5px] font-bold flex items-center gap-1.5 bg-[#0E1430] text-[#9AA8C7] border-[#263363] truncate';
-          insightEl.innerHTML = `
-            <span class="text-xs shrink-0">↔</span>
-            <div class="truncate">Pengeluaran sama persis vs bulan lalu</div>
-          `;
+          insightEl.style.background = 'var(--canvas)';
+          insightEl.style.color = 'var(--ink7)';
+          insightEl.innerHTML = `<span style="font-size:14px">↔</span> <div>Pengeluaran sama persis vs bulan lalu</div>`;
         }
       } else {
-        insightEl.className = 'flex-1 py-1 px-2.5 rounded-xl border transition-all text-[10.5px] font-bold flex items-center gap-1.5 bg-[#0E1430] text-[#9AA8C7] border-[#263363] truncate';
-        insightEl.innerHTML = `
-          <span class="text-xs shrink-0">🌱</span>
-          <div class="truncate">Belum ada data pembanding bulan lalu</div>
-        `;
+        insightEl.style.background = 'var(--canvas)';
+        insightEl.style.color = 'var(--ink6)';
+        insightEl.innerHTML = `<span>🌱</span> <div>Belum ada data pembanding bulan lalu</div>`;
       }
 
-      // 2. Render Detail Tooltip Aktif
       updateTrendTooltip(V.month);
 
-      // 3. Render SVG Bar Chart Berkelompok (Aqua Jade & Baby Pink)
       const maxVal = Math.max(1000, ...months.map(m => Math.max(m.inAmt, m.outAmt)));
       const baselineY = 76;
       let svgHtml = '';
 
-      // Grid Guidelines Muted
+      // Grid Guidelines
       svgHtml += `
-        <line x1="12" y1="16" x2="328" y2="16" stroke="#263363" stroke-width="1" stroke-dasharray="3 3" />
-        <line x1="12" y1="46" x2="328" y2="46" stroke="#263363" stroke-width="1" stroke-dasharray="3 3" />
-        <line x1="12" y1="${baselineY}" x2="328" y2="${baselineY}" stroke="#263363" stroke-width="1.2" />
+        <line x1="12" y1="16" x2="328" y2="16" stroke="var(--line)" stroke-width="1" stroke-dasharray="3 3" />
+        <line x1="12" y1="46" x2="328" y2="46" stroke="var(--line)" stroke-width="1" stroke-dasharray="3 3" />
+        <line x1="12" y1="${baselineY}" x2="328" y2="${baselineY}" stroke="var(--line2)" stroke-width="1.2" />
       `;
 
-      // 6 Grup Batang
       months.forEach((m, idx) => {
         const groupCenterX = 15 + idx * 51.6 + 25.8;
         const barW = 10;
-        const rx = 2.5;
+        const rx = 3;
 
         const hIn = m.inAmt > 0 ? Math.max(3, Math.round((m.inAmt / maxVal) * 54)) : 2;
         const yIn = baselineY - hIn;
@@ -1090,40 +2134,24 @@
         const opacity = m.isSelected ? 1 : 0.35;
 
         svgHtml += `
-          <g data-m="${m.isoMonth}" class="cursor-pointer group" opacity="${opacity}">
+          <g data-m="${m.isoMonth}" class="cursor-pointer" opacity="${opacity}">
             <title>${m.fullLabel}: Masuk ${rp(m.inAmt)} | Keluar ${rp(m.outAmt)}</title>
             <rect x="${groupCenterX - 24}" y="6" width="48" height="96" fill="transparent" />
 
-            <!-- Batang Pemasukan (Aqua Jade #74FFED) -->
-            <rect 
-              x="${xIn.toFixed(1)}" 
-              y="${yIn}" 
-              width="${barW}" 
-              height="${hIn}" 
-              rx="${rx}" 
-              fill="#74FFED" 
-              class="bar-rect"
-            />
+            <!-- Batang Masuk -->
+            <rect x="${xIn.toFixed(1)}" y="${yIn}" width="${barW}" height="${hIn}" rx="${rx}" fill="var(--b700)" class="bar-rect" />
 
-            <!-- Batang Pengeluaran (Baby Pink #FE51D1) -->
-            <rect 
-              x="${xOut.toFixed(1)}" 
-              y="${yOut}" 
-              width="${barW}" 
-              height="${hOut}" 
-              rx="${rx}" 
-              fill="#FE51D1" 
-              class="bar-rect"
-            />
+            <!-- Batang Keluar -->
+            <rect x="${xOut.toFixed(1)}" y="${yOut}" width="${barW}" height="${hOut}" rx="${rx}" fill="var(--p700)" class="bar-rect" />
 
-            <!-- Label Bulan di Bawah Batang -->
+            <!-- Label Bulan -->
             ${m.isSelected ? `
-              <rect x="${(groupCenterX - 16).toFixed(1)}" y="81" width="32" height="16" rx="8" fill="#FE51D1" />
-              <text x="${groupCenterX.toFixed(1)}" y="93" text-anchor="middle" fill="#0B1026" font-size="9" font-weight="900">
+              <rect x="${(groupCenterX - 16).toFixed(1)}" y="81" width="32" height="17" rx="8.5" fill="var(--primary)" />
+              <text x="${groupCenterX.toFixed(1)}" y="93" text-anchor="middle" fill="var(--onp)" font-size="10" font-weight="800">
                 ${m.shortName}
               </text>
             ` : `
-              <text x="${groupCenterX.toFixed(1)}" y="93" text-anchor="middle" fill="#9AA8C7" font-size="9" font-weight="700">
+              <text x="${groupCenterX.toFixed(1)}" y="93" text-anchor="middle" fill="var(--ink6)" font-size="10" font-weight="700">
                 ${m.shortName}
               </text>
             `}
@@ -1139,39 +2167,38 @@
       const monthName = MON[m - 1];
       const inAmt = sum(S.tx.filter(x => x.d.startsWith(isoMonth) && x.t === 'in'));
       const outAmt = sum(S.tx.filter(x => x.d.startsWith(isoMonth) && x.t === 'out'));
-      
+
       const ttEl = $('#trendTooltip');
       if (!ttEl) return;
       ttEl.innerHTML = `
-        <span class="text-white flex items-center gap-1.5 truncate">
+        <span style="display:flex;align-items:center;gap:6px">
           <span>🗓️</span> <span>${monthName} ${y}</span>
-          ${isoMonth === V.month ? '<span class="text-[8.5px] bg-[#FE51D1] text-[#0B1026] px-1.5 py-0.2 rounded-full font-black ml-0.5">Aktif</span>' : ''}
+          ${isoMonth === V.month ? '<span style="font-size:10px;background:var(--primary);color:var(--onp);padding:1px 6px;border-radius:999px;font-weight:800">Aktif</span>' : ''}
         </span>
-        <span class="flex items-center gap-2 text-[10.5px] font-extrabold shrink-0">
-          <span class="text-[#74FFED]">+${rp(inAmt)}</span>
-          <span class="text-[#FE51D1]">-${rp(outAmt)}</span>
+        <span style="display:flex;align-items:center;gap:8px">
+          <span style="color:var(--b700)">+${rp(inAmt)}</span>
+          <span style="color:var(--p700)">−${rp(outAmt)}</span>
         </span>
       `;
     }
 
-    // Interaktivitas Toggle Ciutkan / Buka Kartu Tren
     function updateTrendCollapse() {
       const body = $('#trendBody');
-      const btn = $('#btnToggleTrend');
       const text = $('#trendToggleText');
       const chevron = $('#trendChevron');
-      if (!body || !btn) return;
+      const btn = $('#btnToggleTrend');
+      if (!body) return;
 
       if (V.trendOpen) {
         body.classList.add('open');
         text.textContent = 'Ciutkan';
-        chevron.classList.add('rotate-180');
-        btn.setAttribute('aria-expanded', 'true');
+        if (chevron) chevron.style.transform = 'rotate(180deg)';
+        if (btn) btn.setAttribute('aria-expanded', 'true');
       } else {
         body.classList.remove('open');
         text.textContent = 'Buka';
-        chevron.classList.remove('rotate-180');
-        btn.setAttribute('aria-expanded', 'false');
+        if (chevron) chevron.style.transform = 'rotate(0deg)';
+        if (btn) btn.setAttribute('aria-expanded', 'false');
       }
     }
 
@@ -1180,726 +2207,55 @@
       updateTrendCollapse();
     };
 
-    // Interaktivitas Tap Bar Chart Tren
     $('#trendSvg').onclick = e => {
       const g = e.target.closest('g[data-m]');
       if (g && g.dataset.m) {
-        goToMonth(g.dataset.m);
+        V.month = g.dataset.m;
+        V.sel = null;
+        if (!V.day.startsWith(V.month)) {
+          V.day = todayS.startsWith(V.month) ? todayS : `${V.month}-01`;
+        }
+        renderAll(true);
       }
     };
 
     $('#trendSvg').onmouseover = e => {
       const g = e.target.closest('g[data-m]');
-      if (g && g.dataset.m) {
-        updateTrendTooltip(g.dataset.m);
-      }
+      if (g && g.dataset.m) updateTrendTooltip(g.dataset.m);
     };
 
-    $('#trendSvg').onmouseleave = () => {
-      updateTrendTooltip(V.month);
-    };
+    $('#trendSvg').onmouseleave = () => updateTrendTooltip(V.month);
 
     /* ==========================================================================
-       3. RENDER REKAP BULANAN & INTERACTIVE SVG DONUT CHART
-       ========================================================================== */
-    function getCategoryGroups() {
-      const map = {};
-      monthTx(V.rt).forEach(x => {
-        map[x.c] = (map[x.c] || 0) + x.a;
-      });
-      return Object.entries(map)
-        .map(([c, a]) => ({ c, a }))
-        .sort((a, b) => b.a - a.a);
-    }
-
-    function renderDonut() {
-      setTabClass('#rtab', btn => btn.dataset.t === V.rt);
-
-      const groups = getCategoryGroups();
-      const total = sum(groups);
-      const R = 70;
-      const C = 2 * Math.PI * R; // ~439.82
-      let accumulated = 0;
-      let svgHtml = '';
-
-      // Background Track Circle (Deep Navy well)
-      svgHtml += `
-        <circle 
-          cx="100" 
-          cy="100" 
-          r="${R}" 
-          fill="none" 
-          stroke="#0E1430" 
-          stroke-width="26" 
-          style="cursor: default"
-        />
-      `;
-
-      if (groups.length > 0 && total > 0) {
-        groups.forEach((item, idx) => {
-          const sliceLen = (item.a / total) * C;
-          const gap = groups.length > 1 ? 3 : 0;
-          const isSelected = V.sel === item.c;
-          const color = COL[idx % COL.length];
-          const strokeWidth = isSelected ? 34 : 26;
-          const opacity = V.sel && !isSelected ? 0.28 : 1;
-          const targetDash = Math.max(sliceLen - gap, 0);
-
-          const initialDash = shouldAnimateDonut ? 0 : targetDash;
-          const inlineTransition = shouldAnimateDonut 
-            ? 'transition: none;' 
-            : 'transition: stroke-width 0.25s ease, opacity 0.25s ease;';
-
-          svgHtml += `
-            <circle 
-              data-c="${escapeHtml(item.c)}" 
-              data-slice="1" 
-              data-target="${targetDash.toFixed(2)}"
-              cx="100" 
-              cy="100" 
-              r="${R}" 
-              fill="none" 
-              stroke="${color}" 
-              stroke-width="${strokeWidth}" 
-              stroke-dasharray="${initialDash.toFixed(2)} ${C.toFixed(2)}" 
-              stroke-dashoffset="${(-accumulated).toFixed(2)}" 
-              stroke-linecap="butt" 
-              opacity="${opacity}" 
-              style="${inlineTransition}"
-              class="cursor-pointer"
-            />
-          `;
-          accumulated += sliceLen;
-        });
-      }
-
-      $('#svg').innerHTML = svgHtml;
-
-      const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-      if (shouldAnimateDonut && !prefersReduced && groups.length > 0) {
-        requestAnimationFrame(() => {
-          const circles = $$('#svg circle[data-slice]');
-          circles.forEach((c, idx) => {
-            const target = c.dataset.target;
-            c.style.transition = `stroke-dasharray 0.8s cubic-bezier(0.16, 1, 0.3, 1) ${idx * 60}ms, stroke-width 0.25s ease, opacity 0.25s ease`;
-            c.setAttribute('stroke-dasharray', `${target} ${C.toFixed(2)}`);
-          });
-        });
-      }
-
-      // Update Center Hole Text & Count-Up Nominal
-      const selectedItem = groups.find(x => x.c === V.sel);
-      const ctrEl = $('#ctr');
-      const targetAmount = selectedItem ? selectedItem.a : total;
-
-      if (selectedItem) {
-        const percent = Math.round((selectedItem.a / total) * 100);
-        ctrEl.innerHTML = `
-          <div class="animate-pop flex flex-col items-center">
-            <span class="text-2xl leading-none mb-0.5">${icoOf(V.rt, selectedItem.c)}</span>
-            <span class="text-[9.5px] font-extrabold text-[#9AA8C7] uppercase tracking-wider max-w-[100px] truncate">${escapeHtml(selectedItem.c)}</span>
-            <span id="ctrNominal" class="text-base sm:text-lg font-black text-white tracking-tight leading-tight my-0.5">
-              ${rp(animPrev.ctr)}
-            </span>
-            <span class="text-[9.5px] font-black text-[#FE51D1] bg-[#FE51D1]/15 px-2 py-0.5 rounded-full border border-[#FE51D1]/30">${percent}%</span>
-          </div>
-        `;
-      } else {
-        ctrEl.innerHTML = `
-          <div class="animate-pop flex flex-col items-center">
-            <span class="text-[9.5px] font-extrabold text-[#9AA8C7] uppercase tracking-wider">
-              Total ${V.rt === 'out' ? 'Keluar' : 'Masuk'}
-            </span>
-            <span id="ctrNominal" class="text-base sm:text-lg font-black text-white tracking-tight leading-tight my-0.5 max-w-[115px] truncate">
-              ${rp(animPrev.ctr)}
-            </span>
-            <span class="text-[9px] font-extrabold text-[#74FFED] bg-[#74FFED]/15 px-2 py-0.5 rounded-full border border-[#74FFED]/30">
-              ${groups.length} Kategori
-            </span>
-          </div>
-        `;
-      }
-
-      animateCountUp($('#ctrNominal'), animPrev.ctr, targetAmount, 500, v => rp(v));
-      animPrev.ctr = targetAmount;
-
-      // Render Mini Badges Legenda Kategori di Bawah Donut
-      const legendEl = $('#donutLegend');
-      if (groups.length === 0 || total <= 0) {
-        legendEl.innerHTML = `
-          <div class="text-[11px] text-[#9AA8C7] font-semibold text-center py-1">
-            Belum ada transaksi di bulan ini 🌱
-          </div>
-        `;
-      } else {
-        legendEl.innerHTML = groups.map((item, idx) => {
-          const percent = Math.round((item.a / total) * 100);
-          const color = COL[idx % COL.length];
-          const isSelected = V.sel === item.c;
-
-          return `
-            <button 
-              type="button" 
-              data-c="${escapeHtml(item.c)}" 
-              class="inline-flex items-center gap-1.5 py-1 px-2.5 rounded-full text-[10.5px] font-extrabold transition-all cursor-pointer ${isSelected ? 'bg-[#74FFED] text-[#0B1026] shadow-sm scale-105' : 'bg-[#0E1430] hover:bg-[#131A3B] text-white border border-[#263363]'}"
-            >
-              <span class="w-2 h-2 rounded-full shrink-0" style="background-color: ${color}"></span>
-              <span>${icoOf(V.rt, item.c)}</span>
-              <span class="truncate max-w-[90px]">${escapeHtml(item.c)}</span>
-              <span class="${isSelected ? 'text-[#0B1026]/80' : 'text-[#9AA8C7]'}">${percent}%</span>
-            </button>
-          `;
-        }).join('');
-      }
-    }
-
-    function toggleSelectCategory(catName) {
-      V.sel = V.sel === catName ? null : catName;
-      shouldAnimateDonut = false;
-      renderDonut();
-      shouldAnimateDonut = true;
-    }
-
-    $('#svg').onclick = e => {
-      const circle = e.target.closest('circle[data-c]');
-      if (circle && circle.dataset.c) {
-        toggleSelectCategory(circle.dataset.c);
-      }
-    };
-
-    $('#donutLegend').onclick = e => {
-      const btn = e.target.closest('button[data-c]');
-      if (btn) {
-        toggleSelectCategory(btn.dataset.c);
-      }
-    };
-
-    $('#rtab').onclick = e => {
-      const btn = e.target.closest('button[data-t]');
-      if (btn) {
-        V.rt = btn.dataset.t;
-        V.sel = null;
-        shouldAnimateDonut = true;
-        renderDonut();
-      }
-    };
-
-    /* ==========================================================================
-       4. RENDER SALDO PER KANTONG / DOMPET DINAMIS
-       ========================================================================== */
-    function renderWallets() {
-      validateFormWallets();
-
-      // Hitung saldo dompet
-      $('#wal').innerHTML = S.wallets.map(w => {
-        const inW = sum(S.tx.filter(x => (x.w === w.id && x.t === 'in') || (x.w2 === w.id && x.t === 'tf')));
-        const outW = sum(S.tx.filter(x => (x.w === w.id && x.t === 'out') || (x.w === w.id && x.t === 'tf')));
-        const balW = inW - outW;
-
-        return `
-          <div class="shrink-0 flex-1 min-w-[115px] p-2.5 rounded-2xl bg-[#0E1430] border border-[#263363] flex flex-col justify-between animate-pop">
-            <span class="text-[11px] font-extrabold text-[#9AA8C7] flex items-center gap-1 truncate">
-              <span>${w.e}</span> <span>${escapeHtml(w.n)}</span>
-            </span>
-            <b class="text-xs sm:text-sm font-black text-white mt-1 truncate">
-              ${balW < 0 ? '-' : ''}${rp(balW)}
-            </b>
-          </div>
-        `;
-      }).join('');
-
-      // Pills Selector di Form Catat Cepat (Biasa)
-      $('#fw').innerHTML = S.wallets.map(w => {
-        const isSelected = V.fw === w.id;
-        return `
-          <button 
-            type="button" 
-            data-id="${w.id}" 
-            class="shrink-0 py-1.5 px-3 rounded-full font-black text-xs transition-all flex items-center gap-1.5 cursor-pointer min-h-[38px] ${isSelected ? 'bg-[#74FFED] text-[#0B1026] shadow-md shadow-[#74FFED]/20 scale-105' : 'bg-[#0E1430] hover:bg-[#131A3B] text-white border border-[#263363]'}"
-          >
-            <span>${w.e}</span> <span>${escapeHtml(w.n)}</span>
-          </button>
-        `;
-      }).join('');
-
-      // Pills Selector Transfer: Dari Dompet
-      $('#fwFrom').innerHTML = S.wallets.map(w => {
-        const isSelected = V.fw === w.id;
-        const isTarget = V.fw2 === w.id;
-        return `
-          <button 
-            type="button" 
-            data-id="${w.id}" 
-            class="shrink-0 py-1.5 px-3 rounded-full font-black text-xs transition-all flex items-center gap-1.5 cursor-pointer min-h-[38px] ${isSelected ? 'bg-[#74FFED] text-[#0B1026] shadow-md shadow-[#74FFED]/20 scale-105' : 'bg-[#0E1430] hover:bg-[#131A3B] text-white border border-[#263363]'}"
-          >
-            <span>${w.e}</span> <span>${escapeHtml(w.n)}</span>
-            ${isTarget ? '<span class="text-[8.5px] font-black text-[#FE51D1] bg-[#FE51D1]/15 px-1 py-0.2 rounded-full border border-[#FE51D1]/30">(Tujuan)</span>' : ''}
-          </button>
-        `;
-      }).join('');
-
-      // Pills Selector Transfer: Ke Dompet
-      $('#fwTo').innerHTML = S.wallets.map(w => {
-        const isSelected = V.fw2 === w.id;
-        const isSource = V.fw === w.id;
-        return `
-          <button 
-            type="button" 
-            data-id="${w.id}" 
-            class="shrink-0 py-1.5 px-3 rounded-full font-black text-xs transition-all flex items-center gap-1.5 cursor-pointer min-h-[38px] ${isSelected ? 'bg-[#FE51D1] text-[#0B1026] shadow-md shadow-[#FE51D1]/20 scale-105' : 'bg-[#0E1430] hover:bg-[#131A3B] text-white border border-[#263363]'}"
-          >
-            <span>${w.e}</span> <span>${escapeHtml(w.n)}</span>
-            ${isSource ? '<span class="text-[8.5px] font-black text-[#74FFED] bg-[#74FFED]/15 px-1 py-0.2 rounded-full border border-[#74FFED]/30">(Asal)</span>' : ''}
-          </button>
-        `;
-      }).join('');
-    }
-
-    // Klik Dompet Normal
-    $('#fw').onclick = e => {
-      const btn = e.target.closest('button[data-id]');
-      if (btn) {
-        V.fw = parseInt(btn.dataset.id, 10);
-        validateFormWallets();
-        renderWallets();
-      }
-    };
-
-    // Klik Dompet Transfer "Dari"
-    $('#fwFrom').onclick = e => {
-      const btn = e.target.closest('button[data-id]');
-      if (btn) {
-        const id = parseInt(btn.dataset.id, 10);
-        if (id === V.fw2) {
-          const temp = V.fw;
-          V.fw = V.fw2;
-          V.fw2 = temp;
-        } else {
-          V.fw = id;
-        }
-        validateFormWallets();
-        renderWallets();
-      }
-    };
-
-    // Klik Dompet Transfer "Ke"
-    $('#fwTo').onclick = e => {
-      const btn = e.target.closest('button[data-id]');
-      if (btn) {
-        const id = parseInt(btn.dataset.id, 10);
-        if (id === V.fw) {
-          const temp = V.fw;
-          V.fw = V.fw2;
-          V.fw2 = temp;
-        } else {
-          V.fw2 = id;
-        }
-        validateFormWallets();
-        renderWallets();
-      }
-    };
-
-    // Swap Dompet Asal & Tujuan
-    $('#btnSwapWallet').onclick = () => {
-      const temp = V.fw;
-      V.fw = V.fw2;
-      V.fw2 = temp;
-      renderWallets();
-      toast(`Dompet ditukar: ${getWallet(V.fw).n} ⇄ ${getWallet(V.fw2).n}`);
-    };
-
-    /* ==========================================================================
-       5. RENDER FORM CATAT CEPAT
-       ========================================================================== */
-    function renderForm() {
-      setTabClass('#ftab', btn => btn.dataset.t === V.ft);
-
-      const singleWalletBox = $('#singleWalletBox');
-      const transferWalletBox = $('#transferWalletBox');
-      const categoryBox = $('#categoryBox');
-      const saveBtn = $('#save');
-
-      if (V.ft === 'tf') {
-        singleWalletBox.classList.add('hidden');
-        transferWalletBox.classList.remove('hidden');
-        categoryBox.classList.add('hidden');
-        saveBtn.className = 'w-full py-3.5 px-4 rounded-xl bg-gradient-to-r from-[#FE51D1] to-[#74FFED] text-[#0B1026] font-black text-xs tracking-wider shadow-lg shadow-[#FE51D1]/20 transition-all flex items-center justify-center gap-1 cursor-pointer mt-1 min-h-[46px] active:scale-[0.98]';
-        saveBtn.textContent = '⇄ Simpan Transfer';
-      } else {
-        singleWalletBox.classList.remove('hidden');
-        transferWalletBox.classList.add('hidden');
-        categoryBox.classList.remove('hidden');
-
-        const catList = CATS[V.ft] || [];
-        if (!catList.some(c => c[1] === V.fc)) {
-          V.fc = catList[0] ? catList[0][1] : 'Makan';
-        }
-
-        const fcEl = $('#fc');
-        fcEl.className = V.ft === 'in' ? 'grid grid-cols-2 gap-1.5' : 'grid grid-cols-3 gap-1.5';
-        fcEl.innerHTML = catList.map(c => {
-          const isSelected = V.fc === c[1];
-          const activeClass = V.ft === 'in'
-            ? 'bg-[#74FFED] text-[#0B1026] shadow-md shadow-[#74FFED]/25 scale-[1.02]'
-            : 'bg-[#FE51D1] text-[#0B1026] shadow-md shadow-[#FE51D1]/25 scale-[1.02]';
-
-          return `
-            <button 
-              type="button" 
-              data-c="${escapeHtml(c[1])}" 
-              class="flex items-center justify-center gap-1.5 py-2 px-2 rounded-xl font-black text-xs transition-all cursor-pointer min-h-[44px] ${isSelected ? activeClass : 'bg-[#0E1430] hover:bg-[#131A3B] text-white border border-[#263363]'}"
-            >
-              <span class="text-base shrink-0 leading-none">${c[0]}</span>
-              <span class="text-[11px] font-extrabold truncate">${escapeHtml(c[1])}</span>
-            </button>
-          `;
-        }).join('');
-
-        if (V.ft === 'in') {
-          saveBtn.className = 'w-full py-3.5 px-4 rounded-xl bg-[#74FFED] hover:bg-[#5be8d5] active:scale-[0.98] text-[#0B1026] font-black text-xs tracking-wider shadow-lg shadow-[#74FFED]/25 transition-all flex items-center justify-center gap-1 cursor-pointer mt-1 min-h-[46px]';
-          saveBtn.textContent = '＋ Simpan Pemasukan';
-        } else {
-          saveBtn.className = 'w-full py-3.5 px-4 rounded-xl bg-[#FE51D1] hover:bg-[#e640bd] active:scale-[0.98] text-[#0B1026] font-black text-xs tracking-wider shadow-lg shadow-[#FE51D1]/25 transition-all flex items-center justify-center gap-1 cursor-pointer mt-1 min-h-[46px]';
-          saveBtn.textContent = '＋ Simpan Pengeluaran';
-        }
-      }
-    }
-
-    $('#ftab').onclick = e => {
-      const btn = e.target.closest('button[data-t]');
-      if (btn) {
-        V.ft = btn.dataset.t;
-        renderForm();
-      }
-    };
-
-    $('#fc').onclick = e => {
-      const btn = e.target.closest('button[data-c]');
-      if (btn) {
-        V.fc = btn.dataset.c;
-        renderForm();
-      }
-    };
-
-    const setNominal = num => {
-      V.amt = Math.max(0, Math.floor(num || 0));
-      $('#amt').value = V.amt > 0 ? V.amt.toLocaleString('id-ID') : '';
-    };
-
-    $('#amt').oninput = e => {
-      const rawNum = parseInt(e.target.value.replace(/\D/g, '').slice(0, 12), 10) || 0;
-      setNominal(rawNum);
-    };
-
-    $('#qk').onclick = e => {
-      const btn = e.target.closest('button[data-v]');
-      if (btn) {
-        const val = btn.dataset.v;
-        if (val === '0') {
-          setNominal(0);
-        } else {
-          setNominal(V.amt + parseInt(val, 10));
-        }
-      }
-    };
-
-    $('#save').onclick = () => {
-      if (!V.amt || V.amt <= 0) {
-        const box = $('#amtbox');
-        box.classList.remove('shake');
-        void box.offsetWidth;
-        box.classList.add('shake');
-        toast('Isi nominal transaksi dulu ya!');
-        $('#amt').focus();
-        return;
-      }
-
-      if (V.ft === 'tf' && V.fw === V.fw2) {
-        const box = $('#transferWalletBox');
-        box.classList.remove('shake');
-        void box.offsetWidth;
-        box.classList.add('shake');
-        toast('Dompet asal dan tujuan tidak boleh sama!');
-        return;
-      }
-
-      const inputDate = $('#fd').value || todayS;
-      const now = new Date();
-      const timeStr = `${pad(now.getHours())}.${pad(now.getMinutes())}`;
-      const noteStr = ($('#fn').value || '').trim();
-
-      let newTx;
-      if (V.ft === 'tf') {
-        newTx = {
-          id: getNextId(),
-          t: 'tf',
-          w: V.fw,
-          w2: V.fw2,
-          a: V.amt,
-          d: inputDate,
-          tm: timeStr,
-          n: noteStr
-        };
-      } else {
-        newTx = {
-          id: getNextId(),
-          t: V.ft,
-          c: V.fc,
-          w: V.fw,
-          a: V.amt,
-          d: inputDate,
-          tm: timeStr,
-          n: noteStr
-        };
-      }
-
-      S.tx.unshift(newTx);
-      saveStorage();
-
-      setNominal(0);
-      $('#fn').value = '';
-      toast(V.ft === 'tf' ? 'Transfer berhasil dicatat ✓' : 'Transaksi tersimpan ✓');
-
-      V.day = inputDate;
-      V.month = inputDate.slice(0, 7);
-      shouldAnimateDonut = true;
-      renderAll();
-    };
-
-    /* ==========================================================================
-       6. RENDER RIWAYAT TRANSAKSI HARIAN
-       ========================================================================== */
-    const shiftDate = (dateStr, days) => {
-      const d = new Date(dateStr + 'T00:00:00');
-      d.setDate(d.getDate() + days);
-      return iso(d);
-    };
-
-    function renderHist() {
-      const d = new Date(V.day + 'T00:00:00');
-      const isToday = V.day === todayS;
-      const dayLabel = `${isToday ? 'Hari Ini, ' : ''}${d.getDate()} ${MON[d.getMonth()].slice(0, 3)} ${d.getFullYear()}`;
-      
-      $('#dt').textContent = dayLabel;
-      $('#dpick').value = V.day;
-
-      const dailyAll = S.tx.filter(x => x.d === V.day);
-      const dailyOut = sum(dailyAll.filter(x => x.t === 'out'));
-      const dailyIn = sum(dailyAll.filter(x => x.t === 'in'));
-
-      $('#so').textContent = '● Keluar: -' + rp(dailyOut);
-      $('#si').textContent = '● Masuk: +' + rp(dailyIn);
-      $('#cnt').textContent = `${dailyAll.length} Transaksi`;
-
-      $$('#hf button').forEach(btn => {
-        const isActive = btn.dataset.f === V.hf;
-        if (isActive) {
-          btn.className = 'py-1.5 px-1 rounded-lg font-black text-[10.5px] transition-all text-center bg-[#74FFED] text-[#0B1026] shadow-xs';
-        } else {
-          btn.className = 'py-1.5 px-1 rounded-lg font-bold text-[10.5px] transition-all text-center text-[#9AA8C7] hover:text-white';
-        }
-      });
-
-      const filtered = dailyAll.filter(x => V.hf === 'all' || x.t === V.hf);
-      const histEl = $('#hist');
-
-      if (filtered.length === 0) {
-        histEl.innerHTML = `
-          <div class="py-5 text-center text-xs text-[#9AA8C7] font-semibold">
-            <span class="text-xl block mb-0.5">🍃</span>
-            Tidak ada transaksi di tanggal ini
-          </div>
-        `;
-      } else {
-        histEl.innerHTML = filtered.map(x => {
-          if (x.t === 'tf') {
-            const wFrom = getWallet(x.w);
-            const wTo = getWallet(x.w2);
-
-            return `
-              <div class="flex items-center gap-2.5 p-2.5 rounded-2xl bg-[#0E1430] border border-[#263363] animate-pop">
-                <span class="w-8 h-8 rounded-xl bg-[#171F44] shadow-xs flex items-center justify-center text-base shrink-0 border border-[#263363]">
-                  🔁
-                </span>
-
-                <div class="flex-1 min-w-0">
-                  <div class="flex items-center gap-1.5">
-                    <b class="text-xs font-black text-white truncate">
-                      ${escapeHtml(wFrom.n)} → ${escapeHtml(wTo.n)}
-                    </b>
-                    <span class="text-[8.5px] font-black bg-[#171F44] text-[#74FFED] px-1.5 py-0.5 rounded-full border border-[#263363] shrink-0">
-                      Transfer
-                    </span>
-                  </div>
-                  <small class="block text-[9.5px] text-[#9AA8C7] font-medium truncate">
-                    Pukul ${x.tm || '--.--'}${x.n ? ' · ' + escapeHtml(x.n) : ' · Pindah Dana'}
-                  </small>
-                </div>
-
-                <div class="font-black text-xs shrink-0 text-white">
-                  ${rp(x.a)}
-                </div>
-
-                <button 
-                  type="button" 
-                  data-id="${x.id}" 
-                  title="Hapus Transaksi"
-                  class="btn-del-tx w-6 h-6 rounded-lg hover:bg-[#FE51D1]/20 text-[#9AA8C7] hover:text-[#FE51D1] flex items-center justify-center text-[11px] shrink-0 transition-all cursor-pointer"
-                >
-                  🗑
-                </button>
-              </div>
-            `;
-          }
-
-          const wallet = getWallet(x.w);
-          const isIncome = x.t === 'in';
-
-          return `
-            <div class="flex items-center gap-2.5 p-2.5 rounded-2xl bg-[#0E1430] border border-[#263363] animate-pop">
-              <span class="w-8 h-8 rounded-xl bg-[#171F44] shadow-xs flex items-center justify-center text-base shrink-0 border border-[#263363]">
-                ${icoOf(x.t, x.c)}
-              </span>
-
-              <div class="flex-1 min-w-0">
-                <div class="flex items-center gap-1.5">
-                  <b class="text-xs font-black text-white truncate">${escapeHtml(x.c)}</b>
-                  <span class="text-[8.5px] font-extrabold bg-[#171F44] text-[#9AA8C7] px-1.5 py-0.5 rounded-full border border-[#263363] shrink-0">
-                    ${wallet.e} ${escapeHtml(wallet.n)}
-                  </span>
-                </div>
-                <small class="block text-[9.5px] text-[#9AA8C7] font-medium truncate">
-                  Pukul ${x.tm || '--.--'}${x.n ? ' · ' + escapeHtml(x.n) : ''}
-                </small>
-              </div>
-
-              <div class="font-black text-xs shrink-0 ${isIncome ? 'text-[#74FFED]' : 'text-[#FE51D1]'}">
-                ${isIncome ? '+' : '-'}${rp(x.a)}
-              </div>
-
-              <button 
-                type="button" 
-                data-id="${x.id}" 
-                title="Hapus Transaksi"
-                class="btn-del-tx w-6 h-6 rounded-lg hover:bg-[#FE51D1]/20 text-[#9AA8C7] hover:text-[#FE51D1] flex items-center justify-center text-[11px] shrink-0 transition-all cursor-pointer"
-              >
-                🗑
-              </button>
-            </div>
-          `;
-        }).join('');
-      }
-    }
-
-    $('#hist').onclick = e => {
-      const btn = e.target.closest('.btn-del-tx');
-      if (btn && btn.dataset.id) {
-        const id = parseInt(btn.dataset.id, 10);
-        if (confirm('Yakin ingin menghapus transaksi ini?')) {
-          S.tx = S.tx.filter(x => x.id !== id);
-          saveStorage();
-          toast('Transaksi dihapus');
-          shouldAnimateDonut = true;
-          renderAll();
-        }
-      }
-    };
-
-    $('#hf').onclick = e => {
-      const btn = e.target.closest('button[data-f]');
-      if (btn) {
-        V.hf = btn.dataset.f;
-        renderHist();
-      }
-    };
-
-    const goToDay = newDayStr => {
-      V.day = newDayStr;
-      const newMonth = newDayStr.slice(0, 7);
-      if (V.month !== newMonth) {
-        V.month = newMonth;
-        shouldAnimateDonut = true;
-      }
-      V.sel = null;
-      renderAll();
-    };
-
-    $('#dp').onclick = () => goToDay(shiftDate(V.day, -1));
-    $('#dn').onclick = () => goToDay(shiftDate(V.day, 1));
-    $('#dpick').onchange = e => {
-      if (e.target.value) goToDay(e.target.value);
-    };
-
-    const goToMonth = isoMonth => {
-      if (V.month === isoMonth) return;
-      V.month = isoMonth;
-      V.sel = null;
-      shouldAnimateDonut = true;
-
-      if (!V.day.startsWith(V.month)) {
-        if (todayS.startsWith(V.month)) {
-          V.day = todayS;
-        } else {
-          V.day = `${V.month}-01`;
-        }
-      }
-      renderAll();
-    };
-
-    const moveMonth = offset => {
-      const [y, m] = V.month.split('-').map(Number);
-      const d = new Date(y, m - 1 + offset, 1);
-      const newMonthStr = `${d.getFullYear()}-${pad(d.getMonth() + 1)}`;
-      goToMonth(newMonthStr);
-    };
-
-    $('#mp').onclick = () => moveMonth(-1);
-    $('#mn').onclick = () => moveMonth(1);
-
-    /* ==========================================================================
-       7. BOTTOM SHEET: KELOLA KANTONG DOMPET
+       7. BOTTOM SHEET: KELOLA DOMPET
        ========================================================================== */
     function renderWalletSheet() {
       $('#wl').innerHTML = S.wallets.map(w => `
-        <div class="flex items-center justify-between p-2.5 rounded-2xl bg-[#0E1430] border border-[#263363]">
-          <span class="font-black text-xs text-white flex items-center gap-1.5">
-            <span>${w.e}</span> <span>${escapeHtml(w.n)}</span>
-          </span>
-          <button 
-            type="button" 
-            data-id="${w.id}" 
-            class="btn-del-w text-[9.5px] font-black text-[#FE51D1] bg-[#FE51D1]/15 hover:bg-[#FE51D1]/25 px-2 py-0.5 rounded-lg border border-[#FE51D1]/30 transition-all cursor-pointer"
-          >
-            Hapus
-          </button>
+        <div class="wr">
+          <span>${w.e ? w.e + ' ' : ''}${escapeHtml(w.n)}</span>
+          <button type="button" class="chip danger btn-del-w" data-id="${w.id}">Hapus</button>
         </div>
       `).join('');
     }
 
-    function openWalletSheet() {
+    function openSheet() {
       renderWalletSheet();
-      const ov = $('#ov');
-      ov.classList.remove('opacity-0', 'pointer-events-none');
-      ov.classList.add('opacity-100', 'pointer-events-auto');
-      ov.firstElementChild.classList.remove('translate-y-full');
-      ov.firstElementChild.classList.add('translate-y-0');
+      $('#sc').classList.add('on');
     }
 
-    function closeWalletSheet() {
-      const ov = $('#ov');
-      ov.classList.add('opacity-0', 'pointer-events-none');
-      ov.classList.remove('opacity-100', 'pointer-events-auto');
-      ov.firstElementChild.classList.add('translate-y-full');
-      ov.firstElementChild.classList.remove('translate-y-0');
+    function closeSheet() {
+      $('#sc').classList.remove('on');
     }
 
-    $('#wm').onclick = openWalletSheet;
+    $('#btnCloseSheet').onclick = closeSheet;
 
-    $('#ov').onclick = e => {
-      if (e.target.id === 'ov') {
-        closeWalletSheet();
-      }
+    $('#sc').onclick = e => {
+      if (e.target.id === 'sc') closeSheet();
     };
+
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape') closeSheet();
+    });
 
     $('#wl').onclick = e => {
       const btn = e.target.closest('.btn-del-w');
@@ -1907,17 +2263,14 @@
       const id = parseInt(btn.dataset.id, 10);
 
       if (S.tx.some(x => x.w === id || x.w2 === id)) {
-        toast('Dompet masih memiliki riwayat transaksi');
-        return;
+        return toast('Dompet masih memiliki riwayat transaksi');
       }
       if (S.wallets.length <= 1) {
-        toast('Minimal harus menyisakan satu dompet');
-        return;
+        return toast('Minimal harus menyisakan satu dompet');
       }
 
       S.wallets = S.wallets.filter(w => w.id !== id);
       validateFormWallets();
-
       saveStorage();
       renderWalletSheet();
       renderWallets();
@@ -1941,13 +2294,9 @@
       }
 
       const newId = getNextId();
-      S.wallets.push({
-        id: newId,
-        e: emoji,
-        n: name
-      });
-
+      S.wallets.push({ id: newId, e: emoji, n: name });
       $('#wn').value = '';
+      $('#we').value = '💳';
       saveStorage();
       renderWalletSheet();
       validateFormWallets();
@@ -1956,7 +2305,7 @@
     };
 
     /* ==========================================================================
-       8. FITUR EXPORT DATA TRANSAKSI KE CSV
+       8. FITUR EXPORT DATA KE CSV
        ========================================================================== */
     function exportCsv() {
       let txList = S.tx;
@@ -1964,12 +2313,10 @@
         const raw = localStorage.getItem(STORAGE_KEY_V2);
         if (raw) {
           const parsed = JSON.parse(raw);
-          if (Array.isArray(parsed.tx)) {
-            txList = parsed.tx;
-          }
+          if (Array.isArray(parsed.tx)) txList = parsed.tx;
         }
       } catch (err) {
-        console.warn('Gagal membaca data storage saat export CSV:', err);
+        console.warn('Gagal membaca data saat export CSV:', err);
       }
 
       if (!txList || txList.length === 0) {
@@ -1994,16 +2341,14 @@
         const tanggal = item.d || '';
         let tipe = 'Pengeluaran';
         let kategori = item.c || '';
-        let dompet = getWallet(item.w).n || 'Dompet';
+        let dompet = wn(item.w).n || 'Dompet';
 
         if (item.t === 'in') {
           tipe = 'Pemasukan';
         } else if (item.t === 'tf') {
           tipe = 'Transfer';
           kategori = 'Transfer Antar Dompet';
-          const wFrom = getWallet(item.w).n;
-          const wTo = getWallet(item.w2).n;
-          dompet = `${wFrom} -> ${wTo}`;
+          dompet = `${wn(item.w).n} -> ${wn(item.w2).n}`;
         }
 
         const nominal = Math.abs(item.a || 0);
@@ -2020,7 +2365,6 @@
       });
 
       const csvContent = '\uFEFF' + headers.join(',') + '\r\n' + rows.join('\r\n');
-
       const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
       const url = URL.createObjectURL(blob);
       const link = document.createElement('a');
@@ -2035,25 +2379,23 @@
     }
 
     const btnExport = $('#btnExportCsv');
-    if (btnExport) {
-      btnExport.onclick = exportCsv;
-    }
+    if (btnExport) btnExport.onclick = exportCsv;
 
     /* ==========================================================================
        INITIALIZATION
        ========================================================================== */
-    function renderAll() {
+    function renderAll(anim = true) {
       renderHead();
-      renderTrend();
-      renderDonut();
+      renderDonut(anim);
       renderWallets();
       renderForm();
       renderHist();
+      renderTrend();
       updateTrendCollapse();
     }
 
     $('#fd').value = todayS;
-    renderAll();
+    renderAll(true);
   </script>
 </body>
 </html>
