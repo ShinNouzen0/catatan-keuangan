@@ -296,11 +296,11 @@
 
     .wallets {
       display: flex;
-      gap: 10px;
+      gap: 12px;
       overflow-x: auto;
       scroll-snap-type: x mandatory;
       margin: 18px -16px 0;
-      padding: 10px 16px 18px;
+      padding: 12px 16px 22px;
       scrollbar-width: none;
       -webkit-overflow-scrolling: touch;
     }
@@ -309,11 +309,13 @@
       display: none;
     }
 
+    /* Neo-Bank Frosted Glass Card */
     .wc {
       flex: none;
-      width: 136px;
-      height: 90px;
-      padding: 10px 14px;
+      min-width: 145px;
+      width: 154px;
+      height: 112px;
+      padding: 13px 14px;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
@@ -321,95 +323,139 @@
       color: #ffffff !important;
       -webkit-text-fill-color: #ffffff !important;
       position: relative;
+      overflow: hidden;
       scroll-snap-align: start;
-      filter: drop-shadow(0 6px 8px rgba(8, 50, 80, .25));
       border-radius: 20px;
-      transition: transform .25s var(--ease), filter .25s;
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      background-color: rgba(255, 255, 255, 0.12);
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      box-shadow: 0 10px 24px -6px rgba(4, 28, 48, 0.35);
+      transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+      cursor: pointer;
+      box-sizing: border-box;
       isolation: isolate;
-      transform: translateZ(0);
-      z-index: 0;
     }
 
-    .wc:before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      border-radius: 20px;
-      background: var(--c);
-      -webkit-mask: radial-gradient(circle 9px at 100% 50%, transparent 98%, #000 100%);
-      mask: radial-gradient(circle 9px at 100% 50%, transparent 98%, #000 100%);
-      z-index: -1;
-      pointer-events: none;
+    .wc:hover {
+      background-color: rgba(255, 255, 255, 0.18);
+      border-color: rgba(255, 255, 255, 0.38);
+      transform: translateY(-2px);
     }
 
-    .wc:after {
-      content: "";
+    /* Active / Selected Neo-Bank State */
+    .wc.sel {
+      background-color: rgba(255, 255, 255, 0.22) !important;
+      border-color: rgba(255, 255, 255, 0.9) !important;
+      box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.9), 0 16px 32px -6px rgba(4, 28, 48, 0.55) !important;
+      transform: translateY(-4px) !important;
+    }
+
+    .wc-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      position: relative;
+      z-index: 2;
+    }
+
+    .wc-ico {
+      width: 32px;
+      height: 32px;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.18);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 15px;
+      line-height: 1;
+      flex-shrink: 0;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .wc-nfc {
+      opacity: 0.42;
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .wc-body {
+      width: 100%;
+      margin-top: 6px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .wc-name {
+      font-size: 11.5px;
+      font-weight: 500;
+      color: rgba(255, 255, 255, 0.82) !important;
+      -webkit-text-fill-color: rgba(255, 255, 255, 0.82) !important;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      display: block;
+      line-height: 1.2;
+    }
+
+    .wc-bal {
+      font-size: 16px;
+      font-weight: 800;
+      color: #ffffff !important;
+      -webkit-text-fill-color: #ffffff !important;
+      letter-spacing: -0.025em;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      display: block;
+      margin-top: 2px;
+      line-height: 1.2;
+    }
+
+    .wc-glow {
       position: absolute;
-      right: 4px;
-      top: 50%;
-      width: 6px;
-      height: 6px;
-      margin-top: -3px;
+      right: -16px;
+      bottom: -16px;
+      width: 64px;
+      height: 64px;
       border-radius: 50%;
-      background: #fff;
+      background: rgba(255, 255, 255, 0.14);
+      filter: blur(18px);
+      pointer-events: none;
       z-index: 1;
     }
 
-    .wc > * {
-      position: relative;
-      z-index: 2;
-      color: #ffffff !important;
-      -webkit-text-fill-color: #ffffff !important;
-      opacity: 1 !important;
-      visibility: visible !important;
-    }
-
-    .wc small {
-      font-size: 11.5px;
-      font-weight: 700;
-      line-height: 1.2;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      display: block;
-      color: #ffffff !important;
-      -webkit-text-fill-color: #ffffff !important;
-      opacity: 1 !important;
-      visibility: visible !important;
-      position: relative;
-      z-index: 2;
-    }
-
-    .wc b {
-      font-size: 17px;
-      font-weight: 800;
-      letter-spacing: -.02em;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      display: block;
-      color: #ffffff !important;
-      -webkit-text-fill-color: #ffffff !important;
-      opacity: 1 !important;
-      visibility: visible !important;
-      position: relative;
-      z-index: 2;
-    }
-
-    .wc.sel {
-      transform: translateY(-6px) translateZ(0);
-      filter: drop-shadow(0 12px 14px rgba(8, 50, 80, .45));
-    }
-
     .wc.add {
-      --c: rgba(10, 26, 43, .55);
+      background-color: rgba(255, 255, 255, 0.07);
+      border: 1.5px dashed rgba(255, 255, 255, 0.3);
     }
 
-    .wc.add small,
-    .wc.add b {
-      color: #ffffff !important;
-      -webkit-text-fill-color: #ffffff !important;
-      opacity: 1 !important;
+    .wc.add:hover {
+      background-color: rgba(255, 255, 255, 0.15);
+      border-color: rgba(255, 255, 255, 0.55);
+      transform: translateY(-2px);
+    }
+
+    .wc.add .wc-ico {
+      background: rgba(255, 255, 255, 0.14);
+      font-size: 16px;
+      font-weight: 700;
+    }
+
+    .wc.add .wc-name {
+      color: rgba(255, 255, 255, 0.75) !important;
+      -webkit-text-fill-color: rgba(255, 255, 255, 0.75) !important;
+    }
+
+    .wc.add .wc-bal {
+      font-size: 14px;
+      font-weight: 700;
     }
 
     .paper {
@@ -1773,19 +1819,58 @@
     function renderWallets() {
       validateFormWallets();
 
+      const WALLET_THEMES = [
+        'linear-gradient(135deg, rgba(16, 185, 129, 0.32) 0%, rgba(255, 255, 255, 0.08) 55%, rgba(14, 141, 208, 0.22) 100%)', // Emerald Teal
+        'linear-gradient(135deg, rgba(221, 45, 144, 0.32) 0%, rgba(255, 255, 255, 0.08) 55%, rgba(138, 15, 85, 0.22) 100%)',  // Rose Pink
+        'linear-gradient(135deg, rgba(249, 115, 22, 0.32) 0%, rgba(255, 255, 255, 0.08) 55%, rgba(234, 88, 12, 0.18) 100%)',  // Orange Amber
+        'linear-gradient(135deg, rgba(14, 141, 208, 0.35) 0%, rgba(255, 255, 255, 0.08) 55%, rgba(6, 95, 142, 0.22) 100%)',   // Electric Sky
+        'linear-gradient(135deg, rgba(168, 85, 247, 0.32) 0%, rgba(255, 255, 255, 0.08) 55%, rgba(59, 130, 246, 0.22) 100%)'   // Indigo Violet
+      ];
+
+      const getWalletBg = (name, idx) => {
+        const nl = (name || '').toLowerCase();
+        if (nl.includes('cash') || nl.includes('tunai') || nl.includes('dompet')) return WALLET_THEMES[0];
+        if (nl.includes('bank') || nl.includes('bca') || nl.includes('jago') || nl.includes('bri') || nl.includes('mandiri')) return WALLET_THEMES[1];
+        if (nl.includes('shopee')) return WALLET_THEMES[2];
+        if (nl.includes('gopay') || nl.includes('dana') || nl.includes('ovo')) return WALLET_THEMES[3];
+        return WALLET_THEMES[idx % WALLET_THEMES.length];
+      };
+
       $('#wal').innerHTML = S.wallets.map((w, i) => {
         const b = balOf(w.id);
         const isSel = V.fw === w.id;
+        const bgGrad = getWalletBg(w.n, i);
+        const iconEmoji = w.e ? w.e : '💳';
         return `
-          <button type="button" class="wc ${isSel ? 'sel' : ''}" data-id="${w.id}" style="--c:${COLW[i % COLW.length]};color:#ffffff;">
-            <small style="color:#ffffff;opacity:1;position:relative;z-index:2;display:block;">${w.e ? w.e + ' ' : ''}${escapeHtml(w.n)}</small>
-            <b style="color:#ffffff;opacity:1;position:relative;z-index:2;display:block;">${b < 0 ? '−' : ''}${rp(b)}</b>
+          <button type="button" class="wc ${isSel ? 'sel' : ''}" data-id="${w.id}" style="background-image: ${bgGrad};">
+            <div class="wc-top">
+              <span class="wc-ico">${iconEmoji}</span>
+              <span class="wc-nfc" title="Contactless">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+                  <path d="M8.5 16.5a5 5 0 0 1 0-7M12 19a8.5 8.5 0 0 1 0-12M15.5 21.5a12 12 0 0 1 0-17"/>
+                </svg>
+              </span>
+            </div>
+            <div class="wc-body">
+              <span class="wc-name">${escapeHtml(w.n)}</span>
+              <b class="wc-bal">${b < 0 ? '−' : ''}${rp(b)}</b>
+            </div>
+            <div class="wc-glow"></div>
           </button>
         `;
       }).join('') + `
-        <button type="button" class="wc add" id="btnManageWallets" style="color:#ffffff;">
-          <small style="color:#ffffff;opacity:1;position:relative;z-index:2;display:block;">＋ Kelola</small>
-          <b style="color:#ffffff;opacity:1;position:relative;z-index:2;display:block;font-size:14px;font-weight:700">dompet</b>
+        <button type="button" class="wc add" id="btnManageWallets">
+          <div class="wc-top">
+            <span class="wc-ico">＋</span>
+            <span class="wc-nfc" style="opacity: 0.35">
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+            </span>
+          </div>
+          <div class="wc-body">
+            <span class="wc-name">Kelola</span>
+            <b class="wc-bal">Dompet</b>
+          </div>
+          <div class="wc-glow"></div>
         </button>
       `;
 
