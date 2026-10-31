@@ -961,31 +961,54 @@
       display: flex;
       align-items: center;
       margin-bottom: 12px;
+      gap: 6px;
     }
 
     .dnav > button {
-      width: 48px;
-      height: 48px;
+      width: 44px;
+      height: 44px;
       border-radius: 50%;
       font-size: 20px;
       border: 1px solid var(--line2);
       display: grid;
       place-items: center;
+      background: var(--surface);
+      cursor: pointer;
+      flex-shrink: 0;
+      transition: background 0.2s, transform 0.15s;
     }
 
     .dnav > button:hover {
       background: var(--canvas);
     }
 
+    .dnav > button:active {
+      transform: scale(0.92);
+    }
+
     .dnav label {
       flex: 1;
       text-align: center;
       font-weight: 800;
-      font-size: 17px;
+      font-size: 15px;
       letter-spacing: -.01em;
       position: relative;
       cursor: pointer;
-      padding: 12px 0;
+      padding: 11px 14px;
+      border-radius: 999px;
+      background: var(--canvas);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: background 0.2s, transform 0.15s;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    .dnav label:active {
+      background: var(--b100);
+      transform: scale(0.98);
     }
 
     .dnav input {
@@ -993,7 +1016,9 @@
       inset: 0;
       opacity: 0;
       width: 100%;
+      height: 100%;
       cursor: pointer;
+      z-index: 3;
     }
 
     .sum {
@@ -1008,17 +1033,79 @@
     .out { color: var(--expense); }
     .tfc { color: var(--ink7); }
 
-    .tx {
+    /* Swipe-to-Action Transaction Rows */
+    .tx-row {
+      position: relative;
+      overflow: hidden;
+      border-radius: 18px;
+      margin-bottom: 8px;
+      background: var(--canvas);
+      touch-action: pan-y;
+      user-select: none;
+      -webkit-user-select: none;
+      border: 1px solid var(--line);
+    }
+
+    .tx-act {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 76px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 3px;
+      font-size: 11.5px;
+      font-weight: 800;
+      color: #ffffff;
+      border: 0;
+      cursor: pointer;
+      z-index: 1;
+      padding: 0;
+      transition: opacity 0.2s;
+    }
+
+    .tx-act svg {
+      width: 18px;
+      height: 18px;
+    }
+
+    .tx-act-edit {
+      left: 0;
+      background: linear-gradient(135deg, #0A6FA6 0%, #0E8DD0 100%);
+    }
+
+    .tx-act-del {
+      right: 0;
+      background: linear-gradient(135deg, #DD2D90 0%, #B8146F 100%);
+    }
+
+    .tx-card {
+      position: relative;
+      z-index: 2;
+      background: var(--surface);
       display: flex;
       align-items: center;
       gap: 14px;
-      min-height: 72px;
-      padding: 10px 0;
-      border-bottom: 1px solid var(--line);
-      animation: pop .35s var(--ease) both;
+      min-height: 68px;
+      padding: 10px 14px;
+      border-radius: 17px;
+      transition: transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
+      will-change: transform;
+      cursor: grab;
+      box-shadow: 0 1px 3px rgba(10, 26, 43, 0.04);
     }
 
-    .tx.new {
+    .tx-card:active {
+      cursor: grabbing;
+    }
+
+    .tx-card.swiping {
+      transition: none !important;
+    }
+
+    .tx-card.new {
       animation: pop .35s var(--ease) both, hl 1.6s ease-out;
     }
 
@@ -1027,7 +1114,7 @@
       to { background: transparent; }
     }
 
-    .tx .ic {
+    .tx-card .ic {
       width: 44px;
       height: 44px;
       border-radius: 50%;
@@ -1038,16 +1125,16 @@
       color: var(--ink7);
     }
 
-    .tx .m {
+    .tx-card .m {
       flex: 1;
       min-width: 0;
     }
 
-    .tx .m b {
+    .tx-card .m b {
       font-size: 15px;
     }
 
-    .tx .m small {
+    .tx-card .m small {
       display: block;
       color: var(--ink6);
       font-size: 12px;
@@ -1056,25 +1143,10 @@
       text-overflow: ellipsis;
     }
 
-    .tx .a {
+    .tx-card .a {
       font-weight: 800;
       font-size: 15px;
       white-space: nowrap;
-    }
-
-    .tx .x {
-      width: 44px;
-      height: 44px;
-      border-radius: 50%;
-      color: var(--ink6);
-      display: grid;
-      place-items: center;
-      cursor: pointer;
-    }
-
-    .tx .x:hover {
-      background: var(--p100);
-      color: var(--p700);
     }
 
     .scrim {
@@ -1356,6 +1428,9 @@
           <i></i>
           <span id="sl">Simpan Pengeluaran</span>
         </button>
+        <button type="button" id="btnCancelEdit" style="display:none;width:100%;margin-top:10px;min-height:46px;border-radius:999px;font-size:14px;font-weight:700;color:var(--ink7);background:var(--canvas);cursor:pointer;text-align:center;border:1px solid var(--line2);transition:all .2s;">
+          ✕ Batal Edit Transaksi
+        </button>
       </section>
 
       <!-- 03. RIWAYAT TRANSAKSI HARIAN -->
@@ -1367,7 +1442,13 @@
 
         <div class="dnav">
           <button type="button" id="dp" aria-label="Hari sebelumnya">‹</button>
-          <label id="dl">
+          <label id="dl" title="Klik untuk pilih tanggal dari kalender">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--b700);flex-shrink:0">
+              <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+              <line x1="16" y1="2" x2="16" y2="6"/>
+              <line x1="8" y1="2" x2="8" y2="6"/>
+              <line x1="3" y1="10" x2="21" y2="10"/>
+            </svg>
             <span id="dt"></span>
             <input type="date" id="dpick" aria-label="Pilih tanggal">
           </label>
@@ -1663,7 +1744,8 @@
       hf: 'all',
       amt: 0,
       trendOpen: false,
-      newId: 0
+      newId: 0,
+      editingId: null            // ID transaksi yang sedang diedit
     };
 
     function validateFormWallets() {
@@ -2036,11 +2118,83 @@
         `).join('');
       }
 
-      $('#sl').textContent = tf ? 'Simpan Transfer' : V.ft === 'out' ? 'Simpan Pengeluaran' : 'Simpan Pemasukan';
-      $('#save').style.setProperty('--dc', tf ? '#0A6FA6' : V.ft === 'out' ? '#DD2D90' : '#0E8DD0');
+      const saveBtn = $('#save');
+      const cancelBtn = $('#btnCancelEdit');
+
+      if (V.editingId) {
+        $('#sl').textContent = 'Update Transaksi';
+        saveBtn.style.background = 'linear-gradient(135deg, #0A6FA6 0%, #0E8DD0 100%)';
+        saveBtn.style.setProperty('--dc', '#ffffff');
+        if (cancelBtn) cancelBtn.style.display = 'block';
+      } else {
+        $('#sl').textContent = tf ? 'Simpan Transfer' : V.ft === 'out' ? 'Simpan Pengeluaran' : 'Simpan Pemasukan';
+        saveBtn.style.background = 'var(--ink9)';
+        saveBtn.style.setProperty('--dc', tf ? '#0A6FA6' : V.ft === 'out' ? '#DD2D90' : '#0E8DD0');
+        if (cancelBtn) cancelBtn.style.display = 'none';
+      }
 
       renderWallets();
     }
+
+    /* ==========================================================================
+       LOGIKA EDIT TRANSAKSI
+       ========================================================================== */
+    function editTransaction(id) {
+      const tx = S.tx.find(x => x.id === id);
+      if (!tx) {
+        toast('Transaksi tidak ditemukan');
+        return;
+      }
+
+      V.editingId = id;
+      V.ft = tx.t;
+      V.fw = tx.w;
+      if (tx.t === 'tf') {
+        V.fw2 = tx.w2;
+      }
+      if (tx.c) {
+        V.fc = tx.c;
+      }
+      setAmt(tx.a);
+      $('#fd').value = tx.d || todayS;
+      $('#fn').value = tx.n || '';
+
+      renderForm();
+
+      const formSec = $('#ftab').closest('.sec');
+      if (formSec) {
+        formSec.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+
+      toast(`Mengedit transaksi: ${tx.c || 'Transfer'}`);
+    }
+
+    function cancelEdit() {
+      V.editingId = null;
+      setAmt(0);
+      $('#fn').value = '';
+      $('#fd').value = todayS;
+      renderForm();
+      toast('Batal mengedit');
+    }
+
+    const cancelEditBtn = $('#btnCancelEdit');
+    if (cancelEditBtn) cancelEditBtn.onclick = cancelEdit;
+
+    function deleteTransaction(id) {
+      if (confirm('Yakin ingin menghapus transaksi ini?')) {
+        S.tx = S.tx.filter(x => x.id !== id);
+        if (V.editingId === id) {
+          cancelEdit();
+        }
+        saveStorage();
+        toast('Transaksi dihapus');
+        renderAll(false);
+      }
+    }
+
+    window.editTransaction = editTransaction;
+    window.deleteTransaction = deleteTransaction;
 
     $('#ftab').onclick = e => {
       const btn = e.target.closest('button[data-t]');
@@ -2095,6 +2249,54 @@
       const noteStr = ($('#fn').value || '').trim();
       const isTransfer = V.ft === 'tf';
 
+      if (V.editingId) {
+        const idx = S.tx.findIndex(x => x.id === V.editingId);
+        if (idx !== -1) {
+          const old = S.tx[idx];
+          if (isTransfer) {
+            S.tx[idx] = {
+              id: old.id,
+              t: 'tf',
+              w: V.fw,
+              w2: V.fw2,
+              a: V.amt,
+              d,
+              tm: old.tm || timeStr,
+              n: noteStr
+            };
+          } else {
+            S.tx[idx] = {
+              id: old.id,
+              t: V.ft,
+              c: V.fc,
+              w: V.fw,
+              a: V.amt,
+              d,
+              tm: old.tm || timeStr,
+              n: noteStr
+            };
+          }
+
+          saveStorage();
+          V.newId = old.id;
+          V.editingId = null;
+
+          setAmt(0);
+          $('#fn').value = '';
+          $('#fd').value = todayS;
+          renderForm();
+
+          toast('Transaksi berhasil diperbarui ✓');
+
+          V.day = d;
+          V.month = d.slice(0, 7);
+          V.sel = null;
+          renderAll(true);
+          return;
+        }
+      }
+
+      // Transaksi Baru
       let newTx;
       if (isTransfer) {
         newTx = {
@@ -2145,7 +2347,7 @@
     };
 
     /* ==========================================================================
-       5. RIWAYAT TRANSAKSI HARIAN
+       5. RIWAYAT TRANSAKSI HARIAN & SWIPE-TO-ACTION GESTURE
        ========================================================================== */
     const shift = (s, days) => {
       const d = new Date(s + 'T00:00:00');
@@ -2153,7 +2355,29 @@
       return iso(d);
     };
 
+    let activeOpenRow = null;
+
+    function closeSwipedRow(row) {
+      if (!row) return;
+      const card = row.querySelector('.tx-card');
+      if (card) {
+        card.classList.remove('swiping');
+        card.style.transform = 'translateX(0px)';
+      }
+      row.dataset.open = '';
+      if (activeOpenRow === row) activeOpenRow = null;
+    }
+
+    function closeAllSwipes() {
+      if (activeOpenRow) {
+        closeSwipedRow(activeOpenRow);
+      }
+      const allOpen = $$('#hist .tx-row[data-open="edit"], #hist .tx-row[data-open="del"]');
+      allOpen.forEach(r => closeSwipedRow(r));
+    }
+
     function renderHist() {
+      closeAllSwipes();
       const d = new Date(V.day + 'T00:00:00');
       const isToday = V.day === todayS;
       $('#dt').textContent = `${isToday ? 'Hari Ini, ' : ''}${d.getDate()} ${MON[d.getMonth()].slice(0, 3)} ${d.getFullYear()}`;
@@ -2183,34 +2407,209 @@
           const sub = `${tf ? '' : (wn(x.w).n + ' · ')}Pukul ${x.tm || '--.--'}${x.n ? ' · ' + escapeHtml(x.n) : (tf ? ' · Pindah Dana' : '')}`;
 
           return `
-            <div class="tx ${x.id === V.newId ? 'new' : ''}">
-              <div class="ic">${svgIco(ik(x.t, x.c), 20)}</div>
-              <div class="m">
-                <b>${escapeHtml(title)}</b>
-                <small>${sub}</small>
-              </div>
-              <div class="a ${tf ? 'tfc' : x.t}">${sg}${rp(x.a)} ${ar}</div>
-              <button type="button" class="x" data-id="${x.id}" aria-label="Hapus transaksi" title="Hapus transaksi">
-                ${svgIco('plus', 18).replace('<path', '<path transform="rotate(45 12 12)"')}
+            <div class="tx-row" data-id="${x.id}">
+              <button type="button" class="tx-act tx-act-edit" data-id="${x.id}" aria-label="Edit transaksi" title="Edit transaksi">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M12 20h9M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
+                </svg>
+                <span>Edit</span>
               </button>
+
+              <button type="button" class="tx-act tx-act-del" data-id="${x.id}" aria-label="Hapus transaksi" title="Hapus transaksi">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M10 11v6M14 11v6"/>
+                </svg>
+                <span>Hapus</span>
+              </button>
+
+              <div class="tx-card ${x.id === V.newId ? 'new' : ''}">
+                <div class="ic">${svgIco(ik(x.t, x.c), 20)}</div>
+                <div class="m">
+                  <b>${escapeHtml(title)}</b>
+                  <small>${sub}</small>
+                </div>
+                <div class="a ${tf ? 'tfc' : x.t}">${sg}${rp(x.a)} ${ar}</div>
+              </div>
             </div>
           `;
         }).join('');
       }
     }
 
-    $('#hist').onclick = e => {
-      const b = e.target.closest('.x');
-      if (b && b.dataset.id) {
-        const id = parseInt(b.dataset.id, 10);
-        if (confirm('Yakin ingin menghapus transaksi ini?')) {
-          S.tx = S.tx.filter(x => x.id !== id);
-          saveStorage();
-          toast('Transaksi dihapus');
-          renderAll(false);
+    // Touch Swipe Event Listeners (Mobile Gesture)
+    let touchRow = null;
+    let touchStartX = 0;
+    let touchStartY = 0;
+    let touchBaseX = 0;
+    let isTouchHorizontal = null;
+
+    const histContainer = $('#hist');
+
+    histContainer.addEventListener('touchstart', e => {
+      const row = e.target.closest('.tx-row');
+      if (!row || e.target.closest('.tx-act')) return;
+
+      if (activeOpenRow && activeOpenRow !== row) {
+        closeSwipedRow(activeOpenRow);
+      }
+
+      touchRow = row;
+      touchStartX = e.touches[0].clientX;
+      touchStartY = e.touches[0].clientY;
+      isTouchHorizontal = null;
+
+      const currentOpen = row.dataset.open;
+      touchBaseX = currentOpen === 'edit' ? 76 : currentOpen === 'del' ? -76 : 0;
+
+      const card = row.querySelector('.tx-card');
+      if (card) card.classList.add('swiping');
+    }, { passive: true });
+
+    histContainer.addEventListener('touchmove', e => {
+      if (!touchRow) return;
+
+      const dx = e.touches[0].clientX - touchStartX;
+      const dy = e.touches[0].clientY - touchStartY;
+
+      if (isTouchHorizontal === null) {
+        if (Math.abs(dx) > 7 || Math.abs(dy) > 7) {
+          isTouchHorizontal = Math.abs(dx) > Math.abs(dy);
         }
       }
+
+      if (isTouchHorizontal) {
+        let targetX = touchBaseX + dx;
+        if (targetX > 85) targetX = 85 + (targetX - 85) * 0.25;
+        if (targetX < -85) targetX = -85 + (targetX + 85) * 0.25;
+
+        const card = touchRow.querySelector('.tx-card');
+        if (card) card.style.transform = `translateX(${targetX}px)`;
+      }
+    }, { passive: true });
+
+    histContainer.addEventListener('touchend', e => {
+      if (!touchRow) return;
+
+      const card = touchRow.querySelector('.tx-card');
+      if (card) card.classList.remove('swiping');
+
+      if (isTouchHorizontal) {
+        const dx = e.changedTouches[0].clientX - touchStartX;
+        const totalX = touchBaseX + dx;
+
+        if (totalX > 60) {
+          // Swipe Kanan (> 60px): Tampilkan Tombol Edit (Biru)
+          if (card) card.style.transform = 'translateX(76px)';
+          touchRow.dataset.open = 'edit';
+          activeOpenRow = touchRow;
+        } else if (totalX < -60) {
+          // Swipe Kiri (< -60px): Tampilkan Tombol Hapus (Merah)
+          if (card) card.style.transform = 'translateX(-76px)';
+          touchRow.dataset.open = 'del';
+          activeOpenRow = touchRow;
+        } else {
+          // Tutup kembali
+          if (card) card.style.transform = 'translateX(0px)';
+          touchRow.dataset.open = '';
+          if (activeOpenRow === touchRow) activeOpenRow = null;
+        }
+      } else if (touchBaseX !== 0 && Math.abs(e.changedTouches[0].clientX - touchStartX) < 10) {
+        closeSwipedRow(touchRow);
+      }
+
+      touchRow = null;
+      isTouchHorizontal = null;
+    });
+
+    // Mouse Drag Support (Desktop Swipe Test)
+    let mouseRow = null;
+    let mouseStartX = 0;
+    let mouseBaseX = 0;
+    let isMouseDown = false;
+
+    histContainer.addEventListener('mousedown', e => {
+      const row = e.target.closest('.tx-row');
+      if (!row || e.target.closest('.tx-act')) return;
+
+      if (activeOpenRow && activeOpenRow !== row) {
+        closeSwipedRow(activeOpenRow);
+      }
+
+      mouseRow = row;
+      isMouseDown = true;
+      mouseStartX = e.clientX;
+      const currentOpen = row.dataset.open;
+      mouseBaseX = currentOpen === 'edit' ? 76 : currentOpen === 'del' ? -76 : 0;
+
+      const card = row.querySelector('.tx-card');
+      if (card) card.classList.add('swiping');
+    });
+
+    window.addEventListener('mousemove', e => {
+      if (!isMouseDown || !mouseRow) return;
+      const dx = e.clientX - mouseStartX;
+      let targetX = mouseBaseX + dx;
+      if (targetX > 85) targetX = 85 + (targetX - 85) * 0.25;
+      if (targetX < -85) targetX = -85 + (targetX + 85) * 0.25;
+      const card = mouseRow.querySelector('.tx-card');
+      if (card) card.style.transform = `translateX(${targetX}px)`;
+    });
+
+    window.addEventListener('mouseup', e => {
+      if (!isMouseDown || !mouseRow) return;
+      isMouseDown = false;
+      const card = mouseRow.querySelector('.tx-card');
+      if (card) card.classList.remove('swiping');
+
+      const dx = e.clientX - mouseStartX;
+      const totalX = mouseBaseX + dx;
+      if (totalX > 60) {
+        if (card) card.style.transform = 'translateX(76px)';
+        mouseRow.dataset.open = 'edit';
+        activeOpenRow = mouseRow;
+      } else if (totalX < -60) {
+        if (card) card.style.transform = 'translateX(-76px)';
+        mouseRow.dataset.open = 'del';
+        activeOpenRow = mouseRow;
+      } else {
+        if (card) card.style.transform = 'translateX(0px)';
+        mouseRow.dataset.open = '';
+        if (activeOpenRow === mouseRow) activeOpenRow = null;
+      }
+      mouseRow = null;
+    });
+
+    // Click handler for swipe action buttons & outside click
+    histContainer.onclick = e => {
+      const editBtn = e.target.closest('.tx-act-edit');
+      if (editBtn && editBtn.dataset.id) {
+        e.stopPropagation();
+        const id = parseInt(editBtn.dataset.id, 10);
+        closeAllSwipes();
+        editTransaction(id);
+        return;
+      }
+
+      const delBtn = e.target.closest('.tx-act-del');
+      if (delBtn && delBtn.dataset.id) {
+        e.stopPropagation();
+        const id = parseInt(delBtn.dataset.id, 10);
+        closeAllSwipes();
+        deleteTransaction(id);
+        return;
+      }
+
+      const row = e.target.closest('.tx-row');
+      if (row && row.dataset.open) {
+        closeSwipedRow(row);
+      }
     };
+
+    document.addEventListener('click', e => {
+      if (!e.target.closest('#hist')) {
+        closeAllSwipes();
+      }
+    });
 
     $('#hf').onclick = e => {
       const btn = e.target.closest('button[data-f]');
@@ -2231,8 +2630,18 @@
 
     $('#dp').onclick = () => goDay(shift(V.day, -1));
     $('#dn').onclick = () => goDay(shift(V.day, 1));
+
+    $('#dl').onclick = () => {
+      const p = $('#dpick');
+      if (p && typeof p.showPicker === 'function') {
+        try { p.showPicker(); } catch (err) {}
+      }
+    };
+
     $('#dpick').onchange = e => {
-      if (e.target.value) goDay(e.target.value);
+      if (e.target.value) {
+        goDay(e.target.value);
+      }
     };
 
     const moveMonth = offset => {
