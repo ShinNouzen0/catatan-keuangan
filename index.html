@@ -70,8 +70,27 @@
       width: 100%;
       box-sizing: border-box;
       scroll-padding-top: env(safe-area-inset-top, 0px);
+      -ms-overflow-style: none;
+      scrollbar-width: none;
     }
 
+    html::-webkit-scrollbar {
+      display: none;
+    }
+
+    /* Sembunyikan scrollbar untuk Chrome, Safari, dan Opera */
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    /* Sembunyikan scrollbar untuk IE, Edge, dan Firefox */
+    .no-scrollbar {
+      -ms-overflow-style: none;  /* IE and Edge */
+      scrollbar-width: none;  /* Firefox */
+    }
+    /* Terapkan juga ke body secara global */
+    body::-webkit-scrollbar {
+      display: none;
+    }
     body {
       font-family: 'Manrope', system-ui, -apple-system, sans-serif;
       background: #08557F;
@@ -86,6 +105,8 @@
       box-sizing: border-box;
       margin: 0;
       padding: 0;
+      -ms-overflow-style: none;
+      scrollbar-width: none;
     }
 
     button {
