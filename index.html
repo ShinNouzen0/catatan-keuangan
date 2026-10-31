@@ -766,7 +766,114 @@
       nid: 1
     };
 
-    // Load State dari LocalStorage & Bersihkan Data Dummy
+    const saveStorage = () => {
+      try {
+        localStorage.setItem(STORAGE_KEY_V2, JSON.stringify(S));
+      } catch (err) {
+        console.error('Gagal menyimpan LocalStorage:', err);
+      }
+    };
+
+    // Generator ID Baru yang Terjamin Unik (Global ID Space untuk Wallets & Transaksi)
+    function getNextId() {
+      let max = 0;
+      if (Array.isArray(S.wallets)) {
+        S.wallets.forEach(w => {
+          const num = Number(w.id);
+          if (!isNaN(num) && num > max) max = num;
+        });
+      }
+      if (Array.isArray(S.tx)) {
+        S.tx.forEach(x => {
+          const id = Number(x.id);
+          const w1 = Number(x.w);
+          const w2 = Number(x.w2);
+          if (!isNaN(id) && id > max) max = id;
+          if (!isNaN(w1) && w1 > max) max = w1;
+          if (!isNaN(w2) && w2 > max) max = w2;
+        });
+      }
+      if (typeof S.nid === 'number' && S.nid > max) {
+        max = S.nid;
+      }
+      const next = max + 1;
+      S.nid = next + 1;
+      return next;
+    }
+
+    // Auto-Repair & Deduplikasi ID Dompet (Mencegah & Memperbaiki Bug ID Kembar pada Dompet Baru)
+    function repairWalletsAndIds() {
+      if (!Array.isArray(S.wallets) || S.wallets.length === 0) {
+        S.wallets = [
+          { id: 1, e: '💵', n: 'Cash' },
+          { id: 2, e: '🏦', n: 'Bank' },
+          { id: 3, e: '🟠', n: 'ShopeePay' },
+          { id: 4, e: '🟢', n: 'GoPay' }
+        ];
+      }
+
+      let max = 0;
+      S.wallets.forEach(w => {
+        const num = Number(w.id);
+        if (!isNaN(num) && num > max) max = num;
+      });
+      if (Array.isArray(S.tx)) {
+        S.tx.forEach(x => {
+          const id = Number(x.id);
+          const w1 = Number(x.w);
+          const w2 = Number(x.w2);
+          if (!isNaN(id) && id > max) max = id;
+          if (!isNaN(w1) && w1 > max) max = w1;
+          if (!isNaN(w2) && w2 > max) max = w2;
+        });
+      }
+
+      const seen = new Set();
+      let modified = false;
+
+      S.wallets.forEach(w => {
+        const id = Number(w.id);
+        if (!id || isNaN(id) || id <= 0 || seen.has(id)) {
+          max++;
+          console.warn(`[Auto-Repair] Memperbaiki ID dompet ganda/invalid "${w.n}": semula ${w.id} -> kini ${max}`);
+          w.id = max;
+          seen.add(w.id);
+          modified = true;
+        } else {
+          w.id = id;
+          seen.add(id);
+        }
+      });
+
+      if (!S.nid || typeof S.nid !== 'number' || S.nid <= max) {
+        S.nid = max + 1;
+        modified = true;
+      }
+
+      if (modified) {
+        saveStorage();
+      }
+    }
+
+    // Validasi Pemilihan Dompet pada Form Catat Cepat & Transfer
+    function validateFormWallets() {
+      if (!Array.isArray(S.wallets) || S.wallets.length === 0) return;
+      // Pastikan V.fw selalu ada di daftar dompet yang tersedia
+      if (!S.wallets.some(w => w.id === V.fw)) {
+        V.fw = S.wallets[0].id;
+      }
+      // Pastikan V.fw2 selalu ada di daftar dompet yang tersedia dan berbeda dari V.fw jika dompet >= 2
+      if (S.wallets.length > 1) {
+        if (!S.wallets.some(w => w.id === V.fw2) || V.fw2 === V.fw) {
+          const alt = S.wallets.find(w => w.id !== V.fw);
+          V.fw2 = alt ? alt.id : S.wallets[0].id;
+        }
+      } else {
+        V.fw2 = S.wallets[0].id;
+      }
+    }
+
+    // Load State dari LocalStorage & Jalankan Perbaikan ID
     try {
       const savedV2 = localStorage.getItem(STORAGE_KEY_V2);
       if (savedV2) {
@@ -787,6 +894,9 @@
       console.warn('Gagal membaca LocalStorage:', err);
     }
 
+    // Perbaiki ID dompet jika ada bentrok atau duplikasi
+    repairWalletsAndIds();
+
     // View State (UI Controls)
     const V = {
       month: todayS.slice(0, 7), // YYYY-MM
@@ -794,21 +904,14 @@
       sel: null,                 // Kategori aktif yang dipilih/disorot
       ft: 'out',                 // Tab form catat: 'out' | 'in' | 'tf'
       fw: S.wallets[0] ? S.wallets[0].id : 1, // Dompet aktif form (sumber)
-      fw2: S.wallets[1] ? S.wallets[1].id : 2, // Dompet tujuan transfer
+      fw2: S.wallets[1] ? S.wallets[1].id : (S.wallets[0] ? S.wallets[0].id : 2), // Dompet tujuan transfer
       fc: 'Makan',               // Kategori aktif form
       day: todayS,               // Tanggal aktif riwayat harian
       hf: 'all',                 // Filter riwayat: 'all' | 'out' | 'in' | 'tf'
       amt: 0,                    // Nilai nominal input
       trendOpen: false           // Kartu tren default tertutup (collapsed)
     };
-
-    const saveStorage = () => {
-      try {
-        localStorage.setItem(STORAGE_KEY_V2, JSON.stringify(S));
-      } catch (err) {
-        console.error('Gagal menyimpan LocalStorage:', err);
-      }
-    };
+    validateFormWallets();
 
     let toastTimer = null;
     const toast = msg => {
@@ -1273,6 +1376,8 @@
        4. RENDER SALDO PER KANTONG / DOMPET DINAMIS (MEMPERHITUNGKAN TRANSFER)
        ========================================================================== */
     function renderWallets() {
+      validateFormWallets();
+
       // Hitung saldo dompet: Masuk + Transfer Masuk - Keluar - Transfer Keluar
       $('#wal').innerHTML = S.wallets.map(w => {
         const inW = sum(S.tx.filter(x => (x.w === w.id && x.t === 'in') || (x.w2 === w.id && x.t === 'tf')));
@@ -1343,6 +1448,7 @@
       const btn = e.target.closest('button[data-id]');
       if (btn) {
         V.fw = parseInt(btn.dataset.id, 10);
+        validateFormWallets();
         renderWallets();
       }
     };
@@ -1352,11 +1458,15 @@
       const btn = e.target.closest('button[data-id]');
       if (btn) {
         const id = parseInt(btn.dataset.id, 10);
-        V.fw = id;
-        if (V.fw === V.fw2) {
-          const alt = S.wallets.find(w => w.id !== id);
-          if (alt) V.fw2 = alt.id;
+        if (id === V.fw2) {
+          // Jika menekan dompet yang sedang jadi tujuan, tukar sumber & tujuan
+          const temp = V.fw;
+          V.fw = V.fw2;
+          V.fw2 = temp;
+        } else {
+          V.fw = id;
         }
+        validateFormWallets();
         renderWallets();
       }
     };
@@ -1366,11 +1476,15 @@
       const btn = e.target.closest('button[data-id]');
       if (btn) {
         const id = parseInt(btn.dataset.id, 10);
-        V.fw2 = id;
-        if (V.fw2 === V.fw) {
-          const alt = S.wallets.find(w => w.id !== id);
-          if (alt) V.fw = alt.id;
+        if (id === V.fw) {
+          // Jika menekan dompet yang sedang jadi sumber, tukar sumber & tujuan
+          const temp = V.fw;
+          V.fw = V.fw2;
+          V.fw2 = temp;
+        } else {
+          V.fw2 = id;
         }
+        validateFormWallets();
         renderWallets();
       }
     };
@@ -1498,7 +1612,7 @@
       let newTx;
       if (V.ft === 'tf') {
         newTx = {
-          id: S.nid++,
+          id: getNextId(),
           t: 'tf',
           w: V.fw,
           w2: V.fw2,
@@ -1509,7 +1623,7 @@
         };
       } else {
         newTx = {
-          id: S.nid++,
+          id: getNextId(),
           t: V.ft,
           c: V.fc,
           w: V.fw,
@@ -1797,12 +1911,7 @@
       }
 
       S.wallets = S.wallets.filter(w => w.id !== id);
-      if (V.fw === id) {
-        V.fw = S.wallets[0].id;
-      }
-      if (V.fw2 === id) {
-        V.fw2 = S.wallets.find(w => w.id !== V.fw)?.id || S.wallets[0].id;
-      }
+      validateFormWallets();
 
       saveStorage();
       renderWalletSheet();
@@ -1820,8 +1929,15 @@
         return;
       }
 
+      if (S.wallets.some(w => w.n.toLowerCase() === name.toLowerCase())) {
+        toast('Nama dompet sudah ada');
+        $('#wn').focus();
+        return;
+      }
+
+      const newId = getNextId();
       S.wallets.push({
-        id: S.nid++,
+        id: newId,
         e: emoji,
         n: name
       });
@@ -1829,6 +1945,7 @@
       $('#wn').value = '';
       saveStorage();
       renderWalletSheet();
+      validateFormWallets();
       renderWallets();
       toast('Dompet baru ditambahkan ✓');
     };
