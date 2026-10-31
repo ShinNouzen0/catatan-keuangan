@@ -65,32 +65,74 @@
       -webkit-tap-highlight-color: transparent;
     }
 
+    /* ==========================================================================
+       SEMBUNYIKAN SCROLLBAR MENYELURUH (CROSS-BROWSER: IOS SAFARI, CHROME, FIREFOX, EDGE)
+       ========================================================================== */
+    html, body, * {
+      scrollbar-width: none !important;
+      scrollbar-color: transparent transparent !important;
+      -ms-overflow-style: none !important;
+    }
+
+    /* WebKit Pseudo Elements (Safari, iOS Safari, Chrome, Edge, Opera) */
+    ::-webkit-scrollbar,
+    *::-webkit-scrollbar,
+    html::-webkit-scrollbar,
+    body::-webkit-scrollbar {
+      display: none !important;
+      width: 0 !important;
+      height: 0 !important;
+      -webkit-appearance: none !important;
+      background: transparent !important;
+      opacity: 0 !important;
+    }
+
+    ::-webkit-scrollbar-thumb,
+    *::-webkit-scrollbar-thumb,
+    html::-webkit-scrollbar-thumb,
+    body::-webkit-scrollbar-thumb {
+      display: none !important;
+      width: 0 !important;
+      height: 0 !important;
+      background: transparent !important;
+      opacity: 0 !important;
+    }
+
+    ::-webkit-scrollbar-track,
+    *::-webkit-scrollbar-track,
+    html::-webkit-scrollbar-track,
+    body::-webkit-scrollbar-track {
+      display: none !important;
+      width: 0 !important;
+      height: 0 !important;
+      background: transparent !important;
+      opacity: 0 !important;
+    }
+
+    .no-scrollbar::-webkit-scrollbar {
+      display: none !important;
+      width: 0 !important;
+      height: 0 !important;
+      background: transparent !important;
+    }
+
+    .no-scrollbar {
+      -ms-overflow-style: none !important;
+      scrollbar-width: none !important;
+      scrollbar-color: transparent transparent !important;
+    }
+
     html {
       overflow-x: hidden;
       width: 100%;
       box-sizing: border-box;
       scroll-padding-top: env(safe-area-inset-top, 0px);
-      -ms-overflow-style: none;
-      scrollbar-width: none;
+      -ms-overflow-style: none !important;
+      scrollbar-width: none !important;
+      scrollbar-color: transparent transparent !important;
+      -webkit-overflow-scrolling: touch;
     }
 
-    html::-webkit-scrollbar {
-      display: none;
-    }
-
-    /* Sembunyikan scrollbar untuk Chrome, Safari, dan Opera */
-    .no-scrollbar::-webkit-scrollbar {
-      display: none;
-    }
-    /* Sembunyikan scrollbar untuk IE, Edge, dan Firefox */
-    .no-scrollbar {
-      -ms-overflow-style: none;  /* IE and Edge */
-      scrollbar-width: none;  /* Firefox */
-    }
-    /* Terapkan juga ke body secara global */
-    body::-webkit-scrollbar {
-      display: none;
-    }
     body {
       font-family: 'Manrope', system-ui, -apple-system, sans-serif;
       background: #08557F;
@@ -99,14 +141,18 @@
       display: flex;
       justify-content: center;
       min-height: 100vh;
+      min-height: 100dvh;
       line-height: 1.5;
       overflow-x: hidden;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
       width: 100%;
       box-sizing: border-box;
       margin: 0;
       padding: 0;
-      -ms-overflow-style: none;
-      scrollbar-width: none;
+      -ms-overflow-style: none !important;
+      scrollbar-width: none !important;
+      scrollbar-color: transparent transparent !important;
     }
 
     button {
