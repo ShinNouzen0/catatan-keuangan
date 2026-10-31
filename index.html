@@ -318,12 +318,16 @@
       flex-direction: column;
       justify-content: space-between;
       text-align: left;
-      color: #fff;
+      color: #ffffff !important;
+      -webkit-text-fill-color: #ffffff !important;
       position: relative;
       scroll-snap-align: start;
       filter: drop-shadow(0 6px 8px rgba(8, 50, 80, .25));
       border-radius: 20px;
       transition: transform .25s var(--ease), filter .25s;
+      isolation: isolate;
+      transform: translateZ(0);
+      z-index: 0;
     }
 
     .wc:before {
@@ -334,6 +338,8 @@
       background: var(--c);
       -webkit-mask: radial-gradient(circle 9px at 100% 50%, transparent 98%, #000 100%);
       mask: radial-gradient(circle 9px at 100% 50%, transparent 98%, #000 100%);
+      z-index: -1;
+      pointer-events: none;
     }
 
     .wc:after {
@@ -346,11 +352,16 @@
       margin-top: -3px;
       border-radius: 50%;
       background: #fff;
+      z-index: 1;
     }
 
     .wc > * {
       position: relative;
-      z-index: 1;
+      z-index: 2;
+      color: #ffffff !important;
+      -webkit-text-fill-color: #ffffff !important;
+      opacity: 1 !important;
+      visibility: visible !important;
     }
 
     .wc small {
@@ -361,6 +372,12 @@
       overflow: hidden;
       text-overflow: ellipsis;
       display: block;
+      color: #ffffff !important;
+      -webkit-text-fill-color: #ffffff !important;
+      opacity: 1 !important;
+      visibility: visible !important;
+      position: relative;
+      z-index: 2;
     }
 
     .wc b {
@@ -371,10 +388,16 @@
       overflow: hidden;
       text-overflow: ellipsis;
       display: block;
+      color: #ffffff !important;
+      -webkit-text-fill-color: #ffffff !important;
+      opacity: 1 !important;
+      visibility: visible !important;
+      position: relative;
+      z-index: 2;
     }
 
     .wc.sel {
-      transform: translateY(-6px);
+      transform: translateY(-6px) translateZ(0);
       filter: drop-shadow(0 12px 14px rgba(8, 50, 80, .45));
     }
 
@@ -382,9 +405,11 @@
       --c: rgba(10, 26, 43, .55);
     }
 
+    .wc.add small,
     .wc.add b {
-      font-size: 13px;
-      font-weight: 700;
+      color: #ffffff !important;
+      -webkit-text-fill-color: #ffffff !important;
+      opacity: 1 !important;
     }
 
     .paper {
@@ -1125,7 +1150,7 @@
       <!-- 01. REKAP BULANAN & DONUT CHART -->
       <section class="sec">
         <div class="sh">
-          <span class="ov"><i>01</i>Rekap</span>
+          <span class="ov">Rekap</span>
           <span class="chip" id="rm"></span>
         </div>
         <div class="seg" id="rtab" style="--n:2;--i:0">
@@ -1142,7 +1167,7 @@
       <!-- 02. CATAT CEPAT (3 TAB: KELUAR, MASUK, TRANSFER) -->
       <section class="sec">
         <div class="sh">
-          <span class="ov"><i>02</i>Catat cepat</span>
+          <span class="ov">Catat Cepat</span>
         </div>
         <div class="seg" id="ftab" style="--n:3;--i:0">
           <button data-t="out" class="on">↑ Keluar</button>
@@ -1203,7 +1228,7 @@
       <!-- 03. RIWAYAT TRANSAKSI HARIAN -->
       <section class="sec">
         <div class="sh">
-          <span class="ov"><i>03</i>Riwayat</span>
+          <span class="ov">Riwayat</span>
           <span class="chip" id="cnt"></span>
         </div>
 
@@ -1234,7 +1259,7 @@
       <!-- 04. TREN 6 BULAN (COLLAPSIBLE DI PALING BAWAH) -->
       <section class="sec" id="trendCard">
         <div class="sh" id="trendHeader" style="cursor:pointer;user-select:none">
-          <span class="ov"><i>04</i>Tren 6 Bulan</span>
+          <span class="ov">Tren 6 Bulan</span>
           <button type="button" id="btnToggleTrend" class="chip" aria-expanded="false" style="cursor:pointer;display:inline-flex;align-items:center;gap:6px">
             <span id="trendToggleText">Buka</span>
             <svg id="trendChevron" style="width:14px;height:14px;transform:rotate(0deg);transition:transform .3s var(--ease)" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
@@ -1752,15 +1777,15 @@
         const b = balOf(w.id);
         const isSel = V.fw === w.id;
         return `
-          <button type="button" class="wc ${isSel ? 'sel' : ''}" data-id="${w.id}" style="--c:${COLW[i % COLW.length]}">
-            <small>${w.e ? w.e + ' ' : ''}${escapeHtml(w.n)}</small>
-            <b>${b < 0 ? '−' : ''}${rp(b)}</b>
+          <button type="button" class="wc ${isSel ? 'sel' : ''}" data-id="${w.id}" style="--c:${COLW[i % COLW.length]};color:#ffffff;">
+            <small style="color:#ffffff;opacity:1;position:relative;z-index:2;display:block;">${w.e ? w.e + ' ' : ''}${escapeHtml(w.n)}</small>
+            <b style="color:#ffffff;opacity:1;position:relative;z-index:2;display:block;">${b < 0 ? '−' : ''}${rp(b)}</b>
           </button>
         `;
       }).join('') + `
-        <button type="button" class="wc add" id="btnManageWallets">
-          <small>＋ Kelola</small>
-          <b style="font-size:14px;font-weight:700">dompet</b>
+        <button type="button" class="wc add" id="btnManageWallets" style="color:#ffffff;">
+          <small style="color:#ffffff;opacity:1;position:relative;z-index:2;display:block;">＋ Kelola</small>
+          <b style="color:#ffffff;opacity:1;position:relative;z-index:2;display:block;font-size:14px;font-weight:700">dompet</b>
         </button>
       `;
 
