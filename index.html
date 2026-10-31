@@ -3,6 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="color-scheme" content="light only">
   <title>DompetKu - Catatan Keuangan Pribadi</title>
   <meta name="description" content="Aplikasi pencatat keuangan pribadi modern dan minimalis.">
   <meta name="theme-color" content="#08557F">
@@ -31,8 +32,8 @@
   <style>
     :root {
       --canvas: #EEF3F8;
-      --surface: #fff;
-      --paper: rgba(255, 255, 255, .96);
+      --surface: #ffffff;
+      --paper: #ffffff;
       --ink9: #0A1A2B;
       --ink7: #3A4B5E;
       --ink6: #46586B;
@@ -56,27 +57,7 @@
       padding-top: env(safe-area-inset-top, 0px);
     }
 
-    @media (prefers-color-scheme: dark) {
-      :root {
-        --canvas: rgba(255, 255, 255, .07);
-        --surface: #0F2133;
-        --paper: rgba(11, 26, 40, .96);
-        --ink9: #EAF2F9;
-        --ink7: #C3D2E0;
-        --ink6: #9FB2C6;
-        --line: rgba(255, 255, 255, .1);
-        --line2: rgba(255, 255, 255, .24);
-        --b100: #16344B;
-        --b700: #5CB8EA;
-        --p100: #3A1829;
-        --p700: #F566B4;
-        --primary: #5CB8EA;
-        --onp: #07121D;
-        --logo: #EAF2F9;
-        --glass: rgba(15, 33, 51, .72);
-        color-scheme: dark;
-      }
-    }
+    /* Dark mode disabled - locked to Light Mode */
 
     * {
       box-sizing: border-box;
@@ -85,6 +66,9 @@
     }
 
     html {
+      overflow-x: hidden;
+      width: 100%;
+      box-sizing: border-box;
       scroll-padding-top: env(safe-area-inset-top, 0px);
     }
 
@@ -97,6 +81,11 @@
       justify-content: center;
       min-height: 100vh;
       line-height: 1.5;
+      overflow-x: hidden;
+      width: 100%;
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
     }
 
     button {
@@ -139,23 +128,16 @@
       background: repeating-linear-gradient(90deg, rgba(255, 255, 255, .1) 0 1px, transparent 1px 7px);
     }
 
-    @media (prefers-color-scheme: dark) {
-      .bg {
-        background: 
-          radial-gradient(34% 22% at 90% 8%, rgba(92, 184, 234, .3), transparent 70%),
-          radial-gradient(50% 30% at 10% 68%, rgba(184, 20, 111, .8), transparent 72%),
-          radial-gradient(45% 28% at 92% 90%, rgba(138, 15, 85, .7), transparent 72%),
-          linear-gradient(180deg, #07121D 0%, #0B3550 45%, #07121D 100%);
-      }
-      body::after {
-        background: repeating-linear-gradient(90deg, rgba(255, 255, 255, .04) 0 1px, transparent 1px 7px);
-      }
-    }
+    /* Dark mode bg disabled */
 
     .app {
       width: 100%;
-      max-width: 440px;
+      max-width: 420px;
+      margin-left: auto;
+      margin-right: auto;
       padding: 12px 16px 0;
+      box-sizing: border-box;
+      position: relative;
     }
 
     .top {
@@ -167,22 +149,24 @@
       backdrop-filter: blur(24px) saturate(1.5);
       border: 1px solid rgba(255, 255, 255, .5);
       border-radius: 999px;
-      padding: 4px 4px 4px 16px;
+      padding: 4px 6px 4px 14px;
       box-shadow: 0 12px 30px -16px rgba(8, 50, 80, .6);
     }
 
     .brand {
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 7px;
       font-weight: 800;
-      font-size: 19px;
+      font-size: 17px;
       letter-spacing: -.02em;
+      flex-shrink: 0;
     }
 
     .brand svg {
-      width: 30px;
-      height: 30px;
+      width: 25px;
+      height: 25px;
+      flex-shrink: 0;
     }
 
     #dot {
@@ -198,25 +182,33 @@
       display: flex;
       align-items: center;
       font-weight: 700;
-      font-size: 14px;
+      font-size: 13px;
+      gap: 2px;
     }
 
     .mnav button {
-      width: 40px;
-      height: 40px;
+      width: 32px;
+      height: 32px;
       border-radius: 50%;
-      font-size: 18px;
+      font-size: 16px;
       display: grid;
       place-items: center;
+      flex-shrink: 0;
     }
 
     .mnav button:hover {
       background: var(--canvas);
     }
 
-    .mnav span {
-      min-width: 92px;
+    .mnav span#ml {
+      white-space: nowrap !important;
+      font-size: 12px;
+      font-weight: 800;
+      padding: 0 4px;
       text-align: center;
+      letter-spacing: -0.01em;
+      min-width: unset;
+      display: inline-block;
     }
 
     .hero {
@@ -304,12 +296,13 @@
 
     .wallets {
       display: flex;
-      gap: 12px;
+      gap: 10px;
       overflow-x: auto;
       scroll-snap-type: x mandatory;
-      margin: 20px -16px 0;
-      padding: 14px 16px 22px;
+      margin: 18px -16px 0;
+      padding: 10px 16px 18px;
       scrollbar-width: none;
+      -webkit-overflow-scrolling: touch;
     }
 
     .wallets::-webkit-scrollbar {
@@ -318,9 +311,9 @@
 
     .wc {
       flex: none;
-      width: 172px;
-      height: 108px;
-      padding: 14px 18px;
+      width: 136px;
+      height: 90px;
+      padding: 10px 14px;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
@@ -328,28 +321,29 @@
       color: #fff;
       position: relative;
       scroll-snap-align: start;
-      filter: drop-shadow(0 8px 10px rgba(8, 50, 80, .3));
-      border-radius: 24px;
+      filter: drop-shadow(0 6px 8px rgba(8, 50, 80, .25));
+      border-radius: 20px;
+      transition: transform .25s var(--ease), filter .25s;
     }
 
     .wc:before {
       content: "";
       position: absolute;
       inset: 0;
-      border-radius: 24px;
+      border-radius: 20px;
       background: var(--c);
-      -webkit-mask: radial-gradient(circle 12px at 100% 50%, transparent 98%, #000 100%);
-      mask: radial-gradient(circle 12px at 100% 50%, transparent 98%, #000 100%);
+      -webkit-mask: radial-gradient(circle 9px at 100% 50%, transparent 98%, #000 100%);
+      mask: radial-gradient(circle 9px at 100% 50%, transparent 98%, #000 100%);
     }
 
     .wc:after {
       content: "";
       position: absolute;
-      right: 5px;
+      right: 4px;
       top: 50%;
-      width: 7px;
-      height: 7px;
-      margin-top: -3.5px;
+      width: 6px;
+      height: 6px;
+      margin-top: -3px;
       border-radius: 50%;
       background: #fff;
     }
@@ -360,28 +354,42 @@
     }
 
     .wc small {
-      font-size: 13px;
+      font-size: 11.5px;
       font-weight: 700;
+      line-height: 1.2;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      display: block;
     }
 
     .wc b {
-      font-size: 21px;
+      font-size: 17px;
       font-weight: 800;
       letter-spacing: -.02em;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      display: block;
     }
 
     .wc.sel {
-      transform: translateY(-8px);
-      filter: drop-shadow(0 16px 16px rgba(8, 50, 80, .5));
+      transform: translateY(-6px);
+      filter: drop-shadow(0 12px 14px rgba(8, 50, 80, .45));
     }
 
     .wc.add {
       --c: rgba(10, 26, 43, .55);
     }
 
+    .wc.add b {
+      font-size: 13px;
+      font-weight: 700;
+    }
+
     .paper {
       margin: 0 -16px;
-      background: var(--paper);
+      background: #ffffff;
       -webkit-backdrop-filter: blur(20px);
       backdrop-filter: blur(20px);
       border-radius: 36px 36px 0 0;
@@ -424,11 +432,7 @@
       align-items: center;
     }
 
-    @media (prefers-color-scheme: dark) {
-      .chip {
-        color: var(--b700);
-      }
-    }
+    /* Dark mode chip disabled */
 
     .seg {
       display: grid;
@@ -1057,7 +1061,7 @@
 <body>
   <div class="bg"></div>
 
-  <div class="app">
+  <div class="app w-full max-w-[420px] mx-auto px-4 box-border">
     <!-- TOP HEADER -->
     <header class="top">
       <div class="brand">
@@ -1076,8 +1080,8 @@
 
       <div class="mnav" style="display:flex;align-items:center;gap:2px">
         <!-- Tombol Estetik Export CSV -->
-        <button id="btnExportCsv" type="button" title="Export CSV" aria-label="Export Data ke CSV" style="width:36px;height:36px;border-radius:50%;display:grid;place-items:center;color:var(--ink7);cursor:pointer">
-          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <button id="btnExportCsv" type="button" title="Export CSV" aria-label="Export Data ke CSV" style="width:30px;height:30px;border-radius:50%;display:grid;place-items:center;color:var(--ink7);cursor:pointer;flex-shrink:0">
+          <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M4 16v1a3 3 0 0 0 3 3h10a3 3 0 0 0 3-3v-1M12 4v12M8 12l4 4 4-4"/>
           </svg>
         </button>
