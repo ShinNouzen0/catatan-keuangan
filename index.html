@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>DompetKu - Catatan Keuangan Pribadi</title>
   <meta name="description" content="Aplikasi pencatat keuangan pribadi modern dan minimalis.">
-  <meta name="theme-color" content="#3b2417">
+  <meta name="theme-color" content="#171F44">
 
   <!-- Mobile & PWA App Icons (Tambah ke Layar Utama / Add to Home Screen) -->
   <link rel="manifest" href="manifest.json">
@@ -18,7 +18,7 @@
 
   <!-- iOS & Android Web App Settings -->
   <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="DompetKu">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="application-name" content="DompetKu">
@@ -26,7 +26,7 @@
   <!-- Font Plus Jakarta Sans -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
   
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -38,23 +38,32 @@
             sans: ['"Plus Jakarta Sans"', 'system-ui', '-apple-system', 'sans-serif'],
           },
           colors: {
-            earth: {
-              bg: '#efe7de',
-              card: '#ffffff',
-              soft: '#f6f0e9',
-              ink: '#2b1d14',
-              mute: '#8a7566',
-              line: '#eadfd3',
-              brand: '#3b2417',
-              brand2: '#6b4429',
-              inc: '#0f8a5f',
-              exp: '#d6455a',
+            abyss: {
+              DEFAULT: '#171F44', // Midnight Abyss (swatch)
+              deep: '#0B1026',    // Deep background
+              card: '#171F44',    // Card background
+              surface: '#131A3B', // Element surface
+              subtle: '#0E1430',  // Inputs & inner containers
+              line: '#263363',    // Borders
+              mute: '#9AA8C7',    // Muted text
+            },
+            jade: {
+              DEFAULT: '#74FFED', // Aqua Jade (swatch)
+              soft: '#9CFFF4',
+              dim: 'rgba(116, 255, 237, 0.15)',
+            },
+            pink: {
+              DEFAULT: '#FE51D1', // Baby Pink (swatch)
+              soft: '#FF7EE0',
+              dim: 'rgba(254, 81, 209, 0.15)',
             }
           },
           boxShadow: {
-            card: '0 8px 24px -10px rgba(59, 36, 23, 0.12)',
-            hero: '0 18px 36px -14px rgba(43, 24, 14, 0.55)',
-            sheet: '0 -15px 35px rgba(43, 24, 14, 0.25)',
+            card: '0 12px 32px -10px rgba(5, 8, 20, 0.65), 0 0 1px 1px rgba(116, 255, 237, 0.08)',
+            hero: '0 20px 45px -12px rgba(11, 16, 38, 0.85), 0 0 35px -8px rgba(116, 255, 237, 0.15)',
+            sheet: '0 -20px 45px rgba(5, 8, 20, 0.85)',
+            glowJade: '0 0 24px -4px rgba(116, 255, 237, 0.35)',
+            glowPink: '0 0 24px -4px rgba(254, 81, 209, 0.35)',
           }
         }
       }
@@ -63,17 +72,15 @@
 
   <style>
     :root {
-      --bg: #efe7de;
-      --card: #ffffff;
-      --soft: #f6f0e9;
-      --ink: #2b1d14;
-      --mute: #8a7566;
-      --line: #eadfd3;
-      --brand: #3b2417;
-      --brand2: #6b4429;
-      --inc: #0f8a5f;
-      --exp: #d6455a;
-      color-scheme: light;
+      --bg: #0B1026;
+      --card: #171F44;
+      --surface: #131A3B;
+      --subtle: #0E1430;
+      --border: #263363;
+      --jade: #74FFED;
+      --pink: #FE51D1;
+      --mute: #9AA8C7;
+      color-scheme: dark;
       padding-top: env(safe-area-inset-top, 0px);
       padding-bottom: env(safe-area-inset-bottom, 0px);
     }
@@ -84,7 +91,11 @@
     }
     body {
       background-color: var(--bg);
-      color: var(--ink);
+      background-image: 
+        radial-gradient(circle at 50% 0%, rgba(116, 255, 237, 0.08) 0%, transparent 50%),
+        radial-gradient(circle at 85% 25%, rgba(254, 81, 209, 0.06) 0%, transparent 45%);
+      background-attachment: fixed;
+      color: #ffffff;
       font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
       min-height: 100vh;
       display: flex;
@@ -158,7 +169,7 @@
       width: 4px;
     }
     .custom-scroll::-webkit-scrollbar-thumb {
-      background: #eadfd3;
+      background: #263363;
       border-radius: 99px;
     }
     @media (prefers-reduced-motion: reduce) {
@@ -166,30 +177,32 @@
     }
   </style>
 </head>
-<body class="bg-[#efe7de] text-[#2b1d14] antialiased">
+<body class="bg-[#0B1026] text-white antialiased">
 
-  <!-- Container Utama Mobile-First (Max-w-md, pas di jempol & tidak kaku) -->
+  <!-- Container Utama Mobile-First (Max-w-md, pas di jempol & modern cyber-fintech) -->
   <main class="w-full max-w-md mx-auto px-4 py-5 pb-20 flex flex-col gap-3.5">
     
-    <!-- 1. TOP HEADER (LOGO, EXPORT CSV, & NAVIGASI BULAN GLOBAL) -->
+    <!-- 1. TOP HEADER (LOGO DOMPETKU, EXPORT CSV, & NAVIGASI BULAN GLOBAL) -->
     <header class="flex justify-between items-center px-1">
-      <div class="flex items-center gap-2 font-extrabold text-lg text-[#2b1d14] tracking-tight">
-        <span class="w-8 h-8 rounded-xl bg-[#3b2417] text-white flex items-center justify-center text-base shadow-xs">
+      <div class="flex items-center gap-2.5 font-extrabold text-lg text-white tracking-tight">
+        <span class="w-8 h-8 rounded-xl bg-gradient-to-br from-[#FE51D1] to-[#74FFED] text-[#0B1026] flex items-center justify-center text-base shadow-sm shadow-[#74FFED]/25">
           👛
         </span>
-        <span>DompetKu</span>
+        <span class="bg-gradient-to-r from-white via-[#E8EDF8] to-[#9AA8C7] bg-clip-text text-transparent">
+          DompetKu
+        </span>
       </div>
 
       <div class="flex items-center gap-1.5">
         <!-- Month Navigator Pill Global -->
-        <nav aria-label="Navigasi Bulan" class="flex items-center bg-white rounded-full p-0.5 shadow-card border border-[#eadfd3]/80 font-bold text-xs">
-          <button id="mp" title="Bulan Sebelumnya" class="w-7 h-7 rounded-full flex items-center justify-center text-sm hover:bg-[#f6f0e9] text-[#3b2417] transition-all cursor-pointer">
+        <nav aria-label="Navigasi Bulan" class="flex items-center bg-[#171F44] rounded-full p-0.5 shadow-card border border-[#263363] font-bold text-xs">
+          <button id="mp" title="Bulan Sebelumnya" class="w-7 h-7 rounded-full flex items-center justify-center text-sm hover:bg-[#131A3B] text-[#74FFED] transition-all cursor-pointer">
             ‹
           </button>
-          <span id="ml" class="min-w-[88px] text-center px-1 font-extrabold text-[#2b1d14] text-[11px] select-none">
+          <span id="ml" class="min-w-[88px] text-center px-1 font-extrabold text-white text-[11px] select-none">
             -
           </span>
-          <button id="mn" title="Bulan Berikutnya" class="w-7 h-7 rounded-full flex items-center justify-center text-sm hover:bg-[#f6f0e9] text-[#3b2417] transition-all cursor-pointer">
+          <button id="mn" title="Bulan Berikutnya" class="w-7 h-7 rounded-full flex items-center justify-center text-sm hover:bg-[#131A3B] text-[#74FFED] transition-all cursor-pointer">
             ›
           </button>
         </nav>
@@ -200,7 +213,7 @@
           type="button"
           title="Export Data ke CSV" 
           aria-label="Export Data ke CSV"
-          class="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-white hover:bg-[#f6f0e9] border border-[#eadfd3]/80 shadow-card flex items-center justify-center text-[#3b2417] hover:text-[#2b180e] transition-all cursor-pointer shrink-0 active:scale-95"
+          class="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-[#171F44] hover:bg-[#131A3B] border border-[#263363] shadow-card flex items-center justify-center text-[#74FFED] hover:text-white transition-all cursor-pointer shrink-0 active:scale-95"
         >
           <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
@@ -209,60 +222,61 @@
       </div>
     </header>
 
-    <!-- 2. KARTU SALDO UTAMA (HERO COMPACT & ELEGAN) -->
-    <section class="bg-gradient-to-br from-[#4a2c1b] via-[#2b180e] to-[#6b4429] text-white rounded-3xl p-4 sm:p-5 relative overflow-hidden shadow-hero animate-up select-none">
-      <!-- Glow ambient background -->
-      <div class="absolute -right-10 -top-10 w-40 h-40 rounded-full bg-white/10 blur-xl pointer-events-none"></div>
+    <!-- 2. KARTU SALDO UTAMA (HERO MIDNIGHT ABYSS & GLOWING PLANET EFFECT) -->
+    <section class="bg-gradient-to-br from-[#1E2856] via-[#171F44] to-[#0E1430] text-white rounded-3xl p-4 sm:p-5 relative overflow-hidden shadow-hero border border-[#2D3C75] animate-up select-none">
+      <!-- Ambient Cosmic Glow (Aqua Jade + Baby Pink orbs) -->
+      <div class="absolute -right-10 -top-10 w-44 h-44 rounded-full bg-[#74FFED]/20 blur-2xl pointer-events-none"></div>
+      <div class="absolute -left-10 -bottom-10 w-40 h-40 rounded-full bg-[#FE51D1]/18 blur-2xl pointer-events-none"></div>
       
       <div class="flex items-center justify-between relative z-10">
-        <span class="text-[10px] font-bold tracking-widest text-[#eadfd3] uppercase">
+        <span class="text-[10px] font-bold tracking-widest text-[#9AA8C7] uppercase">
           Total Saldo Saat Ini
         </span>
-        <span class="text-[9px] font-bold bg-white/15 backdrop-blur-md px-2 py-0.5 rounded-full text-white/90 border border-white/10">
-          Real-Time
+        <span class="text-[9px] font-bold bg-[#74FFED]/15 text-[#74FFED] border border-[#74FFED]/30 px-2 py-0.5 rounded-full backdrop-blur-md">
+          ● Real-Time
         </span>
       </div>
 
-      <div class="text-2xl sm:text-3xl font-black tracking-tight text-white my-2.5 relative z-10" id="bal">
+      <div class="text-2xl sm:text-3xl font-black tracking-tight text-white my-2.5 relative z-10 drop-shadow-sm" id="bal">
         Rp 0
       </div>
 
       <!-- Grid Ringkasan Pemasukan & Pengeluaran Bulan Berjalan -->
       <div class="grid grid-cols-2 gap-2 relative z-10 pt-0.5">
-        <!-- Mini Pemasukan -->
-        <div class="bg-white/10 backdrop-blur-md border border-white/15 rounded-2xl p-2.5 flex flex-col">
-          <span class="text-[9.5px] font-extrabold text-[#6df0b4] flex items-center gap-1">
+        <!-- Mini Pemasukan (Aqua Jade) -->
+        <div class="bg-[#0B1026]/75 backdrop-blur-md border border-[#74FFED]/30 rounded-2xl p-2.5 flex flex-col shadow-xs">
+          <span class="text-[9.5px] font-extrabold text-[#74FFED] flex items-center gap-1">
             ↗ Pemasukan
           </span>
-          <b class="text-xs sm:text-sm font-extrabold text-[#6df0b4] truncate mt-0.5" id="hin">
+          <b class="text-xs sm:text-sm font-black text-[#74FFED] truncate mt-0.5" id="hin">
             +Rp 0
           </b>
-          <span class="text-[8.5px] text-white/60 font-medium mt-0.5">Bulan terpilih</span>
+          <span class="text-[8.5px] text-[#9AA8C7]/80 font-medium mt-0.5">Bulan terpilih</span>
         </div>
 
-        <!-- Mini Pengeluaran -->
-        <div class="bg-white/10 backdrop-blur-md border border-white/15 rounded-2xl p-2.5 flex flex-col">
-          <span class="text-[9.5px] font-extrabold text-[#ff9aa8] flex items-center gap-1">
+        <!-- Mini Pengeluaran (Baby Pink) -->
+        <div class="bg-[#0B1026]/75 backdrop-blur-md border border-[#FE51D1]/30 rounded-2xl p-2.5 flex flex-col shadow-xs">
+          <span class="text-[9.5px] font-extrabold text-[#FE51D1] flex items-center gap-1">
             ↘ Pengeluaran
           </span>
-          <b class="text-xs sm:text-sm font-extrabold text-[#ff9aa8] truncate mt-0.5" id="hout">
+          <b class="text-xs sm:text-sm font-black text-[#FE51D1] truncate mt-0.5" id="hout">
             -Rp 0
           </b>
-          <span class="text-[8.5px] text-white/60 font-medium mt-0.5">Bulan terpilih</span>
+          <span class="text-[8.5px] text-[#9AA8C7]/80 font-medium mt-0.5">Bulan terpilih</span>
         </div>
       </div>
     </section>
 
     <!-- 3. SISA SALDO KANTONG (HORIZONTAL/FLEX RAPID SLIDER) -->
-    <section class="bg-white rounded-3xl p-3.5 sm:p-4 shadow-card border border-[#eadfd3]/70 animate-up">
+    <section class="bg-[#171F44] rounded-3xl p-3.5 sm:p-4 shadow-card border border-[#263363] animate-up">
       <div class="flex items-center justify-between mb-2 px-0.5">
         <div class="flex items-center gap-1.5">
           <span class="text-sm">👝</span>
-          <h2 class="text-[11px] font-extrabold tracking-wider text-[#8a7566] uppercase">
+          <h2 class="text-[11px] font-extrabold tracking-wider text-[#9AA8C7] uppercase">
             Sisa Saldo Kantong
           </h2>
         </div>
-        <button id="wm" class="text-[10px] font-bold bg-[#f6f0e9] hover:bg-[#eadfd3] text-[#3b2417] px-2.5 py-1 rounded-full border border-[#eadfd3] transition-all flex items-center gap-1 cursor-pointer">
+        <button id="wm" class="text-[10px] font-bold bg-[#0E1430] hover:bg-[#131A3B] text-[#74FFED] px-2.5 py-1 rounded-full border border-[#74FFED]/35 transition-all flex items-center gap-1 cursor-pointer">
           <span>＋</span> <span>Kelola</span>
         </button>
       </div>
@@ -274,26 +288,26 @@
     </section>
 
     <!-- 4. REKAP FINANSIAL BULANAN (SVG DONUT CHART INTERAKTIF & ANIMASI PUTAR) -->
-    <section class="bg-white rounded-3xl p-4 sm:p-5 shadow-card border border-[#eadfd3]/70 animate-up">
+    <section class="bg-[#171F44] rounded-3xl p-4 sm:p-5 shadow-card border border-[#263363] animate-up">
       <!-- Header Rekap Bulanan -->
       <div class="flex items-center justify-between mb-3">
         <div class="flex items-center gap-1.5">
           <span class="text-sm">📊</span>
-          <h2 class="text-xs font-extrabold tracking-wider text-[#8a7566] uppercase">
+          <h2 class="text-xs font-extrabold tracking-wider text-[#9AA8C7] uppercase">
             Rekap Bulanan
           </h2>
         </div>
-        <span class="text-[10px] font-bold text-[#8a7566] bg-[#f6f0e9] px-2.5 py-1 rounded-full border border-[#eadfd3]/80">
+        <span class="text-[10px] font-bold text-[#74FFED] bg-[#0E1430] px-2.5 py-1 rounded-full border border-[#263363]">
           Grafik Proporsi
         </span>
       </div>
 
-      <!-- Segmented Tab Switch: Pengeluaran vs Pemasukan -->
-      <div id="rtab" class="grid grid-cols-2 bg-[#f6f0e9] p-1 rounded-2xl gap-1 mb-2 select-none border border-[#eadfd3]/60">
-        <button data-t="out" class="py-2 px-2.5 rounded-xl font-bold text-xs transition-all flex items-center justify-center gap-1 bg-[#3b2417] text-white shadow-xs">
+      <!-- Segmented Tab Switch: Pengeluaran (Baby Pink) vs Pemasukan (Aqua Jade) -->
+      <div id="rtab" class="grid grid-cols-2 bg-[#0E1430] p-1 rounded-2xl gap-1 mb-2 select-none border border-[#263363]">
+        <button data-t="out" class="py-2 px-2.5 rounded-xl font-black text-xs transition-all flex items-center justify-center gap-1 bg-[#FE51D1] text-[#0B1026] shadow-md shadow-[#FE51D1]/20">
           <span>💸</span> <span>Pengeluaran</span>
         </button>
-        <button data-t="in" class="py-2 px-2.5 rounded-xl font-bold text-xs transition-all flex items-center justify-center gap-1 text-[#8a7566] hover:text-[#2b1d14]">
+        <button data-t="in" class="py-2 px-2.5 rounded-xl font-bold text-xs transition-all flex items-center justify-center gap-1 text-[#9AA8C7] hover:text-white">
           <span>💰</span> <span>Pemasukan</span>
         </button>
       </div>
@@ -317,56 +331,56 @@
     </section>
 
     <!-- 5. FORM CATAT CEPAT (3 TAB: PENGELUARAN, PEMASUKAN, & TRANSFER) -->
-    <section class="bg-white rounded-3xl p-4 sm:p-5 shadow-card border border-[#eadfd3]/70 animate-up space-y-3">
+    <section class="bg-[#171F44] rounded-3xl p-4 sm:p-5 shadow-card border border-[#263363] animate-up space-y-3">
       <div class="flex items-center gap-1.5">
         <span class="text-sm">⚡</span>
-        <h2 class="text-[11px] font-extrabold tracking-wider text-[#8a7566] uppercase">
+        <h2 class="text-[11px] font-extrabold tracking-wider text-[#9AA8C7] uppercase">
           Catat Cepat
         </h2>
       </div>
 
       <!-- Tab Tipe: Pengeluaran vs Pemasukan vs Transfer -->
-      <div id="ftab" class="grid grid-cols-3 bg-[#f6f0e9] p-1 rounded-2xl gap-1 select-none border border-[#eadfd3]/60">
-        <button data-t="out" class="py-2 px-1.5 rounded-xl font-bold text-xs transition-all flex items-center justify-center gap-1 bg-[#3b2417] text-white shadow-xs min-h-[42px]">
+      <div id="ftab" class="grid grid-cols-3 bg-[#0E1430] p-1 rounded-2xl gap-1 select-none border border-[#263363]">
+        <button data-t="out" class="py-2 px-1.5 rounded-xl font-black text-xs transition-all flex items-center justify-center gap-1 bg-[#FE51D1] text-[#0B1026] shadow-md shadow-[#FE51D1]/20 min-h-[42px]">
           <span>↑</span> <span>Keluar</span>
         </button>
-        <button data-t="in" class="py-2 px-1.5 rounded-xl font-bold text-xs transition-all flex items-center justify-center gap-1 text-[#8a7566] hover:text-[#2b1d14] min-h-[42px]">
+        <button data-t="in" class="py-2 px-1.5 rounded-xl font-bold text-xs transition-all flex items-center justify-center gap-1 text-[#9AA8C7] hover:text-white min-h-[42px]">
           <span>↓</span> <span>Masuk</span>
         </button>
-        <button data-t="tf" class="py-2 px-1.5 rounded-xl font-bold text-xs transition-all flex items-center justify-center gap-1 text-[#8a7566] hover:text-[#2b1d14] min-h-[42px]">
+        <button data-t="tf" class="py-2 px-1.5 rounded-xl font-bold text-xs transition-all flex items-center justify-center gap-1 text-[#9AA8C7] hover:text-white min-h-[42px]">
           <span>⇄</span> <span>Transfer</span>
         </button>
       </div>
 
       <!-- Input Nominal Besar & Quick Chips -->
       <div class="space-y-1.5">
-        <div id="amtbox" class="flex items-center gap-2 bg-[#f6f0e9] border-2 border-transparent focus-within:border-[#6b4429] focus-within:bg-white rounded-2xl px-3.5 py-1.5 transition-all">
-          <span class="font-extrabold text-lg text-[#8a7566]">Rp</span>
+        <div id="amtbox" class="flex items-center gap-2 bg-[#0E1430] border-2 border-[#263363] focus-within:border-[#74FFED] focus-within:shadow-md focus-within:shadow-[#74FFED]/15 rounded-2xl px-3.5 py-1.5 transition-all">
+          <span class="font-black text-lg text-[#74FFED]">Rp</span>
           <input 
             id="amt" 
             type="text" 
             inputmode="numeric" 
             placeholder="0" 
             autocomplete="off"
-            class="flex-1 min-w-0 bg-transparent border-0 outline-none font-black text-2xl text-[#2b1d14] py-0.5 placeholder-[#8a7566]/40"
+            class="flex-1 min-w-0 bg-transparent border-0 outline-none font-black text-2xl text-white py-0.5 placeholder-[#9AA8C7]/30"
           >
         </div>
 
         <!-- Tombol Cepat Tambah Nominal -->
         <div id="qk" class="flex gap-1 flex-wrap">
-          <button data-v="10000" class="py-1.5 px-2.5 rounded-full bg-[#f6f0e9] hover:bg-[#eadfd3] font-bold text-[10.5px] text-[#2b1d14] border border-[#eadfd3]/60 min-h-[36px]">
+          <button data-v="10000" class="py-1.5 px-2.5 rounded-full bg-[#131A3B] hover:bg-[#1E2856] font-extrabold text-[10.5px] text-white border border-[#263363] min-h-[36px]">
             +10rb
           </button>
-          <button data-v="20000" class="py-1.5 px-2.5 rounded-full bg-[#f6f0e9] hover:bg-[#eadfd3] font-bold text-[10.5px] text-[#2b1d14] border border-[#eadfd3]/60 min-h-[36px]">
+          <button data-v="20000" class="py-1.5 px-2.5 rounded-full bg-[#131A3B] hover:bg-[#1E2856] font-extrabold text-[10.5px] text-white border border-[#263363] min-h-[36px]">
             +20rb
           </button>
-          <button data-v="50000" class="py-1.5 px-2.5 rounded-full bg-[#f6f0e9] hover:bg-[#eadfd3] font-bold text-[10.5px] text-[#2b1d14] border border-[#eadfd3]/60 min-h-[36px]">
+          <button data-v="50000" class="py-1.5 px-2.5 rounded-full bg-[#131A3B] hover:bg-[#1E2856] font-extrabold text-[10.5px] text-white border border-[#263363] min-h-[36px]">
             +50rb
           </button>
-          <button data-v="100000" class="py-1.5 px-2.5 rounded-full bg-[#f6f0e9] hover:bg-[#eadfd3] font-bold text-[10.5px] text-[#2b1d14] border border-[#eadfd3]/60 min-h-[36px]">
+          <button data-v="100000" class="py-1.5 px-2.5 rounded-full bg-[#131A3B] hover:bg-[#1E2856] font-extrabold text-[10.5px] text-white border border-[#263363] min-h-[36px]">
             +100rb
           </button>
-          <button data-v="0" class="py-1.5 px-2.5 rounded-full bg-[#f6f0e9] hover:bg-rose-100 font-bold text-[10.5px] text-rose-700 border border-[#eadfd3]/60 min-h-[36px]">
+          <button data-v="0" class="py-1.5 px-2.5 rounded-full bg-[#0E1430] hover:bg-[#FE51D1]/20 font-extrabold text-[10.5px] text-[#FE51D1] border border-[#FE51D1]/35 min-h-[36px]">
             Reset
           </button>
         </div>
@@ -374,7 +388,7 @@
 
       <!-- Pilihan Dompet Biasa (Pengeluaran & Pemasukan) -->
       <div id="singleWalletBox" class="space-y-1">
-        <label class="block text-[10px] font-extrabold text-[#8a7566] tracking-wider uppercase">
+        <label class="block text-[10px] font-extrabold text-[#9AA8C7] tracking-wider uppercase">
           Dompet
         </label>
         <div id="fw" class="flex gap-1.5 overflow-x-auto pb-1 no-scrollbar">
@@ -387,14 +401,14 @@
         <!-- Dari Dompet -->
         <div class="space-y-1">
           <div class="flex items-center justify-between">
-            <label class="block text-[10px] font-extrabold text-[#8a7566] tracking-wider uppercase">
+            <label class="block text-[10px] font-extrabold text-[#9AA8C7] tracking-wider uppercase">
               Dari Dompet (Sumber)
             </label>
             <button 
               type="button" 
               id="btnSwapWallet" 
               title="Tukar Dompet Asal & Tujuan" 
-              class="text-[10px] font-extrabold text-[#3b2417] bg-[#f6f0e9] hover:bg-[#eadfd3] px-2.5 py-1 rounded-full border border-[#eadfd3] flex items-center gap-1 transition-all active:scale-95 cursor-pointer"
+              class="text-[10px] font-extrabold text-[#74FFED] bg-[#0E1430] hover:bg-[#131A3B] px-2.5 py-1 rounded-full border border-[#74FFED]/35 flex items-center gap-1 transition-all active:scale-95 cursor-pointer"
             >
               <span>⇄</span> <span>Tukar</span>
             </button>
@@ -406,7 +420,7 @@
 
         <!-- Ke Dompet -->
         <div class="space-y-1">
-          <label class="block text-[10px] font-extrabold text-[#8a7566] tracking-wider uppercase">
+          <label class="block text-[10px] font-extrabold text-[#9AA8C7] tracking-wider uppercase">
             Ke Dompet (Tujuan)
           </label>
           <div id="fwTo" class="flex gap-1.5 overflow-x-auto pb-1 no-scrollbar">
@@ -417,7 +431,7 @@
 
       <!-- Pilihan Kategori (Khusus Pengeluaran & Pemasukan) -->
       <div id="categoryBox" class="space-y-1">
-        <label class="block text-[10px] font-extrabold text-[#8a7566] tracking-wider uppercase">
+        <label class="block text-[10px] font-extrabold text-[#9AA8C7] tracking-wider uppercase">
           Kategori
         </label>
         <div id="fc" class="grid grid-cols-3 gap-1.5">
@@ -428,83 +442,83 @@
       <!-- Tanggal & Catatan Opsional (Side-by-side 2 Kolom di HP) -->
       <div class="grid grid-cols-2 gap-2 pt-0.5">
         <div>
-          <label class="block text-[10px] font-extrabold text-[#8a7566] tracking-wider uppercase mb-1">
+          <label class="block text-[10px] font-extrabold text-[#9AA8C7] tracking-wider uppercase mb-1">
             Tanggal
           </label>
           <input 
             type="date" 
             id="fd" 
-            class="w-full bg-[#f6f0e9] border border-transparent focus:border-[#6b4429] focus:bg-white rounded-xl p-2 font-semibold text-xs text-[#2b1d14] outline-none min-h-[42px] transition-all"
+            class="w-full bg-[#0E1430] border border-[#263363] focus:border-[#74FFED] rounded-xl p-2 font-semibold text-xs text-white outline-none min-h-[42px] transition-all"
           >
         </div>
         <div>
-          <label class="block text-[10px] font-extrabold text-[#8a7566] tracking-wider uppercase mb-1">
+          <label class="block text-[10px] font-extrabold text-[#9AA8C7] tracking-wider uppercase mb-1">
             Catatan
           </label>
           <input 
             type="text" 
             id="fn" 
             placeholder="cth: Soto / Kirim" 
-            class="w-full bg-[#f6f0e9] border border-transparent focus:border-[#6b4429] focus:bg-white rounded-xl p-2 font-semibold text-xs text-[#2b1d14] outline-none min-h-[42px] transition-all placeholder-[#8a7566]/60"
+            class="w-full bg-[#0E1430] border border-[#263363] focus:border-[#74FFED] rounded-xl p-2 font-semibold text-xs text-white outline-none min-h-[42px] transition-all placeholder-[#9AA8C7]/40"
           >
         </div>
       </div>
 
-      <!-- CTA Tombol Simpan -->
+      <!-- CTA Tombol Simpan (Start Hiring Today Style: Baby Pink Bold!) -->
       <button 
         id="save" 
-        class="w-full py-3.5 px-4 rounded-xl bg-[#3b2417] hover:bg-[#2b180e] active:scale-[0.98] text-white font-extrabold text-xs tracking-wider shadow-sm transition-all flex items-center justify-center gap-1 cursor-pointer mt-1 min-h-[46px]"
+        class="w-full py-3.5 px-4 rounded-xl bg-[#FE51D1] hover:bg-[#e640bd] active:scale-[0.98] text-[#0B1026] font-black text-xs tracking-wider shadow-lg shadow-[#FE51D1]/25 transition-all flex items-center justify-center gap-1 cursor-pointer mt-1 min-h-[46px]"
       >
         ＋ Simpan Pengeluaran
       </button>
     </section>
 
     <!-- 6. RIWAYAT TRANSAKSI HARIAN (PADAT, RINGKAS & ERGONOMIS) -->
-    <section class="bg-white rounded-3xl p-4 sm:p-5 shadow-card border border-[#eadfd3]/70 animate-up space-y-2.5">
+    <section class="bg-[#171F44] rounded-3xl p-4 sm:p-5 shadow-card border border-[#263363] animate-up space-y-2.5">
       <div class="flex items-center justify-between">
         <div class="flex items-center gap-1.5">
           <span class="text-sm">🗓️</span>
-          <h2 class="text-[11px] font-extrabold tracking-wider text-[#8a7566] uppercase">
+          <h2 class="text-[11px] font-extrabold tracking-wider text-[#9AA8C7] uppercase">
             Riwayat Harian
           </h2>
         </div>
-        <span id="cnt" class="text-[10px] font-bold bg-[#f6f0e9] text-[#3b2417] px-2 py-0.5 rounded-full border border-[#eadfd3]">
+        <span id="cnt" class="text-[10px] font-bold bg-[#0E1430] text-[#74FFED] px-2 py-0.5 rounded-full border border-[#263363]">
           0 Transaksi
         </span>
       </div>
 
       <!-- Bar Navigasi Tanggal Harian + Date Picker Tersembunyi -->
-      <div class="flex items-center bg-[#f6f0e9] rounded-2xl p-0.5 border border-[#eadfd3]/60">
-        <button id="dp" title="Hari Sebelumnya" class="w-8 h-8 rounded-xl flex items-center justify-center text-base hover:bg-[#eadfd3] text-[#3b2417]">
+      <div class="flex items-center bg-[#0E1430] rounded-2xl p-0.5 border border-[#263363]">
+        <button id="dp" title="Hari Sebelumnya" class="w-8 h-8 rounded-xl flex items-center justify-center text-base hover:bg-[#131A3B] text-[#74FFED]">
           ‹
         </button>
         <label id="dl" class="flex-1 text-center font-bold text-xs relative cursor-pointer py-1.5 px-1">
-          <span id="dt" class="text-[#2b1d14] font-extrabold text-[11px] block truncate">-</span>
+          <span id="dt" class="text-white font-extrabold text-[11px] block truncate">-</span>
           <input type="date" id="dpick" class="absolute inset-0 opacity-0 w-full h-full cursor-pointer">
         </label>
-        <button id="dn" title="Hari Berikutnya" class="w-8 h-8 rounded-xl flex items-center justify-center text-base hover:bg-[#eadfd3] text-[#3b2417]">
+        <button id="dn" title="Hari Berikutnya" class="w-8 h-8 rounded-xl flex items-center justify-center text-base hover:bg-[#131A3B] text-[#74FFED]">
           ›
         </button>
       </div>
 
-      <!-- Total Transaksi Harian (Keluar & Masuk - Tanpa Transfer) -->
-      <div class="flex justify-between items-center text-[10.5px] font-bold px-1 py-0.5 border-b border-[#f6f0e9]">
-        <span id="so" class="text-[#d6455a] font-extrabold truncate pr-1">● Keluar: -Rp 0</span>
-        <span id="si" class="text-[#0f8a5f] font-extrabold truncate pl-1">● Masuk: +Rp 0</span>
+      <!-- Total Transaksi Harian (Keluar: Baby Pink, Masuk: Aqua Jade) -->
+      <div class="flex justify-between items-center text-[10.5px] font-bold px-1 py-0.5 border-b border-[#263363]/60">
+        <span id="so" class="text-[#FE51D1] font-extrabold truncate pr-1">● Keluar: -Rp 0</span>
+        <span id="si" class="text-[#74FFED] font-extrabold truncate pl-1">● Masuk: +Rp 0</span>
       </div>
 
       <!-- Filter Tabs: Semua | Keluar | Masuk | Transfer -->
-      <div id="hf" class="grid grid-cols-4 bg-[#f6f0e9] p-0.5 rounded-xl gap-1 select-none border border-[#eadfd3]/60 text-xs">
-        <button data-f="all" class="py-1.5 px-1 rounded-lg font-bold text-[10.5px] transition-all text-center bg-[#3b2417] text-white shadow-xs">
+      <div id="hf" class="grid grid-cols-4 bg-[#0E1430] p-0.5 rounded-xl gap-1 select-none border border-[#263363] text-xs">
+        <button data-f="all" class="py-1.5 px-1 rounded-lg font-black text-[10.5px] transition-all text-center bg-[#74FFED] text-[#0B1026] shadow-xs">
           Semua
         </button>
-        <button data-f="out" class="py-1.5 px-1 rounded-lg font-bold text-[10.5px] transition-all text-center text-[#8a7566] hover:text-[#2b1d14]">
+        <button data-f="out" class="py-1.5 px-1 rounded-lg font-bold text-[10.5px] transition-all text-center text-[#9AA8C7] hover:text-white">
           Keluar
         </button>
-        <button data-f="in" class="py-1.5 px-1 rounded-lg font-bold text-[10.5px] transition-all text-center text-[#8a7566] hover:text-[#2b1d14]">
+        <button data-f="in" class="py-1.5 px-1 rounded-lg font-bold text-[10.5px] transition-all text-center text-[#9AA8C7] hover:text-white">
           Masuk
         </button>
-        <button data-f="tf" class="py-1.5 px-1 rounded-lg font-bold text-[10.5px] transition-all text-center text-[#8a7566] hover:text-[#2b1d14]">
+        <button data-f="tf" class="py-1.5 px-1 rounded-lg font-bold text-[10.5px] transition-all text-center text-[#9AA8C7] hover:text-white">
           Transfer
         </button>
       </div>
@@ -515,13 +529,13 @@
       </div>
     </section>
 
-    <!-- 7. TREN BULANAN (BAR CHART SVG BERKELOMPOK 6 BULAN - COLLAPSIBLE) -->
-    <section id="trendCard" class="bg-white rounded-3xl p-3.5 sm:p-4 shadow-card border border-[#eadfd3]/70 animate-up transition-all">
+    <!-- 7. TREN BULANAN (BAR CHART SVG BERKELOMPOK 6 BULAN - COLLAPSIBLE DI BAWAH) -->
+    <section id="trendCard" class="bg-[#171F44] rounded-3xl p-3.5 sm:p-4 shadow-card border border-[#263363] animate-up transition-all">
       <!-- Header Kartu Tren (Klik-able untuk Toggle Ciutkan/Buka) -->
       <div id="trendHeader" class="flex items-center justify-between cursor-pointer select-none">
         <div class="flex items-center gap-1.5">
           <span class="text-sm">📈</span>
-          <h2 class="text-xs font-extrabold tracking-wider text-[#8a7566] uppercase">
+          <h2 class="text-xs font-extrabold tracking-wider text-[#9AA8C7] uppercase">
             Tren 6 Bulan
           </h2>
         </div>
@@ -532,7 +546,7 @@
             type="button" 
             id="btnToggleTrend" 
             aria-expanded="false" 
-            class="inline-flex items-center gap-1 py-1 px-2.5 rounded-full bg-[#f6f0e9] hover:bg-[#eadfd3] text-[#3b2417] text-[10.5px] font-extrabold border border-[#eadfd3] transition-all cursor-pointer active:scale-95"
+            class="inline-flex items-center gap-1 py-1 px-2.5 rounded-full bg-[#0E1430] hover:bg-[#131A3B] text-[#74FFED] text-[10.5px] font-extrabold border border-[#74FFED]/35 transition-all cursor-pointer active:scale-95"
           >
             <span id="trendToggleText">Buka</span>
             <svg id="trendChevron" class="w-3.5 h-3.5 transform transition-transform duration-300" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
@@ -552,19 +566,19 @@
               <!-- Diisi secara dinamis oleh JavaScript -->
             </div>
 
-            <!-- Legenda Mini -->
+            <!-- Legenda Mini: Aqua Jade (Masuk) & Baby Pink (Keluar) -->
             <div class="flex items-center gap-1.5 text-[9.5px] font-bold shrink-0 px-0.5">
-              <span class="inline-flex items-center gap-1 text-[#0f8a5f]">
-                <span class="w-2 h-2 rounded-full bg-[#0f8a5f]"></span> Masuk
+              <span class="inline-flex items-center gap-1 text-[#74FFED]">
+                <span class="w-2 h-2 rounded-full bg-[#74FFED]"></span> Masuk
               </span>
-              <span class="inline-flex items-center gap-1 text-[#d6455a]">
-                <span class="w-2 h-2 rounded-full bg-[#d6455a]"></span> Keluar
+              <span class="inline-flex items-center gap-1 text-[#FE51D1]">
+                <span class="w-2 h-2 rounded-full bg-[#FE51D1]"></span> Keluar
               </span>
             </div>
           </div>
 
           <!-- Detail Tooltip Interaktif untuk Bulan yang Disorot (Compact Spacing py-1) -->
-          <div id="trendTooltip" class="bg-[#f6f0e9] py-1 px-2.5 rounded-xl border border-[#eadfd3]/80 flex items-center justify-between text-[10.5px] font-extrabold transition-all select-none">
+          <div id="trendTooltip" class="bg-[#0E1430] py-1 px-2.5 rounded-xl border border-[#263363] flex items-center justify-between text-[10.5px] font-extrabold transition-all select-none">
             <!-- Diisi secara dinamis oleh JavaScript -->
           </div>
 
@@ -581,15 +595,15 @@
   </main>
 
   <!-- 8. MODAL BOTTOM SHEET: KELOLA DOMPET DINAMIS -->
-  <div id="ov" class="fixed inset-0 bg-[#140a05]/50 backdrop-blur-xs opacity-0 pointer-events-none transition-opacity duration-300 z-50 flex items-end justify-center">
-    <div class="bg-white w-full max-w-md rounded-t-3xl p-4 pb-7 shadow-sheet transform translate-y-full transition-transform duration-300 ease-out max-h-[85vh] overflow-y-auto custom-scroll">
-      <div class="w-9 h-1 rounded-full bg-[#eadfd3] mx-auto mb-3"></div>
+  <div id="ov" class="fixed inset-0 bg-[#050814]/75 backdrop-blur-sm opacity-0 pointer-events-none transition-opacity duration-300 z-50 flex items-end justify-center">
+    <div class="bg-[#171F44] w-full max-w-md rounded-t-3xl p-4 pb-7 shadow-sheet border-t border-[#263363] transform translate-y-full transition-transform duration-300 ease-out max-h-[85vh] overflow-y-auto custom-scroll text-white">
+      <div class="w-9 h-1 rounded-full bg-[#2D3C75] mx-auto mb-3"></div>
       
       <div class="flex items-center justify-between mb-3">
-        <h3 class="text-xs font-extrabold text-[#2b1d14] uppercase tracking-wider">
+        <h3 class="text-xs font-extrabold text-white uppercase tracking-wider">
           Kelola Kantong Dompet
         </h3>
-        <button onclick="closeWalletSheet()" class="w-6 h-6 rounded-full bg-[#f6f0e9] text-[#8a7566] hover:text-[#2b1d14] flex items-center justify-center font-bold text-xs cursor-pointer">
+        <button onclick="closeWalletSheet()" class="w-6 h-6 rounded-full bg-[#0E1430] text-[#9AA8C7] hover:text-white flex items-center justify-center font-bold text-xs cursor-pointer">
           ✕
         </button>
       </div>
@@ -600,8 +614,8 @@
       </div>
 
       <!-- Form Tambah Dompet Baru -->
-      <div class="p-3 bg-[#f6f0e9] rounded-2xl border border-[#eadfd3]/80 space-y-2">
-        <span class="block text-[10px] font-extrabold text-[#8a7566] uppercase tracking-wider">
+      <div class="p-3 bg-[#0E1430] rounded-2xl border border-[#263363] space-y-2">
+        <span class="block text-[10px] font-extrabold text-[#9AA8C7] uppercase tracking-wider">
           Tambah Dompet Baru
         </span>
         <div class="grid grid-cols-[54px_1fr] gap-1.5">
@@ -611,18 +625,18 @@
             value="💳" 
             maxlength="2"
             title="Emoji Dompet"
-            class="w-full bg-white border border-[#eadfd3] rounded-xl p-2 text-center text-base outline-none"
+            class="w-full bg-[#131A3B] border border-[#263363] focus:border-[#74FFED] text-white rounded-xl p-2 text-center text-base outline-none"
           >
           <input 
             type="text" 
             id="wn" 
             placeholder="Nama dompet (cth: Dana)" 
-            class="w-full bg-white border border-[#eadfd3] rounded-xl p-2 text-xs font-semibold text-[#2b1d14] outline-none placeholder-[#8a7566]/60"
+            class="w-full bg-[#131A3B] border border-[#263363] focus:border-[#74FFED] text-white rounded-xl p-2 text-xs font-semibold outline-none placeholder-[#9AA8C7]/50"
           >
         </div>
         <button 
           id="wadd" 
-          class="w-full py-2.5 rounded-xl bg-[#3b2417] hover:bg-[#2b180e] text-white font-extrabold text-xs shadow-xs transition-all cursor-pointer min-h-[42px]"
+          class="w-full py-2.5 rounded-xl bg-[#FE51D1] hover:bg-[#e640bd] text-[#0B1026] font-black text-xs shadow-md shadow-[#FE51D1]/20 transition-all cursor-pointer min-h-[42px]"
         >
           ＋ Tambah Dompet
         </button>
@@ -631,7 +645,7 @@
   </div>
 
   <!-- 9. TOAST NOTIFICATION -->
-  <div id="toast" class="fixed left-1/2 bottom-6 -translate-x-1/2 translate-y-16 bg-[#3b2417] text-white px-4 py-2 rounded-full font-bold text-xs shadow-md transition-all duration-300 z-50 opacity-0 pointer-events-none">
+  <div id="toast" class="fixed left-1/2 bottom-6 -translate-x-1/2 translate-y-16 bg-[#171F44] border border-[#74FFED]/60 text-white px-4 py-2 rounded-full font-bold text-xs shadow-xl shadow-[#74FFED]/20 transition-all duration-300 z-50 opacity-0 pointer-events-none">
     Pesan
   </div>
 
@@ -678,16 +692,16 @@
       ]
     };
 
-    // Palet Warna Earth-Tone Harmonik untuk Donut Chart
+    // Palet Warna Cyber-Fintech (Aqua Jade, Baby Pink, Midnight Highlights)
     const COL = [
-      '#3b2417', // Espresso Tua
-      '#a0653a', // Caramel Cokelat
-      '#d9a066', // Golden Almond
-      '#7a8f5c', // Olive Sage
-      '#c2575f', // Terracotta Warm
-      '#8c7b9b', // Slate Lavender
-      '#5c6470', // Roasted Slate
-      '#b85d6b'  // Dusty Rose
+      '#74FFED', // Aqua Jade
+      '#FE51D1', // Baby Pink
+      '#38BDF8', // Electric Sky Blue
+      '#A78BFA', // Soft Violet
+      '#FBBF24', // Amber Gold
+      '#F472B6', // Neon Rose
+      '#34D399', // Mint Emerald
+      '#818CF8'  // Indigo Glow
     ];
 
     const MON = [
@@ -751,7 +765,7 @@
     }
 
     /* ==========================================================================
-       STATE & LOCALSTORAGE MANAGEMENT (BACKWARD COMPATIBLE)
+       STATE & LOCALSTORAGE MANAGEMENT (BACKWARD COMPATIBLE + REPAIR)
        ========================================================================== */
     const STORAGE_KEY_V2 = 'dompetku2';
 
@@ -801,7 +815,7 @@
       return next;
     }
 
-    // Auto-Repair & Deduplikasi ID Dompet (Mencegah & Memperbaiki Bug ID Kembar pada Dompet Baru)
+    // Auto-Repair & Deduplikasi ID Dompet
     function repairWalletsAndIds() {
       if (!Array.isArray(S.wallets) || S.wallets.length === 0) {
         S.wallets = [
@@ -835,7 +849,6 @@
         const id = Number(w.id);
         if (!id || isNaN(id) || id <= 0 || seen.has(id)) {
           max++;
-          console.warn(`[Auto-Repair] Memperbaiki ID dompet ganda/invalid "${w.n}": semula ${w.id} -> kini ${max}`);
           w.id = max;
           seen.add(w.id);
           modified = true;
@@ -858,11 +871,9 @@
     // Validasi Pemilihan Dompet pada Form Catat Cepat & Transfer
     function validateFormWallets() {
       if (!Array.isArray(S.wallets) || S.wallets.length === 0) return;
-      // Pastikan V.fw selalu ada di daftar dompet yang tersedia
       if (!S.wallets.some(w => w.id === V.fw)) {
         V.fw = S.wallets[0].id;
       }
-      // Pastikan V.fw2 selalu ada di daftar dompet yang tersedia dan berbeda dari V.fw jika dompet >= 2
       if (S.wallets.length > 1) {
         if (!S.wallets.some(w => w.id === V.fw2) || V.fw2 === V.fw) {
           const alt = S.wallets.find(w => w.id !== V.fw);
@@ -894,7 +905,6 @@
       console.warn('Gagal membaca LocalStorage:', err);
     }
 
-    // Perbaiki ID dompet jika ada bentrok atau duplikasi
     repairWalletsAndIds();
 
     // View State (UI Controls)
@@ -935,9 +945,16 @@
       $$(containerSelector + ' button').forEach(btn => {
         const active = predicate(btn);
         if (active) {
-          btn.className = 'py-2 px-1.5 rounded-xl font-bold text-xs transition-all flex items-center justify-center gap-1 bg-[#3b2417] text-white shadow-xs min-h-[42px]';
+          const type = btn.dataset.t;
+          if (type === 'in') {
+            btn.className = 'py-2 px-1.5 rounded-xl font-black text-xs transition-all flex items-center justify-center gap-1 bg-[#74FFED] text-[#0B1026] shadow-md shadow-[#74FFED]/20 min-h-[42px]';
+          } else if (type === 'out') {
+            btn.className = 'py-2 px-1.5 rounded-xl font-black text-xs transition-all flex items-center justify-center gap-1 bg-[#FE51D1] text-[#0B1026] shadow-md shadow-[#FE51D1]/20 min-h-[42px]';
+          } else {
+            btn.className = 'py-2 px-1.5 rounded-xl font-black text-xs transition-all flex items-center justify-center gap-1 bg-gradient-to-r from-[#FE51D1] to-[#74FFED] text-[#0B1026] shadow-md min-h-[42px]';
+          }
         } else {
-          btn.className = 'py-2 px-1.5 rounded-xl font-bold text-xs transition-all flex items-center justify-center gap-1 text-[#8a7566] hover:text-[#2b1d14] min-h-[42px]';
+          btn.className = 'py-2 px-1.5 rounded-xl font-bold text-xs transition-all flex items-center justify-center gap-1 text-[#9AA8C7] hover:text-white min-h-[42px]';
         }
       });
     };
@@ -952,7 +969,7 @@
       
       $('#ml').textContent = `${monthName} ${year}`;
 
-      // Hitung Saldo Keseluruhan Sepanjang Waktu (Transfer netral, tidak mengubah total saldo)
+      // Hitung Saldo Keseluruhan Sepanjang Waktu
       const totalMasukAll = sum(S.tx.filter(x => x.t === 'in'));
       const totalKeluarAll = sum(S.tx.filter(x => x.t === 'out'));
       const netSaldo = totalMasukAll - totalKeluarAll;
@@ -960,7 +977,7 @@
       animateCountUp($('#bal'), animPrev.bal, netSaldo, 600, v => (v < 0 ? '-' : '') + rp(Math.abs(v)));
       animPrev.bal = netSaldo;
 
-      // Hitung Pemasukan & Pengeluaran Bulan Berjalan (Transfer dieksklusikan)
+      // Hitung Pemasukan & Pengeluaran Bulan Berjalan
       const inMonth = sum(monthTx('in'));
       const outMonth = sum(monthTx('out'));
 
@@ -999,10 +1016,10 @@
 
     function renderTrend() {
       const months = get6MonthsData();
-      const currentMonthData = months[5]; // Bulan aktif
-      const prevMonthData = months[4];    // 1 Bulan sebelum aktif
+      const currentMonthData = months[5];
+      const prevMonthData = months[4];
 
-      // 1. Render Banner Insight Tren (Compact Spacing py-1)
+      // 1. Render Banner Insight Tren
       const insightEl = $('#trendInsight');
       if (prevMonthData && prevMonthData.outAmt > 0) {
         const currOut = currentMonthData.outAmt;
@@ -1011,7 +1028,7 @@
         const pct = Math.round((Math.abs(diff) / prevOut) * 100);
 
         if (diff > 0) {
-          insightEl.className = 'flex-1 py-1 px-2.5 rounded-xl border transition-all text-[10.5px] font-bold flex items-center gap-1.5 bg-rose-50 text-rose-700 border-rose-200 truncate';
+          insightEl.className = 'flex-1 py-1 px-2.5 rounded-xl border transition-all text-[10.5px] font-bold flex items-center gap-1.5 bg-[#FE51D1]/15 text-[#FE51D1] border-[#FE51D1]/30 truncate';
           insightEl.innerHTML = `
             <span class="text-xs shrink-0">↗</span>
             <div class="truncate">
@@ -1019,7 +1036,7 @@
             </div>
           `;
         } else if (diff < 0) {
-          insightEl.className = 'flex-1 py-1 px-2.5 rounded-xl border transition-all text-[10.5px] font-bold flex items-center gap-1.5 bg-emerald-50 text-emerald-800 border-emerald-200 truncate';
+          insightEl.className = 'flex-1 py-1 px-2.5 rounded-xl border transition-all text-[10.5px] font-bold flex items-center gap-1.5 bg-[#74FFED]/15 text-[#74FFED] border-[#74FFED]/30 truncate';
           insightEl.innerHTML = `
             <span class="text-xs shrink-0">↘</span>
             <div class="truncate">
@@ -1027,14 +1044,14 @@
             </div>
           `;
         } else {
-          insightEl.className = 'flex-1 py-1 px-2.5 rounded-xl border transition-all text-[10.5px] font-bold flex items-center gap-1.5 bg-[#f6f0e9] text-[#3b2417] border-[#eadfd3] truncate';
+          insightEl.className = 'flex-1 py-1 px-2.5 rounded-xl border transition-all text-[10.5px] font-bold flex items-center gap-1.5 bg-[#0E1430] text-[#9AA8C7] border-[#263363] truncate';
           insightEl.innerHTML = `
             <span class="text-xs shrink-0">↔</span>
             <div class="truncate">Pengeluaran sama persis vs bulan lalu</div>
           `;
         }
       } else {
-        insightEl.className = 'flex-1 py-1 px-2.5 rounded-xl border transition-all text-[10.5px] font-bold flex items-center gap-1.5 bg-[#f6f0e9] text-[#8a7566] border-[#eadfd3] truncate';
+        insightEl.className = 'flex-1 py-1 px-2.5 rounded-xl border transition-all text-[10.5px] font-bold flex items-center gap-1.5 bg-[#0E1430] text-[#9AA8C7] border-[#263363] truncate';
         insightEl.innerHTML = `
           <span class="text-xs shrink-0">🌱</span>
           <div class="truncate">Belum ada data pembanding bulan lalu</div>
@@ -1044,16 +1061,16 @@
       // 2. Render Detail Tooltip Aktif
       updateTrendTooltip(V.month);
 
-      // 3. Render SVG Bar Chart Berkelompok (Custom SVG - Bantet & Compact)
+      // 3. Render SVG Bar Chart Berkelompok (Aqua Jade & Baby Pink)
       const maxVal = Math.max(1000, ...months.map(m => Math.max(m.inAmt, m.outAmt)));
       const baselineY = 76;
       let svgHtml = '';
 
       // Grid Guidelines Muted
       svgHtml += `
-        <line x1="12" y1="16" x2="328" y2="16" stroke="#eadfd3" stroke-width="1" stroke-dasharray="3 3" />
-        <line x1="12" y1="46" x2="328" y2="46" stroke="#eadfd3" stroke-width="1" stroke-dasharray="3 3" />
-        <line x1="12" y1="${baselineY}" x2="328" y2="${baselineY}" stroke="#eadfd3" stroke-width="1.2" />
+        <line x1="12" y1="16" x2="328" y2="16" stroke="#263363" stroke-width="1" stroke-dasharray="3 3" />
+        <line x1="12" y1="46" x2="328" y2="46" stroke="#263363" stroke-width="1" stroke-dasharray="3 3" />
+        <line x1="12" y1="${baselineY}" x2="328" y2="${baselineY}" stroke="#263363" stroke-width="1.2" />
       `;
 
       // 6 Grup Batang
@@ -1070,44 +1087,43 @@
         const yOut = baselineY - hOut;
         const xOut = groupCenterX + 1;
 
-        const opacity = m.isSelected ? 1 : 0.38;
+        const opacity = m.isSelected ? 1 : 0.35;
 
         svgHtml += `
           <g data-m="${m.isoMonth}" class="cursor-pointer group" opacity="${opacity}">
             <title>${m.fullLabel}: Masuk ${rp(m.inAmt)} | Keluar ${rp(m.outAmt)}</title>
-            <!-- Invisible Touch Target Area -->
             <rect x="${groupCenterX - 24}" y="6" width="48" height="96" fill="transparent" />
 
-            <!-- Batang Pemasukan (Hijau) -->
+            <!-- Batang Pemasukan (Aqua Jade #74FFED) -->
             <rect 
               x="${xIn.toFixed(1)}" 
               y="${yIn}" 
               width="${barW}" 
               height="${hIn}" 
               rx="${rx}" 
-              fill="#0f8a5f" 
+              fill="#74FFED" 
               class="bar-rect"
             />
 
-            <!-- Batang Pengeluaran (Merah Terracotta) -->
+            <!-- Batang Pengeluaran (Baby Pink #FE51D1) -->
             <rect 
               x="${xOut.toFixed(1)}" 
               y="${yOut}" 
               width="${barW}" 
               height="${hOut}" 
               rx="${rx}" 
-              fill="#d6455a" 
+              fill="#FE51D1" 
               class="bar-rect"
             />
 
             <!-- Label Bulan di Bawah Batang -->
             ${m.isSelected ? `
-              <rect x="${(groupCenterX - 16).toFixed(1)}" y="81" width="32" height="16" rx="8" fill="#3b2417" />
-              <text x="${groupCenterX.toFixed(1)}" y="93" text-anchor="middle" fill="#ffffff" font-size="9" font-weight="800">
+              <rect x="${(groupCenterX - 16).toFixed(1)}" y="81" width="32" height="16" rx="8" fill="#FE51D1" />
+              <text x="${groupCenterX.toFixed(1)}" y="93" text-anchor="middle" fill="#0B1026" font-size="9" font-weight="900">
                 ${m.shortName}
               </text>
             ` : `
-              <text x="${groupCenterX.toFixed(1)}" y="93" text-anchor="middle" fill="#8a7566" font-size="9" font-weight="700">
+              <text x="${groupCenterX.toFixed(1)}" y="93" text-anchor="middle" fill="#9AA8C7" font-size="9" font-weight="700">
                 ${m.shortName}
               </text>
             `}
@@ -1127,13 +1143,13 @@
       const ttEl = $('#trendTooltip');
       if (!ttEl) return;
       ttEl.innerHTML = `
-        <span class="text-[#2b1d14] flex items-center gap-1.5 truncate">
+        <span class="text-white flex items-center gap-1.5 truncate">
           <span>🗓️</span> <span>${monthName} ${y}</span>
-          ${isoMonth === V.month ? '<span class="text-[8.5px] bg-[#3b2417] text-white px-1.5 py-0.2 rounded-full font-extrabold ml-0.5">Aktif</span>' : ''}
+          ${isoMonth === V.month ? '<span class="text-[8.5px] bg-[#FE51D1] text-[#0B1026] px-1.5 py-0.2 rounded-full font-black ml-0.5">Aktif</span>' : ''}
         </span>
         <span class="flex items-center gap-2 text-[10.5px] font-extrabold shrink-0">
-          <span class="text-[#0f8a5f]">+${rp(inAmt)}</span>
-          <span class="text-[#d6455a]">-${rp(outAmt)}</span>
+          <span class="text-[#74FFED]">+${rp(inAmt)}</span>
+          <span class="text-[#FE51D1]">-${rp(outAmt)}</span>
         </span>
       `;
     }
@@ -1184,7 +1200,7 @@
     };
 
     /* ==========================================================================
-       3. RENDER REKAP BULANAN & INTERACTIVE SVG DONUT CHART (ANIMASI LINGKARAN)
+       3. RENDER REKAP BULANAN & INTERACTIVE SVG DONUT CHART
        ========================================================================== */
     function getCategoryGroups() {
       const map = {};
@@ -1206,14 +1222,14 @@
       let accumulated = 0;
       let svgHtml = '';
 
-      // Background Track Circle
+      // Background Track Circle (Deep Navy well)
       svgHtml += `
         <circle 
           cx="100" 
           cy="100" 
           r="${R}" 
           fill="none" 
-          stroke="#f6f0e9" 
+          stroke="#0E1430" 
           stroke-width="26" 
           style="cursor: default"
         />
@@ -1226,10 +1242,9 @@
           const isSelected = V.sel === item.c;
           const color = COL[idx % COL.length];
           const strokeWidth = isSelected ? 34 : 26;
-          const opacity = V.sel && !isSelected ? 0.35 : 1;
+          const opacity = V.sel && !isSelected ? 0.28 : 1;
           const targetDash = Math.max(sliceLen - gap, 0);
 
-          // Jika shouldAnimateDonut aktif, mulai dari dash 0 lalu transisikan
           const initialDash = shouldAnimateDonut ? 0 : targetDash;
           const inlineTransition = shouldAnimateDonut 
             ? 'transition: none;' 
@@ -1260,7 +1275,6 @@
 
       $('#svg').innerHTML = svgHtml;
 
-      // Jalankan animasi putar/tergambar lingkaran jika dipicu
       const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
       if (shouldAnimateDonut && !prefersReduced && groups.length > 0) {
         requestAnimationFrame(() => {
@@ -1283,23 +1297,23 @@
         ctrEl.innerHTML = `
           <div class="animate-pop flex flex-col items-center">
             <span class="text-2xl leading-none mb-0.5">${icoOf(V.rt, selectedItem.c)}</span>
-            <span class="text-[9.5px] font-extrabold text-[#8a7566] uppercase tracking-wider max-w-[100px] truncate">${escapeHtml(selectedItem.c)}</span>
-            <span id="ctrNominal" class="text-base sm:text-lg font-black text-[#2b1d14] tracking-tight leading-tight my-0.5">
+            <span class="text-[9.5px] font-extrabold text-[#9AA8C7] uppercase tracking-wider max-w-[100px] truncate">${escapeHtml(selectedItem.c)}</span>
+            <span id="ctrNominal" class="text-base sm:text-lg font-black text-white tracking-tight leading-tight my-0.5">
               ${rp(animPrev.ctr)}
             </span>
-            <span class="text-[9.5px] font-extrabold text-[#3b2417] bg-[#f6f0e9] px-2 py-0.5 rounded-full border border-[#eadfd3]">${percent}%</span>
+            <span class="text-[9.5px] font-black text-[#FE51D1] bg-[#FE51D1]/15 px-2 py-0.5 rounded-full border border-[#FE51D1]/30">${percent}%</span>
           </div>
         `;
       } else {
         ctrEl.innerHTML = `
           <div class="animate-pop flex flex-col items-center">
-            <span class="text-[9.5px] font-extrabold text-[#8a7566] uppercase tracking-wider">
+            <span class="text-[9.5px] font-extrabold text-[#9AA8C7] uppercase tracking-wider">
               Total ${V.rt === 'out' ? 'Keluar' : 'Masuk'}
             </span>
-            <span id="ctrNominal" class="text-base sm:text-lg font-black text-[#2b1d14] tracking-tight leading-tight my-0.5 max-w-[115px] truncate">
+            <span id="ctrNominal" class="text-base sm:text-lg font-black text-white tracking-tight leading-tight my-0.5 max-w-[115px] truncate">
               ${rp(animPrev.ctr)}
             </span>
-            <span class="text-[9px] font-extrabold text-[#3b2417] bg-[#f6f0e9] px-2 py-0.5 rounded-full border border-[#eadfd3]">
+            <span class="text-[9px] font-extrabold text-[#74FFED] bg-[#74FFED]/15 px-2 py-0.5 rounded-full border border-[#74FFED]/30">
               ${groups.length} Kategori
             </span>
           </div>
@@ -1313,7 +1327,7 @@
       const legendEl = $('#donutLegend');
       if (groups.length === 0 || total <= 0) {
         legendEl.innerHTML = `
-          <div class="text-[11px] text-[#8a7566] font-semibold text-center py-1">
+          <div class="text-[11px] text-[#9AA8C7] font-semibold text-center py-1">
             Belum ada transaksi di bulan ini 🌱
           </div>
         `;
@@ -1327,12 +1341,12 @@
             <button 
               type="button" 
               data-c="${escapeHtml(item.c)}" 
-              class="inline-flex items-center gap-1.5 py-1 px-2.5 rounded-full text-[10.5px] font-bold transition-all cursor-pointer ${isSelected ? 'bg-[#3b2417] text-white shadow-xs scale-105' : 'bg-[#f6f0e9] hover:bg-[#eadfd3] text-[#2b1d14] border border-[#eadfd3]/80'}"
+              class="inline-flex items-center gap-1.5 py-1 px-2.5 rounded-full text-[10.5px] font-extrabold transition-all cursor-pointer ${isSelected ? 'bg-[#74FFED] text-[#0B1026] shadow-sm scale-105' : 'bg-[#0E1430] hover:bg-[#131A3B] text-white border border-[#263363]'}"
             >
               <span class="w-2 h-2 rounded-full shrink-0" style="background-color: ${color}"></span>
               <span>${icoOf(V.rt, item.c)}</span>
               <span class="truncate max-w-[90px]">${escapeHtml(item.c)}</span>
-              <span class="${isSelected ? 'text-white/80' : 'text-[#8a7566]'}">${percent}%</span>
+              <span class="${isSelected ? 'text-[#0B1026]/80' : 'text-[#9AA8C7]'}">${percent}%</span>
             </button>
           `;
         }).join('');
@@ -1341,13 +1355,11 @@
 
     function toggleSelectCategory(catName) {
       V.sel = V.sel === catName ? null : catName;
-      // Jangan putar ulang lingkaran donut jika hanya highlight kategori
       shouldAnimateDonut = false;
       renderDonut();
       shouldAnimateDonut = true;
     }
 
-    // Event Listener Interaktif Donut & Mini Legend
     $('#svg').onclick = e => {
       const circle = e.target.closest('circle[data-c]');
       if (circle && circle.dataset.c) {
@@ -1373,23 +1385,23 @@
     };
 
     /* ==========================================================================
-       4. RENDER SALDO PER KANTONG / DOMPET DINAMIS (MEMPERHITUNGKAN TRANSFER)
+       4. RENDER SALDO PER KANTONG / DOMPET DINAMIS
        ========================================================================== */
     function renderWallets() {
       validateFormWallets();
 
-      // Hitung saldo dompet: Masuk + Transfer Masuk - Keluar - Transfer Keluar
+      // Hitung saldo dompet
       $('#wal').innerHTML = S.wallets.map(w => {
         const inW = sum(S.tx.filter(x => (x.w === w.id && x.t === 'in') || (x.w2 === w.id && x.t === 'tf')));
         const outW = sum(S.tx.filter(x => (x.w === w.id && x.t === 'out') || (x.w === w.id && x.t === 'tf')));
         const balW = inW - outW;
 
         return `
-          <div class="shrink-0 flex-1 min-w-[115px] p-2.5 rounded-2xl bg-[#f6f0e9] border border-[#eadfd3]/80 flex flex-col justify-between animate-pop">
-            <span class="text-[11px] font-extrabold text-[#8a7566] flex items-center gap-1 truncate">
+          <div class="shrink-0 flex-1 min-w-[115px] p-2.5 rounded-2xl bg-[#0E1430] border border-[#263363] flex flex-col justify-between animate-pop">
+            <span class="text-[11px] font-extrabold text-[#9AA8C7] flex items-center gap-1 truncate">
               <span>${w.e}</span> <span>${escapeHtml(w.n)}</span>
             </span>
-            <b class="text-xs sm:text-sm font-black text-[#2b1d14] mt-1 truncate">
+            <b class="text-xs sm:text-sm font-black text-white mt-1 truncate">
               ${balW < 0 ? '-' : ''}${rp(balW)}
             </b>
           </div>
@@ -1403,7 +1415,7 @@
           <button 
             type="button" 
             data-id="${w.id}" 
-            class="shrink-0 py-1.5 px-3 rounded-full font-bold text-xs transition-all flex items-center gap-1.5 cursor-pointer min-h-[38px] ${isSelected ? 'bg-[#3b2417] text-white shadow-xs scale-105' : 'bg-[#f6f0e9] hover:bg-[#eadfd3] text-[#2b1d14] border border-[#eadfd3]/60'}"
+            class="shrink-0 py-1.5 px-3 rounded-full font-black text-xs transition-all flex items-center gap-1.5 cursor-pointer min-h-[38px] ${isSelected ? 'bg-[#74FFED] text-[#0B1026] shadow-md shadow-[#74FFED]/20 scale-105' : 'bg-[#0E1430] hover:bg-[#131A3B] text-white border border-[#263363]'}"
           >
             <span>${w.e}</span> <span>${escapeHtml(w.n)}</span>
           </button>
@@ -1418,10 +1430,10 @@
           <button 
             type="button" 
             data-id="${w.id}" 
-            class="shrink-0 py-1.5 px-3 rounded-full font-bold text-xs transition-all flex items-center gap-1.5 cursor-pointer min-h-[38px] ${isSelected ? 'bg-[#3b2417] text-white shadow-xs scale-105' : 'bg-[#f6f0e9] hover:bg-[#eadfd3] text-[#2b1d14] border border-[#eadfd3]/60'}"
+            class="shrink-0 py-1.5 px-3 rounded-full font-black text-xs transition-all flex items-center gap-1.5 cursor-pointer min-h-[38px] ${isSelected ? 'bg-[#74FFED] text-[#0B1026] shadow-md shadow-[#74FFED]/20 scale-105' : 'bg-[#0E1430] hover:bg-[#131A3B] text-white border border-[#263363]'}"
           >
             <span>${w.e}</span> <span>${escapeHtml(w.n)}</span>
-            ${isTarget ? '<span class="text-[8.5px] font-extrabold text-amber-700 bg-amber-100 px-1 py-0.2 rounded-full">(Tujuan)</span>' : ''}
+            ${isTarget ? '<span class="text-[8.5px] font-black text-[#FE51D1] bg-[#FE51D1]/15 px-1 py-0.2 rounded-full border border-[#FE51D1]/30">(Tujuan)</span>' : ''}
           </button>
         `;
       }).join('');
@@ -1434,10 +1446,10 @@
           <button 
             type="button" 
             data-id="${w.id}" 
-            class="shrink-0 py-1.5 px-3 rounded-full font-bold text-xs transition-all flex items-center gap-1.5 cursor-pointer min-h-[38px] ${isSelected ? 'bg-[#3b2417] text-white shadow-xs scale-105' : 'bg-[#f6f0e9] hover:bg-[#eadfd3] text-[#2b1d14] border border-[#eadfd3]/60'}"
+            class="shrink-0 py-1.5 px-3 rounded-full font-black text-xs transition-all flex items-center gap-1.5 cursor-pointer min-h-[38px] ${isSelected ? 'bg-[#FE51D1] text-[#0B1026] shadow-md shadow-[#FE51D1]/20 scale-105' : 'bg-[#0E1430] hover:bg-[#131A3B] text-white border border-[#263363]'}"
           >
             <span>${w.e}</span> <span>${escapeHtml(w.n)}</span>
-            ${isSource ? '<span class="text-[8.5px] font-extrabold text-amber-700 bg-amber-100 px-1 py-0.2 rounded-full">(Asal)</span>' : ''}
+            ${isSource ? '<span class="text-[8.5px] font-black text-[#74FFED] bg-[#74FFED]/15 px-1 py-0.2 rounded-full border border-[#74FFED]/30">(Asal)</span>' : ''}
           </button>
         `;
       }).join('');
@@ -1459,7 +1471,6 @@
       if (btn) {
         const id = parseInt(btn.dataset.id, 10);
         if (id === V.fw2) {
-          // Jika menekan dompet yang sedang jadi tujuan, tukar sumber & tujuan
           const temp = V.fw;
           V.fw = V.fw2;
           V.fw2 = temp;
@@ -1477,7 +1488,6 @@
       if (btn) {
         const id = parseInt(btn.dataset.id, 10);
         if (id === V.fw) {
-          // Jika menekan dompet yang sedang jadi sumber, tukar sumber & tujuan
           const temp = V.fw;
           V.fw = V.fw2;
           V.fw2 = temp;
@@ -1499,7 +1509,7 @@
     };
 
     /* ==========================================================================
-       5. RENDER FORM CATAT CEPAT (3 TAB: PENGELUARAN, PEMASUKAN, TRANSFER)
+       5. RENDER FORM CATAT CEPAT
        ========================================================================== */
     function renderForm() {
       setTabClass('#ftab', btn => btn.dataset.t === V.ft);
@@ -1510,13 +1520,12 @@
       const saveBtn = $('#save');
 
       if (V.ft === 'tf') {
-        // Mode Transfer
         singleWalletBox.classList.add('hidden');
         transferWalletBox.classList.remove('hidden');
         categoryBox.classList.add('hidden');
+        saveBtn.className = 'w-full py-3.5 px-4 rounded-xl bg-gradient-to-r from-[#FE51D1] to-[#74FFED] text-[#0B1026] font-black text-xs tracking-wider shadow-lg shadow-[#FE51D1]/20 transition-all flex items-center justify-center gap-1 cursor-pointer mt-1 min-h-[46px] active:scale-[0.98]';
         saveBtn.textContent = '⇄ Simpan Transfer';
       } else {
-        // Mode Pengeluaran / Pemasukan
         singleWalletBox.classList.remove('hidden');
         transferWalletBox.classList.add('hidden');
         categoryBox.classList.remove('hidden');
@@ -1530,11 +1539,15 @@
         fcEl.className = V.ft === 'in' ? 'grid grid-cols-2 gap-1.5' : 'grid grid-cols-3 gap-1.5';
         fcEl.innerHTML = catList.map(c => {
           const isSelected = V.fc === c[1];
+          const activeClass = V.ft === 'in'
+            ? 'bg-[#74FFED] text-[#0B1026] shadow-md shadow-[#74FFED]/25 scale-[1.02]'
+            : 'bg-[#FE51D1] text-[#0B1026] shadow-md shadow-[#FE51D1]/25 scale-[1.02]';
+
           return `
             <button 
               type="button" 
               data-c="${escapeHtml(c[1])}" 
-              class="flex items-center justify-center gap-1.5 py-2 px-2 rounded-xl font-bold text-xs transition-all cursor-pointer min-h-[44px] ${isSelected ? 'bg-[#3b2417] text-white shadow-xs scale-[1.02]' : 'bg-[#f6f0e9] hover:bg-[#eadfd3] text-[#2b1d14] border border-[#eadfd3]/70'}"
+              class="flex items-center justify-center gap-1.5 py-2 px-2 rounded-xl font-black text-xs transition-all cursor-pointer min-h-[44px] ${isSelected ? activeClass : 'bg-[#0E1430] hover:bg-[#131A3B] text-white border border-[#263363]'}"
             >
               <span class="text-base shrink-0 leading-none">${c[0]}</span>
               <span class="text-[11px] font-extrabold truncate">${escapeHtml(c[1])}</span>
@@ -1542,7 +1555,13 @@
           `;
         }).join('');
 
-        saveBtn.textContent = '＋ Simpan ' + (V.ft === 'out' ? 'Pengeluaran' : 'Pemasukan');
+        if (V.ft === 'in') {
+          saveBtn.className = 'w-full py-3.5 px-4 rounded-xl bg-[#74FFED] hover:bg-[#5be8d5] active:scale-[0.98] text-[#0B1026] font-black text-xs tracking-wider shadow-lg shadow-[#74FFED]/25 transition-all flex items-center justify-center gap-1 cursor-pointer mt-1 min-h-[46px]';
+          saveBtn.textContent = '＋ Simpan Pemasukan';
+        } else {
+          saveBtn.className = 'w-full py-3.5 px-4 rounded-xl bg-[#FE51D1] hover:bg-[#e640bd] active:scale-[0.98] text-[#0B1026] font-black text-xs tracking-wider shadow-lg shadow-[#FE51D1]/25 transition-all flex items-center justify-center gap-1 cursor-pointer mt-1 min-h-[46px]';
+          saveBtn.textContent = '＋ Simpan Pengeluaran';
+        }
       }
     }
 
@@ -1648,7 +1667,7 @@
     };
 
     /* ==========================================================================
-       6. RENDER RIWAYAT TRANSAKSI HARIAN (MENDUKUNG TRANSFER & FILTER 4 TAB)
+       6. RENDER RIWAYAT TRANSAKSI HARIAN
        ========================================================================== */
     const shiftDate = (dateStr, days) => {
       const d = new Date(dateStr + 'T00:00:00');
@@ -1668,7 +1687,6 @@
       const dailyOut = sum(dailyAll.filter(x => x.t === 'out'));
       const dailyIn = sum(dailyAll.filter(x => x.t === 'in'));
 
-      // Total keluar/masuk harian mengecualikan transfer
       $('#so').textContent = '● Keluar: -' + rp(dailyOut);
       $('#si').textContent = '● Masuk: +' + rp(dailyIn);
       $('#cnt').textContent = `${dailyAll.length} Transaksi`;
@@ -1676,9 +1694,9 @@
       $$('#hf button').forEach(btn => {
         const isActive = btn.dataset.f === V.hf;
         if (isActive) {
-          btn.className = 'py-1.5 px-1 rounded-lg font-bold text-[10.5px] transition-all text-center bg-[#3b2417] text-white shadow-xs';
+          btn.className = 'py-1.5 px-1 rounded-lg font-black text-[10.5px] transition-all text-center bg-[#74FFED] text-[#0B1026] shadow-xs';
         } else {
-          btn.className = 'py-1.5 px-1 rounded-lg font-bold text-[10.5px] transition-all text-center text-[#8a7566] hover:text-[#2b1d14]';
+          btn.className = 'py-1.5 px-1 rounded-lg font-bold text-[10.5px] transition-all text-center text-[#9AA8C7] hover:text-white';
         }
       });
 
@@ -1687,7 +1705,7 @@
 
       if (filtered.length === 0) {
         histEl.innerHTML = `
-          <div class="py-5 text-center text-xs text-[#8a7566] font-semibold">
+          <div class="py-5 text-center text-xs text-[#9AA8C7] font-semibold">
             <span class="text-xl block mb-0.5">🍃</span>
             Tidak ada transaksi di tanggal ini
           </div>
@@ -1695,43 +1713,38 @@
       } else {
         histEl.innerHTML = filtered.map(x => {
           if (x.t === 'tf') {
-            // Item Transfer
             const wFrom = getWallet(x.w);
             const wTo = getWallet(x.w2);
 
             return `
-              <div class="flex items-center gap-2.5 p-2.5 rounded-2xl bg-[#f6f0e9] border border-[#eadfd3]/80 animate-pop">
-                <!-- Icon Transfer -->
-                <span class="w-8 h-8 rounded-xl bg-white shadow-2xs flex items-center justify-center text-base shrink-0">
+              <div class="flex items-center gap-2.5 p-2.5 rounded-2xl bg-[#0E1430] border border-[#263363] animate-pop">
+                <span class="w-8 h-8 rounded-xl bg-[#171F44] shadow-xs flex items-center justify-center text-base shrink-0 border border-[#263363]">
                   🔁
                 </span>
 
-                <!-- Rincian Transfer -->
                 <div class="flex-1 min-w-0">
                   <div class="flex items-center gap-1.5">
-                    <b class="text-xs font-extrabold text-[#2b1d14] truncate">
+                    <b class="text-xs font-black text-white truncate">
                       ${escapeHtml(wFrom.n)} → ${escapeHtml(wTo.n)}
                     </b>
-                    <span class="text-[8.5px] font-bold bg-[#f6f0e9] text-[#3b2417] px-1.5 py-0.5 rounded-full border border-[#eadfd3] shrink-0">
+                    <span class="text-[8.5px] font-black bg-[#171F44] text-[#74FFED] px-1.5 py-0.5 rounded-full border border-[#263363] shrink-0">
                       Transfer
                     </span>
                   </div>
-                  <small class="block text-[9.5px] text-[#8a7566] font-medium truncate">
+                  <small class="block text-[9.5px] text-[#9AA8C7] font-medium truncate">
                     Pukul ${x.tm || '--.--'}${x.n ? ' · ' + escapeHtml(x.n) : ' · Pindah Dana'}
                   </small>
                 </div>
 
-                <!-- Nominal Netral -->
-                <div class="font-black text-xs shrink-0 text-[#2b1d14]">
+                <div class="font-black text-xs shrink-0 text-white">
                   ${rp(x.a)}
                 </div>
 
-                <!-- Tombol Hapus -->
                 <button 
                   type="button" 
                   data-id="${x.id}" 
                   title="Hapus Transaksi"
-                  class="btn-del-tx w-6 h-6 rounded-lg hover:bg-rose-100 text-[#8a7566] hover:text-rose-600 flex items-center justify-center text-[11px] shrink-0 transition-all cursor-pointer"
+                  class="btn-del-tx w-6 h-6 rounded-lg hover:bg-[#FE51D1]/20 text-[#9AA8C7] hover:text-[#FE51D1] flex items-center justify-center text-[11px] shrink-0 transition-all cursor-pointer"
                 >
                   🗑
                 </button>
@@ -1739,41 +1752,36 @@
             `;
           }
 
-          // Item Normal (Pengeluaran / Pemasukan)
           const wallet = getWallet(x.w);
           const isIncome = x.t === 'in';
 
           return `
-            <div class="flex items-center gap-2.5 p-2.5 rounded-2xl bg-[#f6f0e9] border border-[#eadfd3]/80 animate-pop">
-              <!-- Icon Kategori -->
-              <span class="w-8 h-8 rounded-xl bg-white shadow-2xs flex items-center justify-center text-base shrink-0">
+            <div class="flex items-center gap-2.5 p-2.5 rounded-2xl bg-[#0E1430] border border-[#263363] animate-pop">
+              <span class="w-8 h-8 rounded-xl bg-[#171F44] shadow-xs flex items-center justify-center text-base shrink-0 border border-[#263363]">
                 ${icoOf(x.t, x.c)}
               </span>
 
-              <!-- Rincian Transaksi -->
               <div class="flex-1 min-w-0">
                 <div class="flex items-center gap-1.5">
-                  <b class="text-xs font-extrabold text-[#2b1d14] truncate">${escapeHtml(x.c)}</b>
-                  <span class="text-[8.5px] font-bold bg-white text-[#8a7566] px-1.5 py-0.5 rounded-full border border-[#eadfd3] shrink-0">
+                  <b class="text-xs font-black text-white truncate">${escapeHtml(x.c)}</b>
+                  <span class="text-[8.5px] font-extrabold bg-[#171F44] text-[#9AA8C7] px-1.5 py-0.5 rounded-full border border-[#263363] shrink-0">
                     ${wallet.e} ${escapeHtml(wallet.n)}
                   </span>
                 </div>
-                <small class="block text-[9.5px] text-[#8a7566] font-medium truncate">
+                <small class="block text-[9.5px] text-[#9AA8C7] font-medium truncate">
                   Pukul ${x.tm || '--.--'}${x.n ? ' · ' + escapeHtml(x.n) : ''}
                 </small>
               </div>
 
-              <!-- Nominal Berwarna -->
-              <div class="font-black text-xs shrink-0 ${isIncome ? 'text-[#0f8a5f]' : 'text-[#d6455a]'}">
+              <div class="font-black text-xs shrink-0 ${isIncome ? 'text-[#74FFED]' : 'text-[#FE51D1]'}">
                 ${isIncome ? '+' : '-'}${rp(x.a)}
               </div>
 
-              <!-- Tombol Hapus -->
               <button 
                 type="button" 
                 data-id="${x.id}" 
                 title="Hapus Transaksi"
-                class="btn-del-tx w-6 h-6 rounded-lg hover:bg-rose-100 text-[#8a7566] hover:text-rose-600 flex items-center justify-center text-[11px] shrink-0 transition-all cursor-pointer"
+                class="btn-del-tx w-6 h-6 rounded-lg hover:bg-[#FE51D1]/20 text-[#9AA8C7] hover:text-[#FE51D1] flex items-center justify-center text-[11px] shrink-0 transition-all cursor-pointer"
               >
                 🗑
               </button>
@@ -1822,14 +1830,12 @@
       if (e.target.value) goToDay(e.target.value);
     };
 
-    // Navigasi Bulan Utama Global
     const goToMonth = isoMonth => {
       if (V.month === isoMonth) return;
       V.month = isoMonth;
       V.sel = null;
       shouldAnimateDonut = true;
 
-      // Sinkronisasi otomatis ke Riwayat Harian
       if (!V.day.startsWith(V.month)) {
         if (todayS.startsWith(V.month)) {
           V.day = todayS;
@@ -1855,14 +1861,14 @@
        ========================================================================== */
     function renderWalletSheet() {
       $('#wl').innerHTML = S.wallets.map(w => `
-        <div class="flex items-center justify-between p-2.5 rounded-2xl bg-[#f6f0e9] border border-[#eadfd3]/80">
-          <span class="font-extrabold text-xs text-[#2b1d14] flex items-center gap-1.5">
+        <div class="flex items-center justify-between p-2.5 rounded-2xl bg-[#0E1430] border border-[#263363]">
+          <span class="font-black text-xs text-white flex items-center gap-1.5">
             <span>${w.e}</span> <span>${escapeHtml(w.n)}</span>
           </span>
           <button 
             type="button" 
             data-id="${w.id}" 
-            class="btn-del-w text-[9.5px] font-bold text-rose-600 bg-rose-50 hover:bg-rose-100 px-2 py-0.5 rounded-lg border border-rose-200 transition-all cursor-pointer"
+            class="btn-del-w text-[9.5px] font-black text-[#FE51D1] bg-[#FE51D1]/15 hover:bg-[#FE51D1]/25 px-2 py-0.5 rounded-lg border border-[#FE51D1]/30 transition-all cursor-pointer"
           >
             Hapus
           </button>
@@ -1900,7 +1906,6 @@
       if (!btn || !btn.dataset.id) return;
       const id = parseInt(btn.dataset.id, 10);
 
-      // Cek apakah dompet pernah dipakai untuk transaksi atau transfer
       if (S.tx.some(x => x.w === id || x.w2 === id)) {
         toast('Dompet masih memiliki riwayat transaksi');
         return;
@@ -1951,7 +1956,7 @@
     };
 
     /* ==========================================================================
-       8. FITUR EXPORT DATA TRANSAKSI KE CSV (MENDUKUNG TRANSFER)
+       8. FITUR EXPORT DATA TRANSAKSI KE CSV
        ========================================================================== */
     function exportCsv() {
       let txList = S.tx;
@@ -1972,7 +1977,6 @@
         return;
       }
 
-      // Kolom Header: Tanggal, Tipe, Kategori, Nominal, Dompet, Catatan
       const headers = ['Tanggal', 'Tipe', 'Kategori', 'Nominal', 'Dompet', 'Catatan'];
 
       const escapeCsvCell = val => {
@@ -1984,7 +1988,6 @@
         return `"${str}"`;
       };
 
-      // Urutkan transaksi dari tanggal terbaru
       const sortedTx = [...txList].sort((a, b) => (b.d > a.d ? 1 : (b.d < a.d ? -1 : (b.id - a.id))));
 
       const rows = sortedTx.map(item => {
@@ -2016,7 +2019,6 @@
         ].join(',');
       });
 
-      // Sisipkan UTF-8 BOM (\uFEFF)
       const csvContent = '\uFEFF' + headers.join(',') + '\r\n' + rows.join('\r\n');
 
       const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
