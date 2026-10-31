@@ -957,25 +957,45 @@
       to { left: calc(100% - 36px); opacity: 0; }
     }
 
+    /* Header & Flex Utilities */
+    .w-10 { width: 40px; }
+    .h-10 { height: 40px; }
+    .shrink-0 { flex-shrink: 0; }
+    .rounded-full { border-radius: 9999px; }
+    .items-center { align-items: center; }
+    .justify-center { justify-content: center; }
+    .justify-between { justify-content: space-between; }
+    .w-full { width: 100%; }
+    .flex-1 { flex: 1 1 0%; }
+
     .dnav {
       display: flex;
       align-items: center;
-      margin-bottom: 12px;
-      gap: 6px;
+      justify-content: space-between;
+      width: 100%;
+      gap: 12px;
+      margin-bottom: 14px;
+      box-sizing: border-box;
     }
 
     .dnav > button {
-      width: 44px;
-      height: 44px;
+      width: 40px;
+      height: 40px;
+      min-width: 40px;
+      max-width: 40px;
       border-radius: 50%;
       font-size: 20px;
       border: 1px solid var(--line2);
-      display: grid;
-      place-items: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       background: var(--surface);
       cursor: pointer;
       flex-shrink: 0;
       transition: background 0.2s, transform 0.15s;
+      box-shadow: 0 1px 3px rgba(10, 26, 43, 0.05);
+      padding: 0;
+      line-height: 1;
     }
 
     .dnav > button:hover {
@@ -988,13 +1008,15 @@
 
     .dnav label {
       flex: 1;
+      min-width: 0;
       text-align: center;
       font-weight: 800;
-      font-size: 15px;
+      font-size: 14.5px;
       letter-spacing: -.01em;
       position: relative;
       cursor: pointer;
-      padding: 11px 14px;
+      height: 40px;
+      padding: 0 14px;
       border-radius: 999px;
       background: var(--canvas);
       display: flex;
@@ -1004,6 +1026,7 @@
       transition: background 0.2s, transform 0.15s;
       user-select: none;
       -webkit-user-select: none;
+      box-sizing: border-box;
     }
 
     .dnav label:active {
@@ -1044,13 +1067,15 @@
       user-select: none;
       -webkit-user-select: none;
       border: 1px solid var(--line);
+      width: 100%;
+      box-sizing: border-box;
     }
 
     .tx-act {
       position: absolute;
       top: 0;
       bottom: 0;
-      width: 76px;
+      width: 80px;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -1063,6 +1088,7 @@
       cursor: pointer;
       z-index: 1;
       padding: 0;
+      box-sizing: border-box;
       transition: opacity 0.2s;
     }
 
@@ -1084,7 +1110,9 @@
     .tx-card {
       position: relative;
       z-index: 2;
-      background: var(--surface);
+      width: 100%;
+      box-sizing: border-box;
+      background: #ffffff !important;
       display: flex;
       align-items: center;
       gap: 14px;
@@ -1094,6 +1122,7 @@
       transition: transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
       will-change: transform;
       cursor: grab;
+      touch-action: pan-y;
       box-shadow: 0 1px 3px rgba(10, 26, 43, 0.04);
     }
 
@@ -1440,9 +1469,9 @@
           <span class="chip" id="cnt"></span>
         </div>
 
-        <div class="dnav">
-          <button type="button" id="dp" aria-label="Hari sebelumnya">‹</button>
-          <label id="dl" title="Klik untuk pilih tanggal dari kalender">
+        <div class="dnav flex items-center justify-between w-full gap-3">
+          <button type="button" id="dp" class="w-10 h-10 shrink-0 rounded-full flex items-center justify-center" aria-label="Hari sebelumnya">‹</button>
+          <label id="dl" class="flex-1" title="Klik untuk pilih tanggal dari kalender">
             <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--b700);flex-shrink:0">
               <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
               <line x1="16" y1="2" x2="16" y2="6"/>
@@ -1452,7 +1481,7 @@
             <span id="dt"></span>
             <input type="date" id="dpick" aria-label="Pilih tanggal">
           </label>
-          <button type="button" id="dn" aria-label="Hari berikutnya">›</button>
+          <button type="button" id="dn" class="w-10 h-10 shrink-0 rounded-full flex items-center justify-center" aria-label="Hari berikutnya">›</button>
         </div>
 
         <div class="sum">
@@ -2355,7 +2384,17 @@
       return iso(d);
     };
 
-    let activeOpenRow = null;
+    const SWIPE_MAX = 80;        // Batas maksimal geser: 80px
+    const SWIPE_THRESH = 40;     // Ambang batas: > 40px snap buka, <= 40px kembali 0
+
+    let activeSwipedRow = null;
+    let pRow = null;
+    let pCard = null;
+    let pStartX = 0;
+    let pStartY = 0;
+    let pBaseX = 0;
+    let pIsHorizontal = null;
+    let pCapturedPointerId = null;
 
     function closeSwipedRow(row) {
       if (!row) return;
@@ -2365,19 +2404,31 @@
         card.style.transform = 'translateX(0px)';
       }
       row.dataset.open = '';
-      if (activeOpenRow === row) activeOpenRow = null;
+      const editBtn = row.querySelector('.tx-act-edit');
+      const delBtn = row.querySelector('.tx-act-del');
+      setTimeout(() => {
+        if (!row.dataset.open) {
+          if (editBtn) editBtn.style.visibility = 'hidden';
+          if (delBtn) delBtn.style.visibility = 'hidden';
+        }
+      }, 250);
+      if (activeSwipedRow === row) activeSwipedRow = null;
     }
 
     function closeAllSwipes() {
-      if (activeOpenRow) {
-        closeSwipedRow(activeOpenRow);
+      if (activeSwipedRow) {
+        closeSwipedRow(activeSwipedRow);
       }
-      const allOpen = $$('#hist .tx-row[data-open="edit"], #hist .tx-row[data-open="del"]');
-      allOpen.forEach(r => closeSwipedRow(r));
+      const allRows = $$('#hist .tx-row');
+      allRows.forEach(r => {
+        if (r.dataset.open) closeSwipedRow(r);
+      });
     }
 
     function renderHist() {
       closeAllSwipes();
+      activeSwipedRow = null;
+
       const d = new Date(V.day + 'T00:00:00');
       const isToday = V.day === todayS;
       $('#dt').textContent = `${isToday ? 'Hari Ini, ' : ''}${d.getDate()} ${MON[d.getMonth()].slice(0, 3)} ${d.getFullYear()}`;
@@ -2394,12 +2445,12 @@
       setSeg('#hf', ['all', 'out', 'in', 'tf'], V.hf);
 
       const filtered = daily.filter(x => V.hf === 'all' || x.t === V.hf);
-      const histEl = $('#hist');
+      const histContainer = $('#hist');
 
       if (filtered.length === 0) {
-        histEl.innerHTML = '<div class="empty">Tidak ada transaksi di tanggal ini 🍃</div>';
+        histContainer.innerHTML = '<div class="empty">Tidak ada transaksi di tanggal ini 🍃</div>';
       } else {
-        histEl.innerHTML = filtered.map(x => {
+        histContainer.innerHTML = filtered.map(x => {
           const tf = x.t === 'tf';
           const sg = tf ? '' : x.t === 'in' ? '+' : '−';
           const ar = tf ? '⇄' : x.t === 'in' ? '↓' : '↑';
@@ -2407,22 +2458,22 @@
           const sub = `${tf ? '' : (wn(x.w).n + ' · ')}Pukul ${x.tm || '--.--'}${x.n ? ' · ' + escapeHtml(x.n) : (tf ? ' · Pindah Dana' : '')}`;
 
           return `
-            <div class="tx-row" data-id="${x.id}">
-              <button type="button" class="tx-act tx-act-edit" data-id="${x.id}" aria-label="Edit transaksi" title="Edit transaksi">
+            <div class="tx-row" data-id="${x.id}" data-open="">
+              <button type="button" class="tx-act tx-act-edit" data-id="${x.id}" aria-label="Edit transaksi" title="Edit transaksi" style="visibility:hidden">
                 <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                   <path d="M12 20h9M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
                 </svg>
                 <span>Edit</span>
               </button>
 
-              <button type="button" class="tx-act tx-act-del" data-id="${x.id}" aria-label="Hapus transaksi" title="Hapus transaksi">
+              <button type="button" class="tx-act tx-act-del" data-id="${x.id}" aria-label="Hapus transaksi" title="Hapus transaksi" style="visibility:hidden">
                 <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                   <path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M10 11v6M14 11v6"/>
                 </svg>
                 <span>Hapus</span>
               </button>
 
-              <div class="tx-card ${x.id === V.newId ? 'new' : ''}">
+              <div class="tx-card ${x.id === V.newId ? 'new' : ''}" style="transform:translateX(0px)">
                 <div class="ic">${svgIco(ik(x.t, x.c), 20)}</div>
                 <div class="m">
                   <b>${escapeHtml(title)}</b>
@@ -2436,147 +2487,137 @@
       }
     }
 
-    // Touch Swipe Event Listeners (Mobile Gesture)
-    let touchRow = null;
-    let touchStartX = 0;
-    let touchStartY = 0;
-    let touchBaseX = 0;
-    let isTouchHorizontal = null;
-
+    // Pointer Events: Unified Touch, Mouse, & Pen Gesture Handling
     const histContainer = $('#hist');
 
-    histContainer.addEventListener('touchstart', e => {
+    histContainer.addEventListener('pointerdown', e => {
+      // Abaikan jika mengetuk tombol aksi secara langsung
+      if (e.target.closest('.tx-act')) return;
+
       const row = e.target.closest('.tx-row');
-      if (!row || e.target.closest('.tx-act')) return;
-
-      if (activeOpenRow && activeOpenRow !== row) {
-        closeSwipedRow(activeOpenRow);
-      }
-
-      touchRow = row;
-      touchStartX = e.touches[0].clientX;
-      touchStartY = e.touches[0].clientY;
-      isTouchHorizontal = null;
-
-      const currentOpen = row.dataset.open;
-      touchBaseX = currentOpen === 'edit' ? 76 : currentOpen === 'del' ? -76 : 0;
+      if (!row) return;
 
       const card = row.querySelector('.tx-card');
-      if (card) card.classList.add('swiping');
-    }, { passive: true });
+      if (!card) return;
 
-    histContainer.addEventListener('touchmove', e => {
-      if (!touchRow) return;
+      // Auto-close: jika baris lain sedang terbuka, tutup secara otomatis
+      if (activeSwipedRow && activeSwipedRow !== row) {
+        closeSwipedRow(activeSwipedRow);
+      }
 
-      const dx = e.touches[0].clientX - touchStartX;
-      const dy = e.touches[0].clientY - touchStartY;
+      pRow = row;
+      pCard = card;
+      pStartX = e.clientX;
+      pStartY = e.clientY;
+      pIsHorizontal = null;
 
-      if (isTouchHorizontal === null) {
-        if (Math.abs(dx) > 7 || Math.abs(dy) > 7) {
-          isTouchHorizontal = Math.abs(dx) > Math.abs(dy);
+      const currentOpen = row.dataset.open;
+      pBaseX = currentOpen === 'edit' ? SWIPE_MAX : currentOpen === 'del' ? -SWIPE_MAX : 0;
+    });
+
+    histContainer.addEventListener('pointermove', e => {
+      if (!pCard || !pRow) return;
+
+      const dx = e.clientX - pStartX;
+      const dy = e.clientY - pStartY;
+
+      if (pIsHorizontal === null) {
+        if (Math.abs(dx) > 6 || Math.abs(dy) > 6) {
+          if (Math.abs(dx) >= Math.abs(dy)) {
+            pIsHorizontal = true;
+            pCard.classList.add('swiping');
+            try {
+              pCard.setPointerCapture(e.pointerId);
+              pCapturedPointerId = e.pointerId;
+            } catch (err) {}
+          } else {
+            pIsHorizontal = false;
+          }
         }
       }
 
-      if (isTouchHorizontal) {
-        let targetX = touchBaseX + dx;
-        if (targetX > 85) targetX = 85 + (targetX - 85) * 0.25;
-        if (targetX < -85) targetX = -85 + (targetX + 85) * 0.25;
+      if (pIsHorizontal) {
+        let targetX = pBaseX + dx;
 
-        const card = touchRow.querySelector('.tx-card');
-        if (card) card.style.transform = `translateX(${targetX}px)`;
-      }
-    }, { passive: true });
+        // CLAMPING: Kunci maksimal translasi tepat 80px ke kanan dan -80px ke kiri
+        if (targetX > SWIPE_MAX) targetX = SWIPE_MAX;
+        if (targetX < -SWIPE_MAX) targetX = -SWIPE_MAX;
 
-    histContainer.addEventListener('touchend', e => {
-      if (!touchRow) return;
+        const editBtn = pRow.querySelector('.tx-act-edit');
+        const delBtn = pRow.querySelector('.tx-act-del');
 
-      const card = touchRow.querySelector('.tx-card');
-      if (card) card.classList.remove('swiping');
-
-      if (isTouchHorizontal) {
-        const dx = e.changedTouches[0].clientX - touchStartX;
-        const totalX = touchBaseX + dx;
-
-        if (totalX > 60) {
-          // Swipe Kanan (> 60px): Tampilkan Tombol Edit (Biru)
-          if (card) card.style.transform = 'translateX(76px)';
-          touchRow.dataset.open = 'edit';
-          activeOpenRow = touchRow;
-        } else if (totalX < -60) {
-          // Swipe Kiri (< -60px): Tampilkan Tombol Hapus (Merah)
-          if (card) card.style.transform = 'translateX(-76px)';
-          touchRow.dataset.open = 'del';
-          activeOpenRow = touchRow;
+        if (targetX > 0) {
+          if (editBtn) editBtn.style.visibility = 'visible';
+          if (delBtn) delBtn.style.visibility = 'hidden';
+        } else if (targetX < 0) {
+          if (editBtn) editBtn.style.visibility = 'hidden';
+          if (delBtn) delBtn.style.visibility = 'visible';
         } else {
-          // Tutup kembali
-          if (card) card.style.transform = 'translateX(0px)';
-          touchRow.dataset.open = '';
-          if (activeOpenRow === touchRow) activeOpenRow = null;
+          if (editBtn) editBtn.style.visibility = 'hidden';
+          if (delBtn) delBtn.style.visibility = 'hidden';
         }
-      } else if (touchBaseX !== 0 && Math.abs(e.changedTouches[0].clientX - touchStartX) < 10) {
-        closeSwipedRow(touchRow);
-      }
 
-      touchRow = null;
-      isTouchHorizontal = null;
+        pCard.style.transform = `translateX(${targetX}px)`;
+      }
     });
 
-    // Mouse Drag Support (Desktop Swipe Test)
-    let mouseRow = null;
-    let mouseStartX = 0;
-    let mouseBaseX = 0;
-    let isMouseDown = false;
+    const endPointerSwipe = e => {
+      if (!pCard || !pRow) return;
 
-    histContainer.addEventListener('mousedown', e => {
-      const row = e.target.closest('.tx-row');
-      if (!row || e.target.closest('.tx-act')) return;
+      const card = pCard;
+      const row = pRow;
 
-      if (activeOpenRow && activeOpenRow !== row) {
-        closeSwipedRow(activeOpenRow);
+      if (pCapturedPointerId !== null) {
+        try {
+          card.releasePointerCapture(pCapturedPointerId);
+        } catch (err) {}
+        pCapturedPointerId = null;
       }
 
-      mouseRow = row;
-      isMouseDown = true;
-      mouseStartX = e.clientX;
-      const currentOpen = row.dataset.open;
-      mouseBaseX = currentOpen === 'edit' ? 76 : currentOpen === 'del' ? -76 : 0;
+      card.classList.remove('swiping');
 
-      const card = row.querySelector('.tx-card');
-      if (card) card.classList.add('swiping');
-    });
+      if (pIsHorizontal) {
+        const dx = e.clientX - pStartX;
+        const finalX = pBaseX + dx;
 
-    window.addEventListener('mousemove', e => {
-      if (!isMouseDown || !mouseRow) return;
-      const dx = e.clientX - mouseStartX;
-      let targetX = mouseBaseX + dx;
-      if (targetX > 85) targetX = 85 + (targetX - 85) * 0.25;
-      if (targetX < -85) targetX = -85 + (targetX + 85) * 0.25;
-      const card = mouseRow.querySelector('.tx-card');
-      if (card) card.style.transform = `translateX(${targetX}px)`;
-    });
+        const editBtn = row.querySelector('.tx-act-edit');
+        const delBtn = row.querySelector('.tx-act-del');
 
-    window.addEventListener('mouseup', e => {
-      if (!isMouseDown || !mouseRow) return;
-      isMouseDown = false;
-      const card = mouseRow.querySelector('.tx-card');
-      if (card) card.classList.remove('swiping');
-
-      const dx = e.clientX - mouseStartX;
-      const totalX = mouseBaseX + dx;
-      if (totalX > 60) {
-        if (card) card.style.transform = 'translateX(76px)';
-        mouseRow.dataset.open = 'edit';
-        activeOpenRow = mouseRow;
-      } else if (totalX < -60) {
-        if (card) card.style.transform = 'translateX(-76px)';
-        mouseRow.dataset.open = 'del';
-        activeOpenRow = mouseRow;
-      } else {
-        if (card) card.style.transform = 'translateX(0px)';
-        mouseRow.dataset.open = '';
-        if (activeOpenRow === mouseRow) activeOpenRow = null;
+        // THRESHOLD CHECK (> 40px snap buka, <= 40px kembali netral)
+        if (finalX > SWIPE_THRESH) {
+          // Geser Kanan (> 40px): Buka Edit (+80px)
+          card.style.transform = `translateX(${SWIPE_MAX}px)`;
+          row.dataset.open = 'edit';
+          if (editBtn) editBtn.style.visibility = 'visible';
+          if (delBtn) delBtn.style.visibility = 'hidden';
+          activeSwipedRow = row;
+        } else if (finalX < -SWIPE_THRESH) {
+          // Geser Kiri (< -40px): Buka Hapus (-80px)
+          card.style.transform = `translateX(-${SWIPE_MAX}px)`;
+          row.dataset.open = 'del';
+          if (editBtn) editBtn.style.visibility = 'hidden';
+          if (delBtn) delBtn.style.visibility = 'visible';
+          activeSwipedRow = row;
+        } else {
+          // Kurang dari threshold 40px: Kembali ke posisi netral
+          closeSwipedRow(row);
+        }
+      } else if (pBaseX !== 0 && Math.abs(e.clientX - pStartX) < 10) {
+        // Klik pada kartu yang sedang terbuka -> tutup kembali
+        closeSwipedRow(row);
       }
-      mouseRow = null;
+
+      pRow = null;
+      pCard = null;
+      pIsHorizontal = null;
+    };
+
+    histContainer.addEventListener('pointerup', endPointerSwipe);
+    histContainer.addEventListener('pointercancel', endPointerSwipe);
+    histContainer.addEventListener('pointerleave', e => {
+      if (pCapturedPointerId === null && pCard && pIsHorizontal) {
+        endPointerSwipe(e);
+      }
     });
 
     // Click handler for swipe action buttons & outside click
@@ -2602,6 +2643,11 @@
       const row = e.target.closest('.tx-row');
       if (row && row.dataset.open) {
         closeSwipedRow(row);
+        return;
+      }
+
+      if (activeSwipedRow && (!row || row !== activeSwipedRow)) {
+        closeSwipedRow(activeSwipedRow);
       }
     };
 
