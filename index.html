@@ -306,24 +306,28 @@
       color: #DCEFFA;
     }
 
+    .text-3xl { font-size: 1.875rem; line-height: 2.25rem; }
+    .text-4xl { font-size: 2.25rem; line-height: 2.5rem; }
+    .font-bold { font-weight: 700; }
+    .tracking-tight { letter-spacing: -0.025em; }
+
     .bal {
       display: flex;
-      align-items: flex-start;
+      align-items: baseline;
       gap: 6px;
-      font-weight: 300;
-      font-size: 64px;
-      line-height: 70px;
-      letter-spacing: -.045em;
-      margin: 6px 0 24px;
+      font-weight: 700;
+      font-size: 34px;
+      line-height: 40px;
+      letter-spacing: -0.025em;
+      margin: 4px 0 20px;
       position: relative;
     }
 
     .bal small {
-      font-size: 20px;
-      line-height: 28px;
+      font-size: 16px;
+      line-height: 22px;
       font-weight: 700;
       letter-spacing: 0;
-      margin-top: 9px;
       color: #DCEFFA;
     }
 
@@ -892,6 +896,20 @@
       background: var(--onp);
     }
 
+    .cat.add-cat {
+      border: 1.5px dashed var(--line2);
+      color: var(--ink6);
+      background: transparent;
+      transition: all 0.2s var(--ease);
+    }
+
+    .cat.add-cat:hover {
+      background: var(--canvas);
+      border-color: var(--primary);
+      color: var(--primary);
+      transform: translateY(-2px);
+    }
+
     .f2 {
       display: grid;
       grid-template-columns: 1fr 1.2fr;
@@ -1090,6 +1108,7 @@
       padding: 0;
       box-sizing: border-box;
       transition: opacity 0.2s;
+      visibility: hidden;
     }
 
     .tx-act svg {
@@ -1139,8 +1158,8 @@
     }
 
     @keyframes hl {
-      from { background: var(--b100); }
-      to { background: transparent; }
+      from { background: #DCEFFA; }
+      to { background: #ffffff; }
     }
 
     .tx-card .ic {
@@ -1306,7 +1325,8 @@
     }
 
     @media (max-width: 360px) {
-      .bal { font-size: 54px; }
+      .bal { font-size: 28px; line-height: 34px; }
+      .bal small { font-size: 14px; }
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -1362,7 +1382,7 @@
         <path mask="url(#dk2)" fill="#fff" d="M12 6H24A18 18 0 0 1 24 42H12A4 4 0 0 1 8 38V10A4 4 0 0 1 12 6Z"/>
       </svg>
       <div class="ov">Total saldo saat ini</div>
-      <div class="bal"><small>Rp</small><span id="bal">0</span></div>
+      <div class="bal text-3xl font-bold tracking-tight"><small>Rp</small><span id="bal">0</span></div>
       <div class="stats">
         <div>
           <small>↓ Masuk bulan ini</small>
@@ -1593,7 +1613,8 @@
       star: 'M12 3l2.6 5.6 6.1.7-4.5 4.2 1.2 6L12 16.5l-5.4 3 1.2-6L3.3 9.3l6.1-.7z',
       lap: 'M5 6h14v10H5zM3 20h18',
       plus: 'M12 5v14M5 12h14',
-      swap: 'M4 8h14l-3-3M20 16H6l3 3'
+      swap: 'M4 8h14l-3-3M20 16H6l3 3',
+      tag: 'M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82zM7 7h.01'
     };
 
     const svgIco = (k, s = 22) => `<svg viewBox="0 0 24 24" width="${s}" height="${s}" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="${P[k] || P.dots}"/></svg>`;
@@ -1617,6 +1638,36 @@
       ]
     };
 
+    // Custom Categories System (Persisted in localStorage)
+    const STORAGE_KEY_CUSTOM_CATS = 'dompetku_custom_cats';
+    let customCats = { out: [], in: [] };
+    try {
+      const savedCC = localStorage.getItem(STORAGE_KEY_CUSTOM_CATS);
+      if (savedCC) {
+        const parsedCC = JSON.parse(savedCC);
+        if (parsedCC && typeof parsedCC === 'object') {
+          if (Array.isArray(parsedCC.out)) customCats.out = parsedCC.out;
+          if (Array.isArray(parsedCC.in)) customCats.in = parsedCC.in;
+        }
+      }
+    } catch (e) {}
+
+    const saveCustomCats = () => {
+      try {
+        localStorage.setItem(STORAGE_KEY_CUSTOM_CATS, JSON.stringify(customCats));
+        if (typeof S === 'object') {
+          S.customCategories = customCats;
+          saveStorage();
+        }
+      } catch (e) {}
+    };
+
+    const getAllCats = t => {
+      const base = CATS[t] || [];
+      const userList = (customCats[t] || []).map(name => ['tag', name]);
+      return [...base, ...userList];
+    };
+
     // Color Ramps for Donut & Categories
     const RAMP = {
       out: ['#B8146F', '#DD2D90', '#F566B4', '#F9A3D2', '#8A0F55', '#FCD0E7', '#E052A0'],
@@ -1629,8 +1680,9 @@
 
     const ik = (t, c) => {
       if (t === 'tf') return 'swap';
-      const found = (CATS[t] || []).find(x => x[1] === c);
-      return found ? found[0] : (t === 'in' ? 'down' : 'dots');
+      const all = getAllCats(t);
+      const found = all.find(x => x[1] === c);
+      return found ? found[0] : (t === 'in' ? 'down' : 'tag');
     };
 
     const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -2133,7 +2185,7 @@
       $('#cs').hidden = tf;
       $('#wl1').textContent = tf ? 'Dari dompet' : 'Dompet';
 
-      const catList = CATS[V.ft] || [];
+      const catList = getAllCats(V.ft);
       if (!tf && !catList.some(c => c[1] === V.fc)) {
         V.fc = catList[0] ? catList[0][1] : 'Makan';
       }
@@ -2144,7 +2196,15 @@
             ${svgIco(c[0], 24)}
             <span>${escapeHtml(c[1])}</span>
           </button>
-        `).join('');
+        `).join('') + `
+          <button type="button" class="cat add-cat" id="btnAddCat" title="Tambah Kategori Baru">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="12" y1="5" x2="12" y2="19"></line>
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+            </svg>
+            <span>Tambah</span>
+          </button>
+        `;
       }
 
       const saveBtn = $('#save');
@@ -2233,7 +2293,39 @@
       }
     };
 
+    function promptAddCategory() {
+      const typeLabel = V.ft === 'in' ? 'Pemasukan' : 'Pengeluaran';
+      const name = prompt(`Masukkan nama kategori ${typeLabel} baru:`);
+      if (name === null) return;
+      const trimmed = name.trim();
+      if (!trimmed) {
+        toast('Nama kategori tidak boleh kosong!');
+        return;
+      }
+
+      const currentCats = getAllCats(V.ft);
+      if (currentCats.some(c => c[1].toLowerCase() === trimmed.toLowerCase())) {
+        toast('Kategori sudah ada!');
+        V.fc = currentCats.find(c => c[1].toLowerCase() === trimmed.toLowerCase())[1];
+        renderForm();
+        return;
+      }
+
+      if (!customCats[V.ft]) customCats[V.ft] = [];
+      customCats[V.ft].push(trimmed);
+      saveCustomCats();
+
+      V.fc = trimmed;
+      renderForm();
+      toast(`Kategori "${trimmed}" berhasil ditambahkan ✓`);
+    }
+
     $('#fc').onclick = e => {
+      const addBtn = e.target.closest('#btnAddCat');
+      if (addBtn) {
+        promptAddCategory();
+        return;
+      }
       const b = e.target.closest('.cat');
       if (b && b.dataset.c) {
         V.fc = b.dataset.c;
@@ -2388,13 +2480,6 @@
     const SWIPE_THRESH = 40;     // Ambang batas: > 40px snap buka, <= 40px kembali 0
 
     let activeSwipedRow = null;
-    let pRow = null;
-    let pCard = null;
-    let pStartX = 0;
-    let pStartY = 0;
-    let pBaseX = 0;
-    let pIsHorizontal = null;
-    let pCapturedPointerId = null;
 
     function closeSwipedRow(row) {
       if (!row) return;
@@ -2423,6 +2508,122 @@
       allRows.forEach(r => {
         if (r.dataset.open) closeSwipedRow(r);
       });
+    }
+
+    // Bind swipe handler secara independen ke setiap elemen transaksi (per-row closure)
+    function bindRowSwipe(row) {
+      const card = row.querySelector('.tx-card');
+      const editBtn = row.querySelector('.tx-act-edit');
+      const delBtn = row.querySelector('.tx-act-del');
+      if (!card) return;
+
+      let startX = 0;
+      let startY = 0;
+      let baseX = 0;
+      let isHorizontal = null;
+      let capturedId = null;
+
+      card.addEventListener('pointerdown', e => {
+        if (e.target.closest('.tx-act')) return;
+
+        // Auto-close baris lain yang sedang terbuka
+        if (activeSwipedRow && activeSwipedRow !== row) {
+          closeSwipedRow(activeSwipedRow);
+        }
+
+        startX = e.clientX;
+        startY = e.clientY;
+        isHorizontal = null;
+
+        const currentOpen = row.dataset.open;
+        baseX = currentOpen === 'edit' ? SWIPE_MAX : currentOpen === 'del' ? -SWIPE_MAX : 0;
+      });
+
+      card.addEventListener('pointermove', e => {
+        if (startX === 0 && startY === 0) return;
+
+        const dx = e.clientX - startX;
+        const dy = e.clientY - startY;
+
+        if (isHorizontal === null) {
+          if (Math.abs(dx) > 6 || Math.abs(dy) > 6) {
+            if (Math.abs(dx) >= Math.abs(dy)) {
+              isHorizontal = true;
+              card.classList.add('swiping');
+              try {
+                card.setPointerCapture(e.pointerId);
+                capturedId = e.pointerId;
+              } catch (err) {}
+            } else {
+              isHorizontal = false;
+            }
+          }
+        }
+
+        if (isHorizontal) {
+          e.preventDefault();
+          let targetX = baseX + dx;
+
+          // CLAMPING: Kunci translasi ketat [-80px, +80px]
+          if (targetX > SWIPE_MAX) targetX = SWIPE_MAX;
+          if (targetX < -SWIPE_MAX) targetX = -SWIPE_MAX;
+
+          if (targetX > 0) {
+            if (editBtn) editBtn.style.visibility = 'visible';
+            if (delBtn) delBtn.style.visibility = 'hidden';
+          } else if (targetX < 0) {
+            if (editBtn) editBtn.style.visibility = 'hidden';
+            if (delBtn) delBtn.style.visibility = 'visible';
+          } else {
+            if (editBtn) editBtn.style.visibility = 'hidden';
+            if (delBtn) delBtn.style.visibility = 'hidden';
+          }
+
+          card.style.transform = `translateX(${targetX}px)`;
+        }
+      });
+
+      const handlePointerUp = e => {
+        if (capturedId !== null) {
+          try {
+            card.releasePointerCapture(capturedId);
+          } catch (err) {}
+          capturedId = null;
+        }
+
+        card.classList.remove('swiping');
+
+        if (isHorizontal) {
+          const dx = e.clientX - startX;
+          const finalX = baseX + dx;
+
+          // THRESHOLD CHECK (> 40px snap buka, <= 40px kembali netral)
+          if (finalX > SWIPE_THRESH) {
+            card.style.transform = `translateX(${SWIPE_MAX}px)`;
+            row.dataset.open = 'edit';
+            if (editBtn) editBtn.style.visibility = 'visible';
+            if (delBtn) delBtn.style.visibility = 'hidden';
+            activeSwipedRow = row;
+          } else if (finalX < -SWIPE_THRESH) {
+            card.style.transform = `translateX(-${SWIPE_MAX}px)`;
+            row.dataset.open = 'del';
+            if (editBtn) editBtn.style.visibility = 'hidden';
+            if (delBtn) delBtn.style.visibility = 'visible';
+            activeSwipedRow = row;
+          } else {
+            closeSwipedRow(row);
+          }
+        } else if (baseX !== 0 && Math.abs(e.clientX - startX) < 10) {
+          closeSwipedRow(row);
+        }
+
+        startX = 0;
+        startY = 0;
+        isHorizontal = null;
+      };
+
+      card.addEventListener('pointerup', handlePointerUp);
+      card.addEventListener('pointercancel', handlePointerUp);
     }
 
     function renderHist() {
@@ -2484,143 +2685,16 @@
             </div>
           `;
         }).join('');
+
+        // Pasang swipe listener independen ke SETIAP transaksi yang dirender
+        $$('#hist .tx-row').forEach(row => {
+          bindRowSwipe(row);
+        });
       }
     }
 
-    // Pointer Events: Unified Touch, Mouse, & Pen Gesture Handling
-    const histContainer = $('#hist');
-
-    histContainer.addEventListener('pointerdown', e => {
-      // Abaikan jika mengetuk tombol aksi secara langsung
-      if (e.target.closest('.tx-act')) return;
-
-      const row = e.target.closest('.tx-row');
-      if (!row) return;
-
-      const card = row.querySelector('.tx-card');
-      if (!card) return;
-
-      // Auto-close: jika baris lain sedang terbuka, tutup secara otomatis
-      if (activeSwipedRow && activeSwipedRow !== row) {
-        closeSwipedRow(activeSwipedRow);
-      }
-
-      pRow = row;
-      pCard = card;
-      pStartX = e.clientX;
-      pStartY = e.clientY;
-      pIsHorizontal = null;
-
-      const currentOpen = row.dataset.open;
-      pBaseX = currentOpen === 'edit' ? SWIPE_MAX : currentOpen === 'del' ? -SWIPE_MAX : 0;
-    });
-
-    histContainer.addEventListener('pointermove', e => {
-      if (!pCard || !pRow) return;
-
-      const dx = e.clientX - pStartX;
-      const dy = e.clientY - pStartY;
-
-      if (pIsHorizontal === null) {
-        if (Math.abs(dx) > 6 || Math.abs(dy) > 6) {
-          if (Math.abs(dx) >= Math.abs(dy)) {
-            pIsHorizontal = true;
-            pCard.classList.add('swiping');
-            try {
-              pCard.setPointerCapture(e.pointerId);
-              pCapturedPointerId = e.pointerId;
-            } catch (err) {}
-          } else {
-            pIsHorizontal = false;
-          }
-        }
-      }
-
-      if (pIsHorizontal) {
-        let targetX = pBaseX + dx;
-
-        // CLAMPING: Kunci maksimal translasi tepat 80px ke kanan dan -80px ke kiri
-        if (targetX > SWIPE_MAX) targetX = SWIPE_MAX;
-        if (targetX < -SWIPE_MAX) targetX = -SWIPE_MAX;
-
-        const editBtn = pRow.querySelector('.tx-act-edit');
-        const delBtn = pRow.querySelector('.tx-act-del');
-
-        if (targetX > 0) {
-          if (editBtn) editBtn.style.visibility = 'visible';
-          if (delBtn) delBtn.style.visibility = 'hidden';
-        } else if (targetX < 0) {
-          if (editBtn) editBtn.style.visibility = 'hidden';
-          if (delBtn) delBtn.style.visibility = 'visible';
-        } else {
-          if (editBtn) editBtn.style.visibility = 'hidden';
-          if (delBtn) delBtn.style.visibility = 'hidden';
-        }
-
-        pCard.style.transform = `translateX(${targetX}px)`;
-      }
-    });
-
-    const endPointerSwipe = e => {
-      if (!pCard || !pRow) return;
-
-      const card = pCard;
-      const row = pRow;
-
-      if (pCapturedPointerId !== null) {
-        try {
-          card.releasePointerCapture(pCapturedPointerId);
-        } catch (err) {}
-        pCapturedPointerId = null;
-      }
-
-      card.classList.remove('swiping');
-
-      if (pIsHorizontal) {
-        const dx = e.clientX - pStartX;
-        const finalX = pBaseX + dx;
-
-        const editBtn = row.querySelector('.tx-act-edit');
-        const delBtn = row.querySelector('.tx-act-del');
-
-        // THRESHOLD CHECK (> 40px snap buka, <= 40px kembali netral)
-        if (finalX > SWIPE_THRESH) {
-          // Geser Kanan (> 40px): Buka Edit (+80px)
-          card.style.transform = `translateX(${SWIPE_MAX}px)`;
-          row.dataset.open = 'edit';
-          if (editBtn) editBtn.style.visibility = 'visible';
-          if (delBtn) delBtn.style.visibility = 'hidden';
-          activeSwipedRow = row;
-        } else if (finalX < -SWIPE_THRESH) {
-          // Geser Kiri (< -40px): Buka Hapus (-80px)
-          card.style.transform = `translateX(-${SWIPE_MAX}px)`;
-          row.dataset.open = 'del';
-          if (editBtn) editBtn.style.visibility = 'hidden';
-          if (delBtn) delBtn.style.visibility = 'visible';
-          activeSwipedRow = row;
-        } else {
-          // Kurang dari threshold 40px: Kembali ke posisi netral
-          closeSwipedRow(row);
-        }
-      } else if (pBaseX !== 0 && Math.abs(e.clientX - pStartX) < 10) {
-        // Klik pada kartu yang sedang terbuka -> tutup kembali
-        closeSwipedRow(row);
-      }
-
-      pRow = null;
-      pCard = null;
-      pIsHorizontal = null;
-    };
-
-    histContainer.addEventListener('pointerup', endPointerSwipe);
-    histContainer.addEventListener('pointercancel', endPointerSwipe);
-    histContainer.addEventListener('pointerleave', e => {
-      if (pCapturedPointerId === null && pCard && pIsHorizontal) {
-        endPointerSwipe(e);
-      }
-    });
-
     // Click handler for swipe action buttons & outside click
+    const histContainer = $('#hist');
     histContainer.onclick = e => {
       const editBtn = e.target.closest('.tx-act-edit');
       if (editBtn && editBtn.dataset.id) {
