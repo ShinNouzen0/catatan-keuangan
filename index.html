@@ -1456,8 +1456,15 @@
         </div>
 
         <div id="cs">
-          <div class="lbl">
+          <div class="lbl" style="display:flex;justify-content:space-between;align-items:center">
             <span class="ov">Kategori</span>
+            <button type="button" class="chip" id="btnManageCat" title="Kelola Kategori" style="cursor:pointer;display:inline-flex;align-items:center;gap:4px">
+              <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="3"></circle>
+                <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+              </svg>
+              <span>Kelola</span>
+            </button>
           </div>
           <div class="cats" id="fc"></div>
         </div>
@@ -1571,6 +1578,29 @@
         <input class="t" id="wn" placeholder="Nama dompet baru" aria-label="Nama dompet">
       </div>
       <button type="button" class="cta" id="wadd" style="margin-top:20px"><i></i>Tambah Dompet</button>
+    </div>
+  </div>
+
+  <!-- MODAL BOTTOM SHEET: KELOLA KATEGORI -->
+  <div class="scrim" id="scCat">
+    <div class="sheet">
+      <div class="grab"></div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+        <h3 style="margin-bottom:0">Kelola Kategori</h3>
+        <button type="button" id="btnCloseCatSheet" style="width:32px;height:32px;border-radius:50%;background:var(--canvas);color:var(--ink6);display:grid;place-items:center;font-weight:800;font-size:14px">✕</button>
+      </div>
+
+      <div class="seg" id="catSheetTab" style="margin-bottom:14px">
+        <button type="button" class="on" data-t="out">Pengeluaran</button>
+        <button type="button" data-t="in">Pemasukan</button>
+      </div>
+
+      <div id="catSheetList" style="max-height:280px;overflow-y:auto;margin-bottom:14px" class="no-scrollbar"></div>
+
+      <div class="f2" style="grid-template-columns:1fr;margin-top:10px">
+        <input class="t" id="newCatName" placeholder="Nama kategori baru..." maxlength="16">
+      </div>
+      <button type="button" class="cta" id="btnAddNewCat" style="margin-top:16px"><i></i>Tambah Kategori</button>
     </div>
   </div>
 
@@ -2293,37 +2323,10 @@
       }
     };
 
-    function promptAddCategory() {
-      const typeLabel = V.ft === 'in' ? 'Pemasukan' : 'Pengeluaran';
-      const name = prompt(`Masukkan nama kategori ${typeLabel} baru:`);
-      if (name === null) return;
-      const trimmed = name.trim();
-      if (!trimmed) {
-        toast('Nama kategori tidak boleh kosong!');
-        return;
-      }
-
-      const currentCats = getAllCats(V.ft);
-      if (currentCats.some(c => c[1].toLowerCase() === trimmed.toLowerCase())) {
-        toast('Kategori sudah ada!');
-        V.fc = currentCats.find(c => c[1].toLowerCase() === trimmed.toLowerCase())[1];
-        renderForm();
-        return;
-      }
-
-      if (!customCats[V.ft]) customCats[V.ft] = [];
-      customCats[V.ft].push(trimmed);
-      saveCustomCats();
-
-      V.fc = trimmed;
-      renderForm();
-      toast(`Kategori "${trimmed}" berhasil ditambahkan ✓`);
-    }
-
     $('#fc').onclick = e => {
       const addBtn = e.target.closest('#btnAddCat');
       if (addBtn) {
-        promptAddCategory();
+        openCategorySheet(V.ft);
         return;
       }
       const b = e.target.closest('.cat');
@@ -2480,6 +2483,7 @@
     const SWIPE_THRESH = 40;     // Ambang batas: > 40px snap buka, <= 40px kembali 0
 
     let activeSwipedRow = null;
+    let swipeSuppressClickUntil = 0;
 
     function closeSwipedRow(row) {
       if (!row) return;
@@ -2508,122 +2512,6 @@
       allRows.forEach(r => {
         if (r.dataset.open) closeSwipedRow(r);
       });
-    }
-
-    // Bind swipe handler secara independen ke setiap elemen transaksi (per-row closure)
-    function bindRowSwipe(row) {
-      const card = row.querySelector('.tx-card');
-      const editBtn = row.querySelector('.tx-act-edit');
-      const delBtn = row.querySelector('.tx-act-del');
-      if (!card) return;
-
-      let startX = 0;
-      let startY = 0;
-      let baseX = 0;
-      let isHorizontal = null;
-      let capturedId = null;
-
-      card.addEventListener('pointerdown', e => {
-        if (e.target.closest('.tx-act')) return;
-
-        // Auto-close baris lain yang sedang terbuka
-        if (activeSwipedRow && activeSwipedRow !== row) {
-          closeSwipedRow(activeSwipedRow);
-        }
-
-        startX = e.clientX;
-        startY = e.clientY;
-        isHorizontal = null;
-
-        const currentOpen = row.dataset.open;
-        baseX = currentOpen === 'edit' ? SWIPE_MAX : currentOpen === 'del' ? -SWIPE_MAX : 0;
-      });
-
-      card.addEventListener('pointermove', e => {
-        if (startX === 0 && startY === 0) return;
-
-        const dx = e.clientX - startX;
-        const dy = e.clientY - startY;
-
-        if (isHorizontal === null) {
-          if (Math.abs(dx) > 6 || Math.abs(dy) > 6) {
-            if (Math.abs(dx) >= Math.abs(dy)) {
-              isHorizontal = true;
-              card.classList.add('swiping');
-              try {
-                card.setPointerCapture(e.pointerId);
-                capturedId = e.pointerId;
-              } catch (err) {}
-            } else {
-              isHorizontal = false;
-            }
-          }
-        }
-
-        if (isHorizontal) {
-          e.preventDefault();
-          let targetX = baseX + dx;
-
-          // CLAMPING: Kunci translasi ketat [-80px, +80px]
-          if (targetX > SWIPE_MAX) targetX = SWIPE_MAX;
-          if (targetX < -SWIPE_MAX) targetX = -SWIPE_MAX;
-
-          if (targetX > 0) {
-            if (editBtn) editBtn.style.visibility = 'visible';
-            if (delBtn) delBtn.style.visibility = 'hidden';
-          } else if (targetX < 0) {
-            if (editBtn) editBtn.style.visibility = 'hidden';
-            if (delBtn) delBtn.style.visibility = 'visible';
-          } else {
-            if (editBtn) editBtn.style.visibility = 'hidden';
-            if (delBtn) delBtn.style.visibility = 'hidden';
-          }
-
-          card.style.transform = `translateX(${targetX}px)`;
-        }
-      });
-
-      const handlePointerUp = e => {
-        if (capturedId !== null) {
-          try {
-            card.releasePointerCapture(capturedId);
-          } catch (err) {}
-          capturedId = null;
-        }
-
-        card.classList.remove('swiping');
-
-        if (isHorizontal) {
-          const dx = e.clientX - startX;
-          const finalX = baseX + dx;
-
-          // THRESHOLD CHECK (> 40px snap buka, <= 40px kembali netral)
-          if (finalX > SWIPE_THRESH) {
-            card.style.transform = `translateX(${SWIPE_MAX}px)`;
-            row.dataset.open = 'edit';
-            if (editBtn) editBtn.style.visibility = 'visible';
-            if (delBtn) delBtn.style.visibility = 'hidden';
-            activeSwipedRow = row;
-          } else if (finalX < -SWIPE_THRESH) {
-            card.style.transform = `translateX(-${SWIPE_MAX}px)`;
-            row.dataset.open = 'del';
-            if (editBtn) editBtn.style.visibility = 'hidden';
-            if (delBtn) delBtn.style.visibility = 'visible';
-            activeSwipedRow = row;
-          } else {
-            closeSwipedRow(row);
-          }
-        } else if (baseX !== 0 && Math.abs(e.clientX - startX) < 10) {
-          closeSwipedRow(row);
-        }
-
-        startX = 0;
-        startY = 0;
-        isHorizontal = null;
-      };
-
-      card.addEventListener('pointerup', handlePointerUp);
-      card.addEventListener('pointercancel', handlePointerUp);
     }
 
     function renderHist() {
@@ -2685,17 +2573,152 @@
             </div>
           `;
         }).join('');
-
-        // Pasang swipe listener independen ke SETIAP transaksi yang dirender
-        $$('#hist .tx-row').forEach(row => {
-          bindRowSwipe(row);
-        });
       }
     }
+
+    // Unified Event Delegation Swipe Engine for #hist
+    (function initHistSwipeEngine() {
+      const histContainer = $('#hist');
+      if (!histContainer) return;
+
+      let startX = 0;
+      let startY = 0;
+      let currentX = 0;
+      let baseX = 0;
+      let isHorizontal = null;
+      let activeRow = null;
+      let activeCard = null;
+      let editBtn = null;
+      let delBtn = null;
+
+      function onMove(e) {
+        if (!activeCard || !activeRow) return;
+        const pt = e.touches && e.touches.length ? e.touches[0] : e;
+        const dx = pt.clientX - startX;
+        const dy = pt.clientY - startY;
+
+        if (isHorizontal === null) {
+          if (Math.abs(dx) > 6 || Math.abs(dy) > 6) {
+            if (Math.abs(dx) >= Math.abs(dy)) {
+              isHorizontal = true;
+              activeCard.classList.add('swiping');
+            } else {
+              isHorizontal = false;
+            }
+          }
+        }
+
+        if (isHorizontal) {
+          if (e.cancelable) e.preventDefault();
+          let targetX = baseX + dx;
+          if (targetX > SWIPE_MAX) targetX = SWIPE_MAX;
+          if (targetX < -SWIPE_MAX) targetX = -SWIPE_MAX;
+
+          if (targetX > 0) {
+            if (editBtn) editBtn.style.visibility = 'visible';
+            if (delBtn) delBtn.style.visibility = 'hidden';
+          } else if (targetX < 0) {
+            if (editBtn) editBtn.style.visibility = 'hidden';
+            if (delBtn) delBtn.style.visibility = 'visible';
+          } else {
+            if (editBtn) editBtn.style.visibility = 'hidden';
+            if (delBtn) delBtn.style.visibility = 'hidden';
+          }
+
+          activeCard.style.transform = `translateX(${targetX}px)`;
+          currentX = targetX;
+        }
+      }
+
+      function onEnd(e) {
+        window.removeEventListener('pointermove', onMove);
+        window.removeEventListener('pointerup', onEnd);
+        window.removeEventListener('pointercancel', onEnd);
+        window.removeEventListener('touchmove', onMove);
+        window.removeEventListener('touchend', onEnd);
+        window.removeEventListener('touchcancel', onEnd);
+
+        if (!activeCard || !activeRow) return;
+        activeCard.classList.remove('swiping');
+
+        if (isHorizontal) {
+          swipeSuppressClickUntil = Date.now() + 350;
+          if (currentX > SWIPE_THRESH) {
+            activeCard.style.transform = `translateX(${SWIPE_MAX}px)`;
+            activeRow.dataset.open = 'edit';
+            if (editBtn) editBtn.style.visibility = 'visible';
+            if (delBtn) delBtn.style.visibility = 'hidden';
+            activeSwipedRow = activeRow;
+          } else if (currentX < -SWIPE_THRESH) {
+            activeCard.style.transform = `translateX(-${SWIPE_MAX}px)`;
+            activeRow.dataset.open = 'del';
+            if (editBtn) editBtn.style.visibility = 'hidden';
+            if (delBtn) delBtn.style.visibility = 'visible';
+            activeSwipedRow = activeRow;
+          } else {
+            closeSwipedRow(activeRow);
+          }
+        } else if (baseX !== 0 && Math.abs(currentX - baseX) < 10) {
+          closeSwipedRow(activeRow);
+        }
+
+        activeRow = null;
+        activeCard = null;
+        editBtn = null;
+        delBtn = null;
+        isHorizontal = null;
+      }
+
+      function onStart(e) {
+        // Jangan proses jika menekan tombol aksi edit/hapus
+        if (e.target.closest('.tx-act')) return;
+
+        const row = e.target.closest('.tx-row');
+        if (!row) return;
+
+        const card = row.querySelector('.tx-card');
+        if (!card) return;
+
+        // Auto-close baris lain yang sedang terbuka
+        if (activeSwipedRow && activeSwipedRow !== row) {
+          closeSwipedRow(activeSwipedRow);
+        }
+
+        activeRow = row;
+        activeCard = card;
+        editBtn = row.querySelector('.tx-act-edit');
+        delBtn = row.querySelector('.tx-act-del');
+
+        const pt = e.touches && e.touches.length ? e.touches[0] : e;
+        startX = pt.clientX;
+        startY = pt.clientY;
+        isHorizontal = null;
+
+        const currentOpen = row.dataset.open;
+        baseX = currentOpen === 'edit' ? SWIPE_MAX : currentOpen === 'del' ? -SWIPE_MAX : 0;
+        currentX = baseX;
+
+        window.addEventListener('pointermove', onMove, { passive: false });
+        window.addEventListener('pointerup', onEnd);
+        window.addEventListener('pointercancel', onEnd);
+        window.addEventListener('touchmove', onMove, { passive: false });
+        window.addEventListener('touchend', onEnd);
+        window.addEventListener('touchcancel', onEnd);
+      }
+
+      histContainer.addEventListener('pointerdown', onStart);
+      histContainer.addEventListener('touchstart', onStart, { passive: true });
+    })();
 
     // Click handler for swipe action buttons & outside click
     const histContainer = $('#hist');
     histContainer.onclick = e => {
+      if (Date.now() < swipeSuppressClickUntil) {
+        e.preventDefault();
+        e.stopPropagation();
+        return;
+      }
+
       const editBtn = e.target.closest('.tx-act-edit');
       if (editBtn && editBtn.dataset.id) {
         e.stopPropagation();
@@ -3033,6 +3056,119 @@
       renderWallets();
       toast('Dompet baru ditambahkan ✓');
     };
+
+    /* ==========================================================================
+       7B. BOTTOM SHEET: KELOLA KATEGORI
+       ========================================================================== */
+    let catSheetType = 'out';
+
+    function renderCategorySheet() {
+      setSeg('#catSheetTab', ['out', 'in'], catSheetType, catSheetType === 'out' ? 'var(--p500)' : 'var(--b600)');
+
+      const baseList = CATS[catSheetType] || [];
+      const userList = customCats[catSheetType] || [];
+
+      const baseHtml = baseList.map(c => `
+        <div class="wr">
+          <div style="width:32px;height:32px;border-radius:50%;background:var(--canvas);display:grid;place-items:center;color:var(--ink7);flex-shrink:0">
+            ${svgIco(c[0], 18)}
+          </div>
+          <span style="font-weight:700;font-size:14px">${escapeHtml(c[1])}</span>
+          <span class="chip" style="font-size:11px;opacity:0.7">Bawaan</span>
+        </div>
+      `).join('');
+
+      const userHtml = userList.map(name => `
+        <div class="wr">
+          <div style="width:32px;height:32px;border-radius:50%;background:var(--canvas);display:grid;place-items:center;color:var(--primary);flex-shrink:0">
+            ${svgIco('tag', 18)}
+          </div>
+          <span style="font-weight:700;font-size:14px">${escapeHtml(name)}</span>
+          <button type="button" class="chip danger btn-del-cat" data-name="${escapeHtml(name)}" data-type="${catSheetType}">Hapus</button>
+        </div>
+      `).join('');
+
+      $('#catSheetList').innerHTML = baseHtml + userHtml;
+    }
+
+    function openCategorySheet(type) {
+      if (type) catSheetType = type;
+      else catSheetType = V.ft === 'in' ? 'in' : 'out';
+      renderCategorySheet();
+      $('#scCat').classList.add('on');
+    }
+
+    function closeCategorySheet() {
+      $('#scCat').classList.remove('on');
+      $('#newCatName').value = '';
+    }
+
+    $('#btnCloseCatSheet').onclick = closeCategorySheet;
+
+    $('#scCat').onclick = e => {
+      if (e.target.id === 'scCat') closeCategorySheet();
+    };
+
+    $('#catSheetTab').onclick = e => {
+      const btn = e.target.closest('button[data-t]');
+      if (btn && btn.dataset.t) {
+        catSheetType = btn.dataset.t;
+        renderCategorySheet();
+      }
+    };
+
+    $('#catSheetList').onclick = e => {
+      const btn = e.target.closest('.btn-del-cat');
+      if (!btn || !btn.dataset.name) return;
+      const name = btn.dataset.name;
+      const type = btn.dataset.type || catSheetType;
+
+      if (!customCats[type]) return;
+      customCats[type] = customCats[type].filter(c => c !== name);
+      saveCustomCats();
+
+      if (V.fc === name) {
+        const remaining = getAllCats(V.ft);
+        V.fc = remaining[0] ? remaining[0][1] : 'Makan';
+      }
+
+      renderCategorySheet();
+      renderForm();
+      renderDonut(false);
+      toast(`Kategori "${name}" dihapus`);
+    };
+
+    $('#btnAddNewCat').onclick = () => {
+      const input = $('#newCatName');
+      const name = (input.value || '').trim();
+      if (!name) {
+        toast('Nama kategori tidak boleh kosong!');
+        input.focus();
+        return;
+      }
+
+      const currentCats = getAllCats(catSheetType);
+      if (currentCats.some(c => c[1].toLowerCase() === name.toLowerCase())) {
+        toast('Kategori sudah ada!');
+        input.focus();
+        return;
+      }
+
+      if (!customCats[catSheetType]) customCats[catSheetType] = [];
+      customCats[catSheetType].push(name);
+      saveCustomCats();
+
+      if (V.ft === catSheetType) {
+        V.fc = name;
+      }
+
+      input.value = '';
+      renderCategorySheet();
+      renderForm();
+      toast(`Kategori "${name}" ditambahkan ✓`);
+    };
+
+    $('#btnManageCat').onclick = () => openCategorySheet();
 
     /* ==========================================================================
        8. FITUR EXPORT DATA KE CSV
