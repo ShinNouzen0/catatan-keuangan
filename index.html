@@ -1154,7 +1154,12 @@
     }
 
     .tx-card.new {
-      animation: pop .35s var(--ease) both, hl 1.6s ease-out;
+      animation: hl 1.6s ease-out;
+    }
+
+    .tx-card.swiping {
+      transition: none !important;
+      animation: none !important;
     }
 
     @keyframes hl {
@@ -1741,6 +1746,13 @@
       }
     };
 
+    function generateTxId() {
+      if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') {
+        return crypto.randomUUID();
+      }
+      return String(Date.now()) + Math.random().toString(36).substr(2, 9);
+    }
+
     function getNextId() {
       let max = 0;
       if (Array.isArray(S.wallets)) {
@@ -2259,13 +2271,13 @@
        LOGIKA EDIT TRANSAKSI
        ========================================================================== */
     function editTransaction(id) {
-      const tx = S.tx.find(x => x.id === id);
+      const tx = S.tx.find(x => String(x.id) === String(id));
       if (!tx) {
         toast('Transaksi tidak ditemukan');
         return;
       }
 
-      V.editingId = id;
+      V.editingId = tx.id;
       V.ft = tx.t;
       V.fw = tx.w;
       if (tx.t === 'tf') {
@@ -2302,8 +2314,8 @@
 
     function deleteTransaction(id) {
       if (confirm('Yakin ingin menghapus transaksi ini?')) {
-        S.tx = S.tx.filter(x => x.id !== id);
-        if (V.editingId === id) {
+        S.tx = S.tx.filter(x => String(x.id) !== String(id));
+        if (String(V.editingId) === String(id)) {
           cancelEdit();
         }
         saveStorage();
@@ -2374,7 +2386,7 @@
       const isTransfer = V.ft === 'tf';
 
       if (V.editingId) {
-        const idx = S.tx.findIndex(x => x.id === V.editingId);
+        const idx = S.tx.findIndex(x => String(x.id) === String(V.editingId));
         if (idx !== -1) {
           const old = S.tx[idx];
           if (isTransfer) {
@@ -2420,11 +2432,12 @@
         }
       }
 
-      // Transaksi Baru
+      // Transaksi Baru dengan ID benar-benar unik
+      const uniqueTxId = generateTxId();
       let newTx;
       if (isTransfer) {
         newTx = {
-          id: getNextId(),
+          id: uniqueTxId,
           t: 'tf',
           w: V.fw,
           w2: V.fw2,
@@ -2435,7 +2448,7 @@
         };
       } else {
         newTx = {
-          id: getNextId(),
+          id: uniqueTxId,
           t: V.ft,
           c: V.fc,
           w: V.fw,
@@ -2448,7 +2461,10 @@
 
       S.tx.unshift(newTx);
       saveStorage();
-      V.newId = newTx.id;
+      V.newId = uniqueTxId;
+      setTimeout(() => {
+        if (V.newId === uniqueTxId) V.newId = null;
+      }, 1800);
 
       // Animasi Coin CTA
       const b = $('#save');
@@ -2534,11 +2550,12 @@
       setSeg('#hf', ['all', 'out', 'in', 'tf'], V.hf);
 
       const filtered = daily.filter(x => V.hf === 'all' || x.t === V.hf);
-      const histContainer = $('#hist');
+      const histContainer = document.getElementById('hist');
 
       if (filtered.length === 0) {
         histContainer.innerHTML = '<div class="empty">Tidak ada transaksi di tanggal ini 🍃</div>';
       } else {
+        // Render setiap transaksi tanpa id duplikat pada swipe element, ditargetkan murni menggunakan CLASS
         histContainer.innerHTML = filtered.map(x => {
           const tf = x.t === 'tf';
           const sg = tf ? '' : x.t === 'in' ? '+' : '−';
@@ -2562,7 +2579,7 @@
                 <span>Hapus</span>
               </button>
 
-              <div class="tx-card ${x.id === V.newId ? 'new' : ''}" style="transform:translateX(0px)">
+              <div class="tx-card ${String(x.id) === String(V.newId) ? 'new' : ''}" style="transform:translateX(0px)">
                 <div class="ic">${svgIco(ik(x.t, x.c), 20)}</div>
                 <div class="m">
                   <b>${escapeHtml(title)}</b>
@@ -2576,9 +2593,12 @@
       }
     }
 
-    // Unified Event Delegation Swipe Engine for #hist
-    (function initHistSwipeEngine() {
-      const histContainer = $('#hist');
+    // =========================================================================
+    // 1. EVENT DELEGATION PADA CONTAINER INDUK (#hist) - HANYA DI-BIND SATU KALI
+    // 2. MURNI MENGGUNAKAN CLASS (.tx-row & .tx-card), BUKAN ATRIBUT ID
+    // =========================================================================
+    (function initHistorySwipeDelegation() {
+      const histContainer = document.getElementById('hist');
       if (!histContainer) return;
 
       let startX = 0;
@@ -2591,11 +2611,10 @@
       let editBtn = null;
       let delBtn = null;
 
-      function onMove(e) {
+      function onPointerMove(e) {
         if (!activeCard || !activeRow) return;
-        const pt = e.touches && e.touches.length ? e.touches[0] : e;
-        const dx = pt.clientX - startX;
-        const dy = pt.clientY - startY;
+        const dx = e.clientX - startX;
+        const dy = e.clientY - startY;
 
         if (isHorizontal === null) {
           if (Math.abs(dx) > 6 || Math.abs(dy) > 6) {
@@ -2630,13 +2649,10 @@
         }
       }
 
-      function onEnd(e) {
-        window.removeEventListener('pointermove', onMove);
-        window.removeEventListener('pointerup', onEnd);
-        window.removeEventListener('pointercancel', onEnd);
-        window.removeEventListener('touchmove', onMove);
-        window.removeEventListener('touchend', onEnd);
-        window.removeEventListener('touchcancel', onEnd);
+      function onPointerEnd(e) {
+        window.removeEventListener('pointermove', onPointerMove);
+        window.removeEventListener('pointerup', onPointerEnd);
+        window.removeEventListener('pointercancel', onPointerEnd);
 
         if (!activeCard || !activeRow) return;
         activeCard.classList.remove('swiping');
@@ -2669,49 +2685,45 @@
         isHorizontal = null;
       }
 
-      function onStart(e) {
-        // Jangan proses jika menekan tombol aksi edit/hapus
+      // Pasang event listener HANYA SATU KALI pada container induk daftar riwayat
+      histContainer.addEventListener('pointerdown', e => {
+        // Abaikan jika mengetuk tombol aksi Edit atau Hapus langsung
         if (e.target.closest('.tx-act')) return;
 
-        const row = e.target.closest('.tx-row');
-        if (!row) return;
+        // Gunakan e.target.closest('.tx-row') untuk mengidentifikasi baris mana yang sedang digeser
+        const swipeItem = e.target.closest('.tx-row');
+        if (!swipeItem) return;
 
-        const card = row.querySelector('.tx-card');
-        if (!card) return;
+        // Target elemen yang bergeser menggunakan CLASS, BUKAN ID
+        const swipeContent = swipeItem.querySelector('.tx-card');
+        if (!swipeContent) return;
 
         // Auto-close baris lain yang sedang terbuka
-        if (activeSwipedRow && activeSwipedRow !== row) {
+        if (activeSwipedRow && activeSwipedRow !== swipeItem) {
           closeSwipedRow(activeSwipedRow);
         }
 
-        activeRow = row;
-        activeCard = card;
-        editBtn = row.querySelector('.tx-act-edit');
-        delBtn = row.querySelector('.tx-act-del');
+        activeRow = swipeItem;
+        activeCard = swipeContent;
+        editBtn = swipeItem.querySelector('.tx-act-edit');
+        delBtn = swipeItem.querySelector('.tx-act-del');
 
-        const pt = e.touches && e.touches.length ? e.touches[0] : e;
-        startX = pt.clientX;
-        startY = pt.clientY;
+        startX = e.clientX;
+        startY = e.clientY;
         isHorizontal = null;
 
-        const currentOpen = row.dataset.open;
+        const currentOpen = swipeItem.dataset.open;
         baseX = currentOpen === 'edit' ? SWIPE_MAX : currentOpen === 'del' ? -SWIPE_MAX : 0;
         currentX = baseX;
 
-        window.addEventListener('pointermove', onMove, { passive: false });
-        window.addEventListener('pointerup', onEnd);
-        window.addEventListener('pointercancel', onEnd);
-        window.addEventListener('touchmove', onMove, { passive: false });
-        window.addEventListener('touchend', onEnd);
-        window.addEventListener('touchcancel', onEnd);
-      }
-
-      histContainer.addEventListener('pointerdown', onStart);
-      histContainer.addEventListener('touchstart', onStart, { passive: true });
+        window.addEventListener('pointermove', onPointerMove, { passive: false });
+        window.addEventListener('pointerup', onPointerEnd);
+        window.addEventListener('pointercancel', onPointerEnd);
+      });
     })();
 
-    // Click handler for swipe action buttons & outside click
-    const histContainer = $('#hist');
+    // Click handler for swipe action buttons & outside click via event delegation
+    const histContainer = document.getElementById('hist');
     histContainer.onclick = e => {
       if (Date.now() < swipeSuppressClickUntil) {
         e.preventDefault();
@@ -2722,7 +2734,7 @@
       const editBtn = e.target.closest('.tx-act-edit');
       if (editBtn && editBtn.dataset.id) {
         e.stopPropagation();
-        const id = parseInt(editBtn.dataset.id, 10);
+        const id = editBtn.dataset.id;
         closeAllSwipes();
         editTransaction(id);
         return;
@@ -2731,7 +2743,7 @@
       const delBtn = e.target.closest('.tx-act-del');
       if (delBtn && delBtn.dataset.id) {
         e.stopPropagation();
-        const id = parseInt(delBtn.dataset.id, 10);
+        const id = delBtn.dataset.id;
         closeAllSwipes();
         deleteTransaction(id);
         return;
