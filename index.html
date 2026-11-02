@@ -1448,6 +1448,36 @@
     .border-slate-200\/60 { border-color: rgba(226, 232, 240, 0.6); }
     .border-slate-200\/80 { border-color: rgba(226, 232, 240, 0.8); }
     .ring-\[\#0A6FA6\]\/40 { --tw-ring-color: rgba(10, 111, 166, 0.4); }
+
+    /* Search Bar Pill-Shape & Focus Within */
+    .mb-5 { margin-bottom: 20px; }
+    .pl-11 { padding-left: 44px; }
+    .py-3 { padding-top: 12px; padding-bottom: 12px; }
+    .left-4 { left: 16px; }
+    .rounded-full { border-radius: 9999px; }
+    .transition-colors { transition-property: color, stroke, fill; transition-duration: 200ms; }
+    .group:focus-within .group-focus-within\:text-\[\#0A6FA6\] {
+      color: #0A6FA6 !important;
+      stroke: #0A6FA6 !important;
+    }
+    #txSearch {
+      box-sizing: border-box;
+      -webkit-appearance: none;
+      appearance: none;
+    }
+    #txSearch:focus {
+      outline: none;
+      border-color: #0A6FA6 !important;
+      background-color: #ffffff !important;
+      box-shadow: 0 0 0 3px rgba(10, 111, 166, 0.25), 0 1px 2px 0 rgba(0, 0, 0, 0.05) !important;
+    }
+    #txSearch::-webkit-search-cancel-button {
+      -webkit-appearance: none;
+      height: 14px;
+      width: 14px;
+      background: url("data:image/svg+xml;utf8,<svg viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2' stroke-linecap='round' xmlns='http://www.w3.org/2000/svg'><line x1='18' y1='6' x2='6' y2='18'/><line x1='6' y1='6' x2='18' y2='18'/></svg>") no-repeat center;
+      cursor: pointer;
+    }
   </style>
 </head>
 <body>
@@ -1636,17 +1666,20 @@
           <button data-f="tf">Transfer</button>
         </div>
 
-        <!-- Search Bar Riwayat Transaksi -->
-        <div class="relative w-full mb-4" style="margin-top: 10px;">
-          <svg class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 w-4 h-4 pointer-events-none" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <!-- Search Bar Riwayat (Capsule Pill-Shape) -->
+        <div class="relative w-full mb-5 group" style="margin-top: 10px;">
+          <!-- Ikon Kaca Pembesar -->
+          <svg class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 w-4 h-4 transition-colors group-focus-within:text-[#0A6FA6] pointer-events-none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <circle cx="11" cy="11" r="8"></circle>
             <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
           </svg>
+          
+          <!-- Input Field -->
           <input 
             type="search" 
             id="txSearch" 
-            placeholder="Cari transaksi, catatan, nominal..." 
-            class="w-full pl-9 pr-4 py-2.5 bg-slate-50/50 backdrop-blur-sm border border-slate-200/60 rounded-xl text-sm font-medium text-slate-700 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#0A6FA6] focus:bg-white transition-all duration-300" 
+            placeholder="Cari transaksi, catatan, atau nominal..." 
+            class="w-full pl-11 pr-4 py-3 bg-slate-50/70 backdrop-blur-sm border border-slate-200/80 rounded-full text-sm font-medium text-slate-700 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#0A6FA6]/30 focus:border-[#0A6FA6] focus:bg-white shadow-sm transition-all duration-300" 
             autocomplete="off"
           />
         </div>
