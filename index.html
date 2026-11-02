@@ -1295,6 +1295,30 @@
       opacity: 1;
     }
 
+    #undoToast {
+      pointer-events: auto;
+    }
+    .toast-undo-btn {
+      background: #0E8DD0;
+      color: #ffffff;
+      border: 0;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+      padding: 5px 12px;
+      cursor: pointer;
+      transition: all .2s;
+      flex-shrink: 0;
+      text-transform: uppercase;
+    }
+    .toast-undo-btn:hover {
+      background: #0A6FA6;
+    }
+    .toast-undo-btn:active {
+      transform: scale(0.93);
+    }
+
     .shake {
       animation: sk .35s;
     }
@@ -1528,6 +1552,21 @@
           <button data-f="tf">Transfer</button>
         </div>
 
+        <!-- Search Bar Riwayat Transaksi (Frosted Glassmorphism) -->
+        <div class="relative w-full mb-3" style="margin-top: 10px;">
+          <svg class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+          <input 
+            type="search" 
+            id="txSearch" 
+            placeholder="Cari transaksi, kategori, atau nominal..." 
+            class="w-full pl-9 pr-4 py-2 bg-white/70 backdrop-blur-md border border-slate-200/80 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-[#0A6FA6] transition-all"
+            autocomplete="off"
+          />
+        </div>
+
         <div id="hist"></div>
       </section>
 
@@ -1612,6 +1651,12 @@
   <!-- TOAST NOTIFICATION -->
   <div class="toast" id="toast" role="status"></div>
 
+  <!-- UNDO TOAST (SOFT DELETE) -->
+  <div class="toast" id="undoToast" role="status" style="pointer-events: auto; display: none; align-items: center; justify-content: space-between; gap: 12px; padding: 8px 10px 8px 18px; min-width: 250px;">
+    <span id="undoMsg">Transaksi dihapus</span>
+    <button type="button" id="btnUndo" class="toast-undo-btn">URUNGKAN</button>
+  </div>
+
   <!-- JAVASCRIPT ENGINE (100% PRESERVED & INTEGRATED) -->
   <script>
     /* ==========================================================================
@@ -1654,7 +1699,7 @@
 
     const svgIco = (k, s = 22) => `<svg viewBox="0 0 24 24" width="${s}" height="${s}" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="${P[k] || P.dots}"/></svg>`;
 
-    // Master Categories: Including "Minum"
+    // Master Categories: Clean list without redundant "Lainnya"
     const CATS = {
       out: [
         ['fork', 'Makan'],
@@ -1662,14 +1707,12 @@
         ['pin', 'Transport'],
         ['bag', 'Belanja'],
         ['bolt', 'Tagihan'],
-        ['cup', 'Nongkrong'],
-        ['dots', 'Lainnya']
+        ['cup', 'Nongkrong']
       ],
       in: [
         ['down', 'Gaji/Uang Saku'],
         ['star', 'Bonus'],
-        ['lap', 'Freelance'],
-        ['plus', 'Lainnya']
+        ['lap', 'Freelance']
       ]
     };
 
@@ -2254,15 +2297,7 @@
             ${svgIco(c[0], 24)}
             <span>${escapeHtml(c[1])}</span>
           </button>
-        `).join('') + `
-          <button type="button" class="cat add-cat" id="btnAddCat" title="Tambah Kategori Baru">
-            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <line x1="12" y1="5" x2="12" y2="19"></line>
-              <line x1="5" y1="12" x2="19" y2="12"></line>
-            </svg>
-            <span>Tambah</span>
-          </button>
-        `;
+        `).join('');
       }
 
       const saveBtn = $('#save');
@@ -2328,17 +2363,95 @@
     const cancelEditBtn = $('#btnCancelEdit');
     if (cancelEditBtn) cancelEditBtn.onclick = cancelEdit;
 
-    function deleteTransaction(id) {
-      if (confirm('Yakin ingin menghapus transaksi ini?')) {
-        S.tx = S.tx.filter(x => String(x.id) !== String(id));
-        if (String(V.editingId) === String(id)) {
-          cancelEdit();
-        }
+    let pendingDeleteTx = null;
+    let pendingDeleteTimer = null;
+
+    function commitPendingDelete() {
+      if (pendingDeleteTx) {
         saveStorage();
-        toast('Transaksi dihapus');
-        renderAll(false);
+        pendingDeleteTx = null;
+      }
+      clearTimeout(pendingDeleteTimer);
+      pendingDeleteTimer = null;
+      hideUndoToast();
+    }
+
+    function hideUndoToast() {
+      const ut = $('#undoToast');
+      if (ut) {
+        ut.classList.remove('on');
+        setTimeout(() => {
+          if (!ut.classList.contains('on')) ut.style.display = 'none';
+        }, 320);
       }
     }
+
+    function showUndoToast(msg) {
+      const regularToast = $('#toast');
+      if (regularToast) regularToast.classList.remove('on');
+
+      const ut = $('#undoToast');
+      const um = $('#undoMsg');
+      if (!ut) return;
+      if (um) um.textContent = msg;
+
+      ut.style.display = 'flex';
+      void ut.offsetWidth;
+      ut.classList.add('on');
+    }
+
+    function deleteTransaction(id) {
+      if (pendingDeleteTx) {
+        commitPendingDelete();
+      }
+
+      const idx = S.tx.findIndex(x => String(x.id) === String(id));
+      if (idx === -1) return;
+
+      const deletedItem = S.tx[idx];
+      pendingDeleteTx = {
+        item: deletedItem,
+        index: idx
+      };
+
+      S.tx.splice(idx, 1);
+
+      if (String(V.editingId) === String(id)) {
+        cancelEdit();
+      }
+
+      renderAll(false);
+      showUndoToast('Transaksi dihapus');
+
+      clearTimeout(pendingDeleteTimer);
+      pendingDeleteTimer = setTimeout(() => {
+        commitPendingDelete();
+      }, 4000);
+    }
+
+    function undoDelete() {
+      if (!pendingDeleteTx) return;
+
+      clearTimeout(pendingDeleteTimer);
+      pendingDeleteTimer = null;
+
+      const insertIdx = Math.min(pendingDeleteTx.index, S.tx.length);
+      S.tx.splice(insertIdx, 0, pendingDeleteTx.item);
+      pendingDeleteTx = null;
+
+      hideUndoToast();
+      renderAll(false);
+      toast('Transaksi dipulihkan');
+    }
+
+    const btnUndo = $('#btnUndo');
+    if (btnUndo) btnUndo.onclick = undoDelete;
+
+    window.addEventListener('beforeunload', () => {
+      if (pendingDeleteTx) {
+        saveStorage();
+      }
+    });
 
     window.editTransaction = editTransaction;
     window.deleteTransaction = deleteTransaction;
@@ -2352,11 +2465,6 @@
     };
 
     $('#fc').onclick = e => {
-      const addBtn = e.target.closest('#btnAddCat');
-      if (addBtn) {
-        openCategorySheet(V.ft);
-        return;
-      }
       const b = e.target.closest('.cat');
       if (b && b.dataset.c) {
         V.fc = b.dataset.c;
@@ -2566,11 +2674,37 @@
 
       setSeg('#hf', ['all', 'out', 'in', 'tf'], V.hf);
 
-      const filtered = daily.filter(x => V.hf === 'all' || x.t === V.hf);
+      const searchEl = $('#txSearch');
+      const query = (searchEl ? searchEl.value : '').trim().toLowerCase();
+
+      let filtered = daily.filter(x => V.hf === 'all' || x.t === V.hf);
+
+      if (query) {
+        filtered = filtered.filter(x => {
+          const cat = (x.c || '').toLowerCase();
+          const note = (x.n || '').toLowerCase();
+          const amtStr = String(x.a || '');
+          const rpStr = rp(x.a).toLowerCase();
+          const wFrom = (wn(x.w).n || '').toLowerCase();
+          const wTo = (wn(x.w2).n || '').toLowerCase();
+          const title = (x.t === 'tf' ? `${wFrom} ${wTo} transfer` : cat).toLowerCase();
+
+          return cat.includes(query) ||
+                 note.includes(query) ||
+                 title.includes(query) ||
+                 wFrom.includes(query) ||
+                 wTo.includes(query) ||
+                 amtStr.includes(query) ||
+                 rpStr.includes(query);
+        });
+      }
+
       const histContainer = document.getElementById('hist');
 
       if (filtered.length === 0) {
-        histContainer.innerHTML = '<div class="empty">Tidak ada transaksi di tanggal ini 🍃</div>';
+        histContainer.innerHTML = query
+          ? `<div class="empty">Tidak ada transaksi yang cocok dengan "${escapeHtml(query)}" 🔍</div>`
+          : '<div class="empty">Tidak ada transaksi di tanggal ini 🍃</div>';
       } else {
         // Render setiap transaksi tanpa id duplikat pada swipe element, ditargetkan murni menggunakan CLASS
         histContainer.innerHTML = filtered.map(x => {
@@ -2628,6 +2762,7 @@
       let editBtn = null;
       let delBtn = null;
       let activePointerId = null;
+      let hapticFired = false;
 
       function onPointerMove(e) {
         if (activePointerId !== null && e.pointerId !== activePointerId) return;
@@ -2651,6 +2786,17 @@
           let targetX = baseX + dx;
           if (targetX > SWIPE_MAX) targetX = SWIPE_MAX;
           if (targetX < -SWIPE_MAX) targetX = -SWIPE_MAX;
+
+          // Haptic feedback (getaran mikro) dipicu SATU KALI saat melewati ambang batas 40px
+          if (!hapticFired && Math.abs(targetX) >= SWIPE_THRESH) {
+            if (typeof navigator !== 'undefined' && typeof navigator.vibrate === 'function') {
+              try { navigator.vibrate(12); } catch (_) {}
+            }
+            hapticFired = true;
+          } else if (hapticFired && Math.abs(targetX) < SWIPE_THRESH - 12) {
+            // Reset jika ditarik kembali ke tengah
+            hapticFired = false;
+          }
 
           if (targetX > 0) {
             if (editBtn) editBtn.style.visibility = 'visible';
@@ -2746,6 +2892,7 @@
         editBtn = swipeItem.querySelector('.tx-act-edit');
         delBtn = swipeItem.querySelector('.tx-act-del');
 
+        hapticFired = false;
         startX = e.clientX;
         startY = e.clientY;
         isHorizontal = null;
@@ -2860,6 +3007,13 @@
         goDay(e.target.value);
       }
     };
+
+    const txSearchInput = $('#txSearch');
+    if (txSearchInput) {
+      txSearchInput.addEventListener('input', () => {
+        renderHist();
+      });
+    }
 
     const moveMonth = offset => {
       const [y, m] = V.month.split('-').map(Number);
