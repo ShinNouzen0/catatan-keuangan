@@ -1716,7 +1716,8 @@
     const ik = (t, c) => {
       if (t === 'tf') return 'swap';
       const all = getAllCats(t);
-      const found = all.find(x => x[1] === c);
+      const clean = (c || '').replace(/\s*\(Terhapus\)$/, '');
+      const found = all.find(x => x[1] === clean || x[1] === c);
       return found ? found[0] : (t === 'in' ? 'down' : 'tag');
     };
 
@@ -1841,7 +1842,11 @@
             S.wallets = parsed.wallets;
           }
           if (Array.isArray(parsed.tx)) {
-            S.tx = parsed.tx.filter(x => !(x.n === 'Gaji Bulanan' && x.a === 1500000) && !(x.n === 'Makan siang soto' && x.a === 35000) && !(x.n === 'Ongkos ojek online' && x.a === 20000));
+            S.tx = parsed.tx.filter(x => {
+              if (!x || !x.id) return false;
+              const nominal = Number(x.a);
+              return typeof nominal === 'number' && !isNaN(nominal);
+            }).map(x => ({ ...x, a: Number(x.a) }));
           }
           if (typeof parsed.nid === 'number') {
             S.nid = Math.max(parsed.nid, S.tx.length + 1);
@@ -1898,16 +1903,17 @@
     };
 
     const wn = id => S.wallets.find(w => w.id === id) || { n: 'Dompet', e: '' };
-    const sum = list => list.reduce((tot, x) => tot + (x.a || 0), 0);
+    const sum = list => list.reduce((tot, x) => tot + (Number(x.a) || 0), 0);
     const mTx = t => S.tx.filter(x => x.d.startsWith(V.month) && (!t || x.t === t));
 
-    // Perhitungan Saldo Dompet (termasuk transfer)
+    // Perhitungan Saldo Dompet (termasuk transfer) - Strict numeric casting
     const balOf = id => S.tx.reduce((total, x) => {
-      if (x.t === 'in' && x.w === id) return total + x.a;
-      if (x.t === 'out' && x.w === id) return total - x.a;
+      const nominal = Number(x.a) || 0;
+      if (x.t === 'in' && x.w === id) return total + nominal;
+      if (x.t === 'out' && x.w === id) return total - nominal;
       if (x.t === 'tf') {
-        if (x.w === id) return total - x.a;
-        if (x.w2 === id) return total + x.a;
+        if (x.w === id) return total - nominal;
+        if (x.w2 === id) return total + nominal;
       }
       return total;
     }, 0);
@@ -2228,8 +2234,18 @@
       $('#wl1').textContent = tf ? 'Dari dompet' : 'Dompet';
 
       const catList = getAllCats(V.ft);
-      if (!tf && !catList.some(c => c[1] === V.fc)) {
-        V.fc = catList[0] ? catList[0][1] : 'Makan';
+      if (!tf) {
+        if (!catList.some(c => c[1] === V.fc)) {
+          if (V.editingId && V.fc) {
+            // Pertahankan kategori asli transaksi yang sedang diedit dengan label penanda khusus
+            const cleanName = V.fc.replace(/\s*\(Terhapus\)$/, '');
+            const displayName = `${cleanName} (Terhapus)`;
+            catList.unshift(['tag', displayName]);
+            V.fc = displayName;
+          } else {
+            V.fc = catList[0] ? catList[0][1] : (V.ft === 'in' ? 'Gaji/Uang Saku' : 'Makan');
+          }
+        }
       }
 
       if (!tf) {
@@ -2401,10 +2417,11 @@
               n: noteStr
             };
           } else {
+            const savedCat = (V.fc || '').replace(/\s*\(Terhapus\)$/, '');
             S.tx[idx] = {
               id: old.id,
               t: V.ft,
-              c: V.fc,
+              c: savedCat,
               w: V.fw,
               a: V.amt,
               d,
@@ -2610,8 +2627,10 @@
       let activeCard = null;
       let editBtn = null;
       let delBtn = null;
+      let activePointerId = null;
 
       function onPointerMove(e) {
+        if (activePointerId !== null && e.pointerId !== activePointerId) return;
         if (!activeCard || !activeRow) return;
         const dx = e.clientX - startX;
         const dy = e.clientY - startY;
@@ -2650,6 +2669,17 @@
       }
 
       function onPointerEnd(e) {
+        if (activePointerId !== null && e.pointerId !== activePointerId) return;
+
+        if (activePointerId !== null) {
+          try {
+            if (histContainer.hasPointerCapture && histContainer.hasPointerCapture(activePointerId)) {
+              histContainer.releasePointerCapture(activePointerId);
+            }
+          } catch (_) {}
+          activePointerId = null;
+        }
+
         window.removeEventListener('pointermove', onPointerMove);
         window.removeEventListener('pointerup', onPointerEnd);
         window.removeEventListener('pointercancel', onPointerEnd);
@@ -2690,6 +2720,9 @@
         // Abaikan jika mengetuk tombol aksi Edit atau Hapus langsung
         if (e.target.closest('.tx-act')) return;
 
+        // Cegah konflik multi-touch jika sudah ada pointer aktif yang sedang bergerak
+        if (activePointerId !== null) return;
+
         // Gunakan e.target.closest('.tx-row') untuk mengidentifikasi baris mana yang sedang digeser
         const swipeItem = e.target.closest('.tx-row');
         if (!swipeItem) return;
@@ -2702,6 +2735,11 @@
         if (activeSwipedRow && activeSwipedRow !== swipeItem) {
           closeSwipedRow(activeSwipedRow);
         }
+
+        activePointerId = e.pointerId;
+        try {
+          histContainer.setPointerCapture(e.pointerId);
+        } catch (_) {}
 
         activeRow = swipeItem;
         activeCard = swipeContent;
@@ -2719,6 +2757,30 @@
         window.addEventListener('pointermove', onPointerMove, { passive: false });
         window.addEventListener('pointerup', onPointerEnd);
         window.addEventListener('pointercancel', onPointerEnd);
+      });
+
+      // Lepaskan pointer dan reset state jika window kehilangan fokus
+      window.addEventListener('blur', () => {
+        if (activePointerId !== null) {
+          try {
+            if (histContainer.hasPointerCapture && histContainer.hasPointerCapture(activePointerId)) {
+              histContainer.releasePointerCapture(activePointerId);
+            }
+          } catch (_) {}
+          activePointerId = null;
+        }
+        window.removeEventListener('pointermove', onPointerMove);
+        window.removeEventListener('pointerup', onPointerEnd);
+        window.removeEventListener('pointercancel', onPointerEnd);
+
+        if (activeCard) activeCard.classList.remove('swiping');
+        if (activeRow) closeSwipedRow(activeRow);
+
+        activeRow = null;
+        activeCard = null;
+        editBtn = null;
+        delBtn = null;
+        isHorizontal = null;
       });
     })();
 
@@ -3206,7 +3268,11 @@
 
       const escapeCsvCell = val => {
         if (val === null || val === undefined) return '""';
-        const str = String(val);
+        let str = String(val);
+        // Sanitasi Formula Injection: netralkan karakter pemicu formula Excel/Sheets (=, +, -, @)
+        if (/^[=\+\-@\t\r]/.test(str)) {
+          str = "'" + str;
+        }
         if (str.includes(',') || str.includes('"') || str.includes('\n') || str.includes('\r')) {
           return `"${str.replace(/"/g, '""')}"`;
         }
