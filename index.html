@@ -814,30 +814,45 @@
     }
 
     .pill {
-      min-height: 44px;
-      padding: 0 16px;
-      border-radius: 999px;
-      border: 1px solid var(--line2);
-      font-weight: 700;
-      font-size: 14px;
+      min-height: 40px;
+      padding: 10px 16px;
+      border-radius: 12px; /* rounded-xl */
+      background: rgba(248, 250, 252, 0.7); /* bg-slate-50/70 */
+      border: 1px solid rgba(226, 232, 240, 0.8); /* border-slate-200/80 */
+      color: #475569; /* text-slate-600 */
+      font-weight: 500; /* font-medium */
+      font-size: 14px; /* text-sm */
       display: inline-flex;
       align-items: center;
+      gap: 8px; /* gap-2 */
       cursor: pointer;
+      user-select: none;
+      -webkit-user-select: none;
+      -webkit-tap-highlight-color: transparent;
+      box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05); /* shadow-sm */
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1); /* duration-200 */
     }
 
-    .pill:hover {
-      background: var(--canvas);
+    .pill:hover:not(.on):not(:disabled) {
+      background: rgba(255, 255, 255, 0.95);
+      border-color: rgba(203, 213, 225, 0.9);
+      color: #334155;
+    }
+
+    .pill:active:not(:disabled) {
+      transform: scale(0.95); /* active:scale-95 */
     }
 
     .pill.on {
-      background: var(--primary);
-      border-color: var(--primary);
-      color: var(--onp);
+      background: #0A6FA6 !important;
+      border-color: #0A6FA6 !important;
+      color: #ffffff !important;
+      box-shadow: 0 4px 12px rgba(10, 111, 166, 0.3), 0 0 0 1px #ffffff, 0 0 0 3px rgba(10, 111, 166, 0.4) !important;
     }
 
     .pls {
       display: flex;
-      gap: 8px;
+      gap: 10px;
       flex-wrap: wrap;
     }
 
@@ -1418,6 +1433,21 @@
         transition: none !important;
       }
     }
+  .text-xs { font-size: 12px; line-height: 16px; }
+    .text-sm { font-size: 14px; line-height: 20px; }
+    .w-4 { width: 16px; }
+    .h-4 { height: 16px; }
+    .mb-4 { margin-bottom: 16px; }
+    .py-2\.5 { padding-top: 10px; padding-bottom: 10px; }
+    .duration-300 { transition-duration: 300ms; }
+    .text-slate-400 { color: #94a3b8; }
+    .text-slate-600 { color: #475569; }
+    .text-slate-700 { color: #334155; }
+    .bg-slate-50\/50 { background-color: rgba(248, 250, 252, 0.5); }
+    .bg-slate-50\/70 { background-color: rgba(248, 250, 252, 0.7); }
+    .border-slate-200\/60 { border-color: rgba(226, 232, 240, 0.6); }
+    .border-slate-200\/80 { border-color: rgba(226, 232, 240, 0.8); }
+    .ring-\[\#0A6FA6\]\/40 { --tw-ring-color: rgba(10, 111, 166, 0.4); }
   </style>
 </head>
 <body>
@@ -1606,17 +1636,17 @@
           <button data-f="tf">Transfer</button>
         </div>
 
-        <!-- Search Bar Riwayat Transaksi (Frosted Glassmorphism) -->
-        <div class="relative w-full mb-3" style="margin-top: 10px;">
-          <svg class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <!-- Search Bar Riwayat Transaksi -->
+        <div class="relative w-full mb-4" style="margin-top: 10px;">
+          <svg class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 w-4 h-4 pointer-events-none" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <circle cx="11" cy="11" r="8"></circle>
             <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
           </svg>
           <input 
             type="search" 
             id="txSearch" 
-            placeholder="Cari transaksi, kategori, atau nominal..." 
-            class="w-full pl-9 pr-4 py-2 bg-white/70 backdrop-blur-md border border-slate-200/80 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-[#0A6FA6] transition-all"
+            placeholder="Cari transaksi, catatan, nominal..." 
+            class="w-full pl-9 pr-4 py-2.5 bg-slate-50/50 backdrop-blur-sm border border-slate-200/60 rounded-xl text-sm font-medium text-slate-700 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#0A6FA6] focus:bg-white transition-all duration-300" 
             autocomplete="off"
           />
         </div>
@@ -2269,11 +2299,16 @@
         </button>
       `;
 
-      const pills = (cur, dis) => S.wallets.map(w => `
-        <button type="button" class="pill ${cur === w.id ? 'on' : ''}" data-id="${w.id}" ${dis === w.id ? 'disabled style="opacity:.4;cursor:not-allowed"' : ''}>
-          ${w.e ? w.e + ' ' : ''}${escapeHtml(w.n)}
-        </button>
-      `).join('');
+      const pills = (cur, dis) => S.wallets.map(w => {
+        const isSelected = cur === w.id;
+        const baseClass = 'pill px-4 py-2.5 rounded-xl bg-slate-50/70 border border-slate-200/80 text-slate-600 font-medium text-sm flex items-center gap-2 transition-all duration-200 shadow-sm active:scale-95';
+        const activeClass = isSelected ? 'on !bg-[#0A6FA6] !text-white !border-[#0A6FA6] shadow-md shadow-[#0A6FA6]/30 ring-2 ring-offset-1 ring-[#0A6FA6]/40' : '';
+        return `
+          <button type="button" class="${baseClass} ${activeClass}" data-id="${w.id}" ${dis === w.id ? 'disabled style="opacity:.4;cursor:not-allowed"' : ''}>
+            ${w.e ? `<span>${w.e}</span>` : ''}<span>${escapeHtml(w.n)}</span>
+          </button>
+        `;
+      }).join('');
 
       $('#fw').innerHTML = pills(V.fw, V.ft === 'tf' ? V.fw2 : 0);
       $('#fw2').innerHTML = pills(V.fw2, V.fw);
