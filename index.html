@@ -855,45 +855,99 @@
     .cats {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 8px;
+      gap: 10px;
     }
 
+    /* Modern Squircle Category Button */
     .cat {
       position: relative;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      gap: 6px;
-      min-height: 84px;
-      border-radius: 22px;
-      border: 1px solid var(--line2);
-      font-size: 13px;
-      font-weight: 700;
-      color: var(--ink7);
+      gap: 7px;
+      min-height: 82px;
+      padding: 12px 6px;
+      border-radius: 18px; /* rounded-2xl */
+      background: rgba(255, 255, 255, 0.72);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      border: 1px solid rgba(226, 232, 240, 0.85); /* border-slate-200/85 */
+      box-shadow: 0 1px 3px rgba(10, 26, 43, 0.04), 0 1px 2px rgba(10, 26, 43, 0.02); /* shadow-sm */
+      font-size: 12px; /* text-xs */
+      font-weight: 600; /* font-medium */
+      color: #475569; /* text-slate-600 */
       cursor: pointer;
+      user-select: none;
+      -webkit-user-select: none;
+      -webkit-tap-highlight-color: transparent;
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
-    .cat:hover {
-      background: var(--canvas);
+    .cat svg {
+      width: 24px;
+      height: 24px;
+      stroke: #64748B; /* text-slate-500 */
+      transition: transform 0.2s ease-out, stroke 0.2s ease-out;
     }
 
+    .cat span {
+      display: block;
+      text-align: center;
+      line-height: 1.25;
+      font-size: 12px;
+      font-weight: 600;
+      color: inherit;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      max-width: 96%;
+      transition: color 0.2s ease-out;
+    }
+
+    .cat:hover:not(.on) {
+      background: rgba(255, 255, 255, 0.95);
+      border-color: rgba(203, 213, 225, 0.9);
+      box-shadow: 0 2px 6px rgba(10, 26, 43, 0.06);
+    }
+
+    .cat:active {
+      transform: scale(0.95); /* active:scale-95 tactile press */
+    }
+
+    /* Kategori Terpilih (Active State) */
     .cat.on {
-      background: var(--primary);
-      border-color: var(--primary);
-      color: var(--onp);
-      transform: translateY(-3px);
+      background: linear-gradient(135deg, #0A6FA6 0%, #0E8DD0 100%);
+      border-color: #0E8DD0;
+      color: #ffffff !important;
+      box-shadow: 0 0 0 2px #ffffff, 0 0 0 3.5px #0E8DD0, 0 6px 16px rgba(14, 141, 208, 0.32);
+      transform: translateY(-2px);
+    }
+
+    .cat.on svg {
+      stroke: #ffffff !important;
+      transform: scale(1.08);
+    }
+
+    .cat.on span {
+      color: #ffffff !important;
+      font-weight: 700;
+    }
+
+    .cat.on:active {
+      transform: translateY(0) scale(0.95);
     }
 
     .cat.on:after {
       content: "";
       position: absolute;
-      top: 10px;
-      right: 10px;
-      width: 7px;
-      height: 7px;
+      top: 8px;
+      right: 8px;
+      width: 6px;
+      height: 6px;
       border-radius: 50%;
-      background: var(--onp);
+      background: #ffffff;
+      box-shadow: 0 0 6px rgba(255, 255, 255, 0.85);
     }
 
     .cat.add-cat {
@@ -2293,7 +2347,7 @@
 
       if (!tf) {
         $('#fc').innerHTML = catList.map(c => `
-          <button type="button" class="cat ${V.fc === c[1] ? 'on' : ''}" data-c="${escapeHtml(c[1])}">
+          <button type="button" class="cat ${V.fc === c[1] ? 'on' : ''} rounded-2xl transition-all duration-200 ease-out active:scale-95 shadow-sm text-xs font-medium" data-c="${escapeHtml(c[1])}">
             ${svgIco(c[0], 24)}
             <span>${escapeHtml(c[1])}</span>
           </button>
