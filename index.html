@@ -1143,6 +1143,94 @@
     .out { color: var(--expense); }
     .tfc { color: var(--ink7); }
 
+    /* Toggle View Mode Riwayat (Harian vs Bulanan) */
+    .hist-vm-toggle {
+      display: inline-flex;
+      align-items: center;
+      background: rgba(241, 245, 249, 0.85);
+      padding: 3px;
+      border-radius: 999px;
+      border: 1px solid rgba(226, 232, 240, 0.9);
+      box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.04);
+      gap: 2px;
+    }
+    .hist-vm-btn {
+      border: none;
+      background: transparent;
+      padding: 5px 12px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--ink6);
+      cursor: pointer;
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+      line-height: 1.2;
+      user-select: none;
+      outline: none;
+    }
+    .hist-vm-btn.on {
+      background: #0A6FA6;
+      color: #ffffff;
+      box-shadow: 0 2px 6px rgba(10, 111, 166, 0.35);
+    }
+    .hist-vm-btn:not(.on):hover {
+      color: var(--ink8);
+    }
+    .hist-vm-btn:active {
+      transform: scale(0.96);
+    }
+
+    /* Group Day Header in Monthly View */
+    .hist-day-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 12px;
+      margin-top: 14px;
+      margin-bottom: 6px;
+      border-radius: 12px;
+      background: rgba(241, 245, 249, 0.65);
+      border: 1px solid rgba(226, 232, 240, 0.7);
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--ink7);
+      letter-spacing: -0.01em;
+    }
+    .hist-day-header:first-child {
+      margin-top: 0;
+    }
+    .hist-day-header .hd-date {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--ink8);
+      font-weight: 800;
+    }
+    .hist-day-header .hd-date .badge-today {
+      background: #0A6FA6;
+      color: #fff;
+      font-size: 9px;
+      font-weight: 800;
+      padding: 1px 6px;
+      border-radius: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+    .hist-day-header .hd-sum {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+    }
+    .hist-day-header .hd-sum .hd-out {
+      color: var(--p700);
+      font-weight: 700;
+    }
+    .hist-day-header .hd-sum .hd-in {
+      color: var(--b700);
+      font-weight: 700;
+    }
+
     /* Swipe-to-Action Transaction Rows */
     .tx-row {
       position: relative;
@@ -1632,11 +1720,18 @@
         </button>
       </section>
 
-      <!-- 03. RIWAYAT TRANSAKSI HARIAN -->
+      <!-- 03. RIWAYAT TRANSAKSI (HARIAN & BULANAN) -->
       <section class="sec">
-        <div class="sh">
-          <span class="ov">Riwayat</span>
-          <span class="chip" id="cnt"></span>
+        <div class="sh" style="flex-wrap:wrap;gap:8px">
+          <div style="display:flex;align-items:center;gap:8px">
+            <span class="ov">Riwayat</span>
+            <span class="chip" id="cnt"></span>
+          </div>
+          <!-- Toggle View Mode: Harian vs Bulanan -->
+          <div class="hist-vm-toggle" id="histVmToggle" role="tablist" aria-label="Mode Tampilan Riwayat">
+            <button type="button" class="hist-vm-btn on" data-vm="day" role="tab" aria-selected="true">Harian</button>
+            <button type="button" class="hist-vm-btn" data-vm="month" role="tab" aria-selected="false">Bulanan</button>
+          </div>
         </div>
 
         <div class="dnav flex items-center justify-between w-full gap-3">
@@ -1871,6 +1966,7 @@
 
     const COLW = ['#08557F', '#B8146F', '#0A1A2B', '#0A6FA6', '#0E8DD0', '#8A0F55'];
     const MON = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+    const DAYS = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
     const todayS = iso(new Date());
 
     const ik = (t, c) => {
@@ -2029,6 +2125,7 @@
       fw2: S.wallets[1] ? S.wallets[1].id : (S.wallets[0] ? S.wallets[0].id : 2),
       fc: 'Makan',
       day: todayS,
+      viewMode: 'day',
       hf: 'all',
       amt: 0,
       trendOpen: false,
@@ -2781,25 +2878,56 @@
       closeAllSwipes();
       activeSwipedRow = null;
 
-      const d = new Date(V.day + 'T00:00:00');
-      const isToday = V.day === todayS;
-      $('#dt').textContent = `${isToday ? 'Hari Ini, ' : ''}${d.getDate()} ${MON[d.getMonth()].slice(0, 3)} ${d.getFullYear()}`;
-      $('#dpick').value = V.day;
+      const isMonthMode = V.viewMode === 'month';
 
-      const daily = S.tx.filter(x => x.d === V.day);
-      const outAmt = sum(daily.filter(x => x.t === 'out'));
-      const inAmt = sum(daily.filter(x => x.t === 'in'));
+      // Sinkronkan status tombol toggle
+      const vmDayBtn = $('#histVmToggle [data-vm="day"]');
+      const vmMonthBtn = $('#histVmToggle [data-vm="month"]');
+      if (vmDayBtn && vmMonthBtn) {
+        vmDayBtn.classList.toggle('on', !isMonthMode);
+        vmDayBtn.setAttribute('aria-selected', !isMonthMode ? 'true' : 'false');
+        vmMonthBtn.classList.toggle('on', isMonthMode);
+        vmMonthBtn.setAttribute('aria-selected', isMonthMode ? 'true' : 'false');
+      }
+
+      // Navigasi Tanggal / Bulan
+      if (isMonthMode) {
+        const [y, m] = V.month.split('-').map(Number);
+        const isThisMonth = V.month === todayS.slice(0, 7);
+        $('#dt').textContent = `${isThisMonth ? 'Bulan Ini, ' : ''}${MON[m - 1]} ${y}`;
+        $('#dpick').value = V.day.startsWith(V.month) ? V.day : `${V.month}-01`;
+        const dp = $('#dp');
+        const dn = $('#dn');
+        if (dp) dp.setAttribute('aria-label', 'Bulan sebelumnya');
+        if (dn) dn.setAttribute('aria-label', 'Bulan berikutnya');
+      } else {
+        const d = new Date(V.day + 'T00:00:00');
+        const isToday = V.day === todayS;
+        $('#dt').textContent = `${isToday ? 'Hari Ini, ' : ''}${d.getDate()} ${MON[d.getMonth()].slice(0, 3)} ${d.getFullYear()}`;
+        $('#dpick').value = V.day;
+        const dp = $('#dp');
+        const dn = $('#dn');
+        if (dp) dp.setAttribute('aria-label', 'Hari sebelumnya');
+        if (dn) dn.setAttribute('aria-label', 'Hari berikutnya');
+      }
+
+      const baseList = isMonthMode
+        ? S.tx.filter(x => x.d.startsWith(V.month))
+        : S.tx.filter(x => x.d === V.day);
+
+      const outAmt = sum(baseList.filter(x => x.t === 'out'));
+      const inAmt = sum(baseList.filter(x => x.t === 'in'));
 
       $('#so').textContent = '↑ Keluar −' + rp(outAmt);
       $('#si').textContent = '↓ Masuk +' + rp(inAmt);
-      $('#cnt').textContent = `${daily.length} transaksi`;
+      $('#cnt').textContent = `${baseList.length} transaksi`;
 
       setSeg('#hf', ['all', 'out', 'in', 'tf'], V.hf);
 
       const searchEl = $('#txSearch');
       const query = (searchEl ? searchEl.value : '').trim().toLowerCase();
 
-      let filtered = daily.filter(x => V.hf === 'all' || x.t === V.hf);
+      let filtered = baseList.filter(x => V.hf === 'all' || x.t === V.hf);
 
       if (query) {
         filtered = filtered.filter(x => {
@@ -2826,43 +2954,92 @@
       if (filtered.length === 0) {
         histContainer.innerHTML = query
           ? `<div class="empty">Tidak ada transaksi yang cocok dengan "${escapeHtml(query)}" 🔍</div>`
-          : '<div class="empty">Tidak ada transaksi di tanggal ini 🍃</div>';
+          : (isMonthMode
+              ? '<div class="empty">Tidak ada transaksi di bulan ini 🍃</div>'
+              : '<div class="empty">Tidak ada transaksi di tanggal ini 🍃</div>');
+        return;
+      }
+
+      const renderTxRowHtml = x => {
+        const tf = x.t === 'tf';
+        const sg = tf ? '' : x.t === 'in' ? '+' : '−';
+        const ar = tf ? '⇄' : x.t === 'in' ? '↓' : '↑';
+        const title = tf ? `${wn(x.w).n} → ${wn(x.w2).n}` : x.c;
+        const sub = `${tf ? '' : (wn(x.w).n + ' · ')}Pukul ${x.tm || '--.--'}${x.n ? ' · ' + escapeHtml(x.n) : (tf ? ' · Pindah Dana' : '')}`;
+
+        return `
+          <div class="tx-row" data-id="${x.id}" data-open="">
+            <button type="button" class="tx-act tx-act-edit" data-id="${x.id}" aria-label="Edit transaksi" title="Edit transaksi" style="visibility:hidden">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 20h9M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
+              </svg>
+              <span>Edit</span>
+            </button>
+
+            <button type="button" class="tx-act tx-act-del" data-id="${x.id}" aria-label="Hapus transaksi" title="Hapus transaksi" style="visibility:hidden">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M10 11v6M14 11v6"/>
+              </svg>
+              <span>Hapus</span>
+            </button>
+
+            <div class="tx-card ${String(x.id) === String(V.newId) ? 'new' : ''}" style="transform:translateX(0px)">
+              <div class="ic">${svgIco(ik(x.t, x.c), 20)}</div>
+              <div class="m">
+                <b>${escapeHtml(title)}</b>
+                <small>${sub}</small>
+              </div>
+              <div class="a ${tf ? 'tfc' : x.t}">${sg}${rp(x.a)} ${ar}</div>
+            </div>
+          </div>
+        `;
+      };
+
+      if (!isMonthMode) {
+        histContainer.innerHTML = filtered.map(renderTxRowHtml).join('');
       } else {
-        // Render setiap transaksi tanpa id duplikat pada swipe element, ditargetkan murni menggunakan CLASS
-        histContainer.innerHTML = filtered.map(x => {
-          const tf = x.t === 'tf';
-          const sg = tf ? '' : x.t === 'in' ? '+' : '−';
-          const ar = tf ? '⇄' : x.t === 'in' ? '↓' : '↑';
-          const title = tf ? `${wn(x.w).n} → ${wn(x.w2).n}` : x.c;
-          const sub = `${tf ? '' : (wn(x.w).n + ' · ')}Pukul ${x.tm || '--.--'}${x.n ? ' · ' + escapeHtml(x.n) : (tf ? ' · Pindah Dana' : '')}`;
+        const sorted = [...filtered].sort((a, b) => {
+          if (b.d !== a.d) return b.d > a.d ? 1 : -1;
+          if (b.tm && a.tm && b.tm !== a.tm) return b.tm > a.tm ? 1 : -1;
+          return (Number(b.id) || 0) - (Number(a.id) || 0);
+        });
 
-          return `
-            <div class="tx-row" data-id="${x.id}" data-open="">
-              <button type="button" class="tx-act tx-act-edit" data-id="${x.id}" aria-label="Edit transaksi" title="Edit transaksi" style="visibility:hidden">
-                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M12 20h9M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
-                </svg>
-                <span>Edit</span>
-              </button>
+        const dayMap = new Map();
+        sorted.forEach(x => {
+          if (!dayMap.has(x.d)) dayMap.set(x.d, []);
+          dayMap.get(x.d).push(x);
+        });
 
-              <button type="button" class="tx-act tx-act-del" data-id="${x.id}" aria-label="Hapus transaksi" title="Hapus transaksi" style="visibility:hidden">
-                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M10 11v6M14 11v6"/>
-                </svg>
-                <span>Hapus</span>
-              </button>
+        let html = '';
+        dayMap.forEach((dayItems, dayStr) => {
+          const itemDate = new Date(dayStr + 'T00:00:00');
+          const isDayToday = dayStr === todayS;
+          const dayName = DAYS[itemDate.getDay()] || '';
+          const dateLabel = `${dayName ? dayName + ', ' : ''}${itemDate.getDate()} ${MON[itemDate.getMonth()].slice(0, 3)} ${itemDate.getFullYear()}`;
 
-              <div class="tx-card ${String(x.id) === String(V.newId) ? 'new' : ''}" style="transform:translateX(0px)">
-                <div class="ic">${svgIco(ik(x.t, x.c), 20)}</div>
-                <div class="m">
-                  <b>${escapeHtml(title)}</b>
-                  <small>${sub}</small>
-                </div>
-                <div class="a ${tf ? 'tfc' : x.t}">${sg}${rp(x.a)} ${ar}</div>
+          const dayOut = sum(dayItems.filter(x => x.t === 'out'));
+          const dayIn = sum(dayItems.filter(x => x.t === 'in'));
+
+          const sumParts = [];
+          if (dayOut > 0) sumParts.push(`<span class="hd-out">−${rp(dayOut)}</span>`);
+          if (dayIn > 0) sumParts.push(`<span class="hd-in">+${rp(dayIn)}</span>`);
+          if (sumParts.length === 0) sumParts.push(`<span>${dayItems.length} transaksi</span>`);
+
+          html += `
+            <div class="hist-day-header">
+              <div class="hd-date">
+                ${isDayToday ? '<span class="badge-today">Hari Ini</span>' : ''}
+                <span>${dateLabel}</span>
+              </div>
+              <div class="hd-sum">
+                ${sumParts.join('<span style="color:var(--ink4);margin:0 2px">·</span>')}
               </div>
             </div>
+            ${dayItems.map(renderTxRowHtml).join('')}
           `;
-        }).join('');
+        });
+
+        histContainer.innerHTML = html;
       }
     }
 
@@ -3114,8 +3291,20 @@
       renderAll(monthChanged);
     };
 
-    $('#dp').onclick = () => goDay(shift(V.day, -1));
-    $('#dn').onclick = () => goDay(shift(V.day, 1));
+    $('#dp').onclick = () => {
+      if (V.viewMode === 'month') {
+        moveMonth(-1);
+      } else {
+        goDay(shift(V.day, -1));
+      }
+    };
+    $('#dn').onclick = () => {
+      if (V.viewMode === 'month') {
+        moveMonth(1);
+      } else {
+        goDay(shift(V.day, 1));
+      }
+    };
 
     $('#dl').onclick = () => {
       const p = $('#dpick');
@@ -3126,9 +3315,31 @@
 
     $('#dpick').onchange = e => {
       if (e.target.value) {
-        goDay(e.target.value);
+        if (V.viewMode === 'month') {
+          const val = e.target.value;
+          V.day = val;
+          const newM = val.slice(0, 7);
+          const monthChanged = newM !== V.month;
+          V.month = newM;
+          V.sel = null;
+          renderAll(monthChanged);
+        } else {
+          goDay(e.target.value);
+        }
       }
     };
+
+    const histVmToggle = $('#histVmToggle');
+    if (histVmToggle) {
+      histVmToggle.onclick = e => {
+        const btn = e.target.closest('.hist-vm-btn');
+        if (!btn || !btn.dataset.vm) return;
+        const newMode = btn.dataset.vm;
+        if (newMode === V.viewMode) return;
+        V.viewMode = newMode;
+        renderHist();
+      };
+    }
 
     const txSearchInput = $('#txSearch');
     if (txSearchInput) {
